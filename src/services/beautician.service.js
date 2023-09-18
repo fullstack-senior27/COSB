@@ -96,14 +96,14 @@ const getsalon = async (searchBody) => {
   }
 
   // filter
-  if (price) {
-    matchCondition.push({
-      'services.price': {
-        $gte: parseInt(price.split('-')[0]),
-        $lte: parseInt(price.split('-')[1]),
-      },
-    });
-  }
+  // if (price) {
+  //   matchCondition.push({
+  //     'services.price': {
+  //       $gte: parseInt(price.split('-')[0]),
+  //       $lte: parseInt(price.split('-')[1]),
+  //     },
+  //   });
+  // }
 
   if (rating) {
     matchCondition.push({
@@ -112,6 +112,7 @@ const getsalon = async (searchBody) => {
       },
     });
   }
+  console.log('Match Condition:', matchCondition);
 
   const aggregationPipeline = [
     {
@@ -190,9 +191,31 @@ const getsalon = async (searchBody) => {
       },
     });
   }
-  const salon = await Salon.aggregate(aggregationPipeline);
 
-  return salon;
+  let filteredSalons = [];
+
+  const salons = await Salon.aggregate(aggregationPipeline);
+
+  if (price) {
+    const [minPrice, maxPrice] = price.split('-').map(Number);
+
+    function isServiceInRange(service) {
+      return service.price >= minPrice && service.price <= maxPrice;
+    }
+
+    filteredSalons = salons.map((salon) => {
+      const filteredServices = salon.services.filter(isServiceInRange);
+      return {
+        ...salon,
+        services: filteredServices.length > 0 ? filteredServices : [],
+      };
+    });
+
+    const allEmpty = filteredSalons.every((salon) => salon.services.length === 0);
+
+    return allEmpty ? [] : filteredSalons;
+  }
+  return salons;
 };
 
 const getservice = async () => {
@@ -352,6 +375,21 @@ const getServiceBySalon = async (id) => {
   return Service.find({ salon: salonId }).populate('service_type').exec();
 };
 
+const testService = async (body) => {
+  const salon = Salon.aggregate([
+    {
+      $lookup: {
+        from: 'services',
+        localField: '_id',
+        foreignField: 'salon',
+        as: 'service',
+      },
+    },
+  ]);
+
+  return salon;
+};
+
 module.exports = {
   createBeautician,
   getBeautician,
@@ -367,4 +405,5 @@ module.exports = {
   createSalonRating,
   getSalonByBeautician,
   getServiceBySalon,
+  testService,
 };

@@ -34,4 +34,9 @@ router.route('/create-rating').post(validate(BeauticianValidation.createRating),
 
 // router.route('/create-service').post(validate(BeauticianValidation.createService), BeauticianController.createService);
 
+
+// test
+router.route('/test').post(BeauticianController.test);
+
+
 module.exports = router;
