@@ -349,7 +349,7 @@ const getSalonByBeautician = async (id) => {
 const getServiceBySalon = async (id) => {
   const salonId = mongooseDb.Types.ObjectId(id);
 
-  return Service.find({salon:salonId}).populate('service_type').exec();
+  return Service.find({ salon: salonId }).populate('service_type').exec();
 };
 
 module.exports = {
