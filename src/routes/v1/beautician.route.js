@@ -8,15 +8,29 @@ const BeauticianController = require('../../controllers/beautician.controller');
 router
   .route('/create-beautician')
   .post(validate(BeauticianValidation.createBeautician), BeauticianController.createBeautician);
+
+// beautician
 router.route('/get-all-beautician').get(BeauticianController.getAllBeautician);
+router.route('/get-beautician/:id').get(BeauticianController.getBeautician);
 
+// salon
 router.route('/create-salon').post(validate(BeauticianValidation.createSalon), BeauticianController.createSalon);
-router.route('/get-all-salon').get(BeauticianController.getAllSalon);
-router.route('/get-all-service').get(BeauticianController.getAllService);
+router.route('/get-all-salon').post(BeauticianController.getAllSalon);
+router.route('/get-salon-by-beautician/:id').get(BeauticianController.getAllSalonByBeautician);
 
-router.route('/get-salon-by-id/:id').post(BeauticianController.getSalonById);
-
+// service
+router.route('/get-all-service').post(BeauticianController.getAllService);
+router.route('/get-salon-by-id/:id').get(BeauticianController.getSalonById);
 router.route('/search').post(BeauticianController.search);
+router.route('/get-service-by-salon/:id').get(BeauticianController.getServiceBySalon);
+
+// service type
+router
+  .route('/create-service-type')
+  .post(validate(BeauticianValidation.createServiceType), BeauticianController.createServiceType);
+
+// salon rating
+router.route('/create-rating').post(validate(BeauticianValidation.createRating), BeauticianController.createRating);
 
 // router.route('/create-service').post(validate(BeauticianValidation.createService), BeauticianController.createService);
 

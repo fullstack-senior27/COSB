@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
+const { string } = require('joi');
 
 const serviceSchema = mongoose.Schema(
   {
@@ -9,9 +10,8 @@ const serviceSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    salons_id: { type: mongoose.Schema.Types.ObjectId, ref: 'salons' },
-    serivce_type_id: { type: mongoose.Schema.Types.ObjectId, ref: 'service_types' },
-
+    salon: { type: mongoose.Schema.Types.ObjectId, ref: 'salons' },
+    service_type: { type: mongoose.Schema.Types.ObjectId, ref: 'service_types' },
     time: {
       type: String,
       required: true,
@@ -19,8 +19,8 @@ const serviceSchema = mongoose.Schema(
     },
 
     price: {
-      type: Array,
-      required: Number,
+      type: Number,
+      required: true,
       required: true,
     },
   },

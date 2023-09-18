@@ -17,6 +17,10 @@ const ResponseMessage = {
   NOT_ALLOW_ADD_POST: 'You are not allowed to add post',
   BEAUTICIAN_CREATE_SUCCESS: 'Beautician Created Successfully!',
   SALON_CREATE_SUCCESS: 'Salon Created Successfully!',
+  SERVICE_TYPE_CREATE_SUCCESS: 'Service Type Created Successfully!',
+  SERVICE_CREATE_SUCCESS: 'Service Created Successfully!',
+  RATING_CREATE_SUCCESS: 'Rating Created Successfully!',
+  SALON_FETCHED_SUCCESS:'Salon fetched Successfully!'
 };
 
 const checkValidId = (id) => {

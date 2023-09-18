@@ -9,7 +9,8 @@ const salonsSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    beautician: { type: mongoose.Schema.Types.ObjectId, ref: 'Beautician' },
+    services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'services' }],
+    beautician: { type: mongoose.Schema.Types.ObjectId, ref: 'beauticians' },
     image: {
       type: String,
       required: false,

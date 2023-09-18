@@ -38,5 +38,5 @@ beauticeanSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   return !!user;
 };
 
-const Beautician = mongoose.model('Beautician', beauticeanSchema);
+const Beautician = mongoose.model('beauticians', beauticeanSchema);
 module.exports = Beautician;
