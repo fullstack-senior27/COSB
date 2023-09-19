@@ -100,6 +100,16 @@ const getServiceBySalon = catchAsync(async (req, res) => {
   const rating = await beauticianService.getServiceBySalon(req.params.id);
   new ApiSuccess(res, httpStatus.OK, ResponseMessage.SALON_FETCHED_SUCCESS, rating);
 });
+
+// test
+
+const test = catchAsync(async (req, res) => {
+
+  const rating = await beauticianService.testService(req);
+
+  new ApiSuccess(res, httpStatus.OK, ResponseMessage.SALON_FETCHED_SUCCESS, rating);
+});
+
 module.exports = {
   createBeautician,
   getAllBeautician,
@@ -115,4 +125,5 @@ module.exports = {
   createRating,
   getAllSalonByBeautician,
   getServiceBySalon,
+  test,
 };
