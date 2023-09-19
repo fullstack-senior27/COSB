@@ -178,23 +178,10 @@ const getsalon = async (searchBody) => {
     });
   }
 
-  if (sort_price === 'low') {
-    aggregationPipeline.push({
-      $sort: {
-        'services.price': 1, // Sort in ascending order (low to high)
-      },
-    });
-  } else {
-    aggregationPipeline.push({
-      $sort: {
-        'services.price': -1, // Sort in descending order (high to low)
-      },
-    });
-  }
 
   let filteredSalons = [];
 
-  const salons = await Salon.aggregate(aggregationPipeline);
+  let salons = await Salon.aggregate(aggregationPipeline);
 
   if (price) {
     const [minPrice, maxPrice] = price.split('-').map(Number);
@@ -207,14 +194,37 @@ const getsalon = async (searchBody) => {
       const filteredServices = salon.services.filter(isServiceInRange);
       return {
         ...salon,
-        services: filteredServices.length > 0 ? filteredServices : [],
+        // services: filteredServices.length > 0 ? filteredServices : [],
+        services: filteredServices,
       };
     });
 
-    const allEmpty = filteredSalons.every((salon) => salon.services.length === 0);
-
-    return allEmpty ? [] : filteredSalons;
+    // const allEmpty = filteredSalons.every((salon) => salon.services.length === 0);
+    const nonEmptySalons = filteredSalons.filter((salon) => salon.services.length > 0);
+    salons = nonEmptySalons;
+    // return allEmpty ? [] : filteredSalons;
   }
+
+  if (sort_price) {
+    if (sort_price === 'low') {
+      salons = salons.map((salon) => {
+        const sortedServices = salon.services.slice().sort((a, b) => a.price - b.price);
+        return {
+          ...salon,
+          services: sortedServices,
+        };
+      });
+    } else if (sort_price === 'high') {
+      salons = salons.map((salon) => {
+        const sortedServices = salon.services.slice().sort((a, b) => b.price - a.price);
+        return {
+          ...salon,
+          services: sortedServices,
+        };
+      });
+    }
+  }
+
   return salons;
 };
 
