@@ -73,18 +73,33 @@ const createService = async (salonBody) => {
 };
 
 const getsalon = async (searchBody) => {
-  const { beautician, service, location, date, price, sort_price, service_type, rating } = searchBody;
+  // console.log(searchBody);
+  const { search, location, date, price, sort_price, service_type, rating } = searchBody;
   let service_typeId = '';
   if (service_type) {
     service_typeId = mongooseDb.Types.ObjectId(service_type);
   }
 
   // console.log(service_type);
+  // const matchCondition = [
+  //   { 'beautician.name': { $regex: search, $options: 'i' } },
+  //   { 'services.name': { $regex: search, $options: 'i' } },
+  //   { address: { $regex: location, $options: 'i' } },
+  // ];
   const matchCondition = [
-    { 'beautician.name': { $regex: beautician, $options: 'i' } },
-    { 'services.name': { $regex: service, $options: 'i' } },
-    { address: { $regex: location, $options: 'i' } },
+    {
+      $or: [
+        { 'beautician.name': { $regex: search, $options: 'i' } },
+        { 'services.name': { $regex: search, $options: 'i' } },
+        // { address: { $regex: location, $options: 'i' } },
+      ],
+    },
+    {
+      address: { $regex: location, $options: 'i' },
+    },
   ];
+
+
 
   if (date) {
     matchCondition.push({
@@ -177,7 +192,6 @@ const getsalon = async (searchBody) => {
       },
     });
   }
-
 
   let filteredSalons = [];
 
