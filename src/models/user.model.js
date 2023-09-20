@@ -6,12 +6,7 @@ const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
-    fname: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    lname: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -27,12 +22,6 @@ const userSchema = mongoose.Schema(
           throw new Error('Invalid email');
         }
       },
-    },
-    phone: {
-      type: String,
-      required: true,
-      default: null,
-      unique: true,
     },
     password: {
       type: String,
@@ -73,11 +62,6 @@ userSchema.plugin(paginate);
  */
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
-  return !!user;
-};
-
-userSchema.statics.isPhoneNoTaken = async function (phone, excludeUserId) {
-  const user = await this.findOne({ phone, _id: { $ne: excludeUserId } });
   return !!user;
 };
 
