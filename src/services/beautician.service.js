@@ -86,6 +86,7 @@ const getsalon = async (searchBody) => {
   //   { 'services.name': { $regex: search, $options: 'i' } },
   //   { address: { $regex: location, $options: 'i' } },
   // ];
+  
   const matchCondition = [
     {
       $or: [
