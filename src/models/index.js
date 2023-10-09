@@ -1,7 +1,9 @@
 module.exports.Token = require('./token.model');
 module.exports.User = require('./user.model');
-module.exports.Beautician = require('./beautician.model');
+// module.exports.Beautician = require('./beautician.model');
 module.exports.Salon = require('./salon.model');
 module.exports.Service = require('./service.model');
-module.exports.ServiceType=require('./serviceType.model');
-module.exports.Rating=require('./rating.model');
+module.exports.ServiceCategory = require('./serviceCategory.model');
+module.exports.Review = require('./review.model');
+module.exports.Blog = require('./blog.model');
+module.exports.BlogCategory = require('./blogCategory.model');

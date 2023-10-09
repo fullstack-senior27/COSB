@@ -2,29 +2,48 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
 
-const salonsSchema = mongoose.Schema(
+const salonSchema = mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
       trim: true,
     },
-    services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'services' }],
-    beautician: { type: mongoose.Schema.Types.ObjectId, ref: 'beauticians' },
-    image: {
+    about: {
       type: String,
-      required: false,
-      default: null,
+      required: true
     },
+    contact: {
+      type: String,
+      required: true
+    },
+    services: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service'
+      }
+    ],
+    beautician: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    service_categories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Service_category"
+      }
+    ],
+    images: [
+      {
+        type: String,
+        required: false,
+        default: null,
+      }
+    ],
     address: {
       type: String,
       required: true,
       trim: true,
-    },
-    is_verified: {
-      type: Boolean,
-      required: false,
-      default: false,
     },
     morning: {
       type: Array,
@@ -34,13 +53,20 @@ const salonsSchema = mongoose.Schema(
       type: Array,
       required: false,
     },
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review'
+      }
+
+    ]
   },
   {
     timestamps: true,
   }
 );
 
-salonsSchema.plugin(toJSON);
+salonSchema.plugin(toJSON);
 
-const Salon = mongoose.model('salons', salonsSchema);
+const Salon = mongoose.model('Salon', salonSchema);
 module.exports = Salon;

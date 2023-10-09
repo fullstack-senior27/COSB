@@ -6,15 +6,20 @@ const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
-    fname: {
+    firstName: {
       type: String,
       required: true,
       trim: true,
     },
-    lname: {
+    lastName: {
       type: String,
       required: true,
       trim: true,
+    },
+    image: {
+      type: String,
+      required: false,
+      default: null
     },
     email: {
       type: String,
@@ -31,7 +36,6 @@ const userSchema = mongoose.Schema(
     phone: {
       type: String,
       required: true,
-      default: null,
       unique: true,
     },
     password: {
@@ -55,6 +59,18 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    salons: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Salon'
+      }
+    ],
+    blogs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Blog'
+      }
+    ]
   },
   {
     timestamps: true,

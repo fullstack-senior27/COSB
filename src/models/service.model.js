@@ -10,18 +10,25 @@ const serviceSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    salon: { type: mongoose.Schema.Types.ObjectId, ref: 'salons' },
-    service_type: { type: mongoose.Schema.Types.ObjectId, ref: 'service_types' },
-    time: {
-      type: String,
-      required: true,
-      trim: true,
+    salon: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Salon'
     },
-
+    service_category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service_category'
+    },
+    isAvailable: {
+      type: Boolean,
+      default: false
+    },
+    durationInMinutes: {
+      type: Number,
+      required: true
+    },
     price: {
       type: Number,
-      required: true,
-      required: true,
+      required: true
     },
   },
   {
@@ -30,6 +37,7 @@ const serviceSchema = mongoose.Schema(
 );
 
 serviceSchema.plugin(toJSON);
+serviceSchema.plugin(paginate);
 
-const Service = mongoose.model('services', serviceSchema);
+const Service = mongoose.model('Service', serviceSchema);
 module.exports = Service;

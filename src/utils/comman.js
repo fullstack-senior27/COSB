@@ -7,6 +7,7 @@ const ResponseMessage = {
   FAIL: 'Fail!',
   SIGNUP_SUCCESS: 'You Have Successfully Registered!',
   LOGIN_SUCCESS: 'You Have Successfully LoggedIn!',
+  RESET_SUCCESS: 'You have successfully reset your password',
   LOGOUT_SUCCESS: 'You Have Successfully Logout!',
   EMAIL_VERIFY_SUCCESS: 'Email Verified Successfully!',
   GROUP_CREATE_SUCCESS: 'Group Created Successfully!',
@@ -20,7 +21,7 @@ const ResponseMessage = {
   SERVICE_TYPE_CREATE_SUCCESS: 'Service Type Created Successfully!',
   SERVICE_CREATE_SUCCESS: 'Service Created Successfully!',
   RATING_CREATE_SUCCESS: 'Rating Created Successfully!',
-  SALON_FETCHED_SUCCESS:'Salon fetched Successfully!'
+  SALON_FETCHED_SUCCESS: 'Salon fetched Successfully!'
 };
 
 const checkValidId = (id) => {
