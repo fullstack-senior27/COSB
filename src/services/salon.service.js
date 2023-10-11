@@ -21,8 +21,6 @@ price_range = {
   "min": number,
   "max": number
 }
-*/
-
 /**
  * Create a user
  * @returns {Promise<QueryResult>}
@@ -185,20 +183,6 @@ const filterSalons = async (filters) => {
     {
       $unwind: '$beautician'
     }
-    // {
-    //   $unwind: '$services'
-    // },
-    // {
-    //   $unwind: '$service_categories'
-    // }
-    // {
-    //   $group: {
-    //     _id: '_id',
-    //     owner_name: { $first: '$owner' },
-    //     salon_name: { $first: '$name' },
-    //     services: { $push: '$services' }, // Collect all services in an array
-    //   },
-    // }
   ]
 
   if (service_type) {

@@ -10,6 +10,10 @@ const serviceSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    description: {
+      type: String,
+      required: true,
+    },
     salon: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Salon'
