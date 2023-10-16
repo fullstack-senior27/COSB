@@ -1,16 +1,27 @@
 const httpStatus = require('http-status');
-const { Salon, Service, Category } = require('../models');
+const { Salon, Service, Category, ServiceType, Beautician } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { filter, http } = require('../config/logger');
 const mongoose = require('mongoose');
+const { beauticianService } = require('./index');
 
-const createService = async ({ name, price, durationInMinutes, category }) => {
+const createService = async ({ name, price, description, durationInMinutes, category, serviceType }, cur_user) => {
   const service = await Service.create({
     name,
     price,
+    description,
     durationInMinutes,
     service_category: category,
+    service_type: serviceType,
+    beautician: cur_user._id
   })
+
+  const updatedType = await ServiceType.findById(serviceType);
+  updatedType.services.push(service);
+  await updatedType.save();
+  const beautician = await Beautician.findById(cur_user._id);
+  beautician.services.push(service._id);
+  await beautician.save();
   return service;
 }
 

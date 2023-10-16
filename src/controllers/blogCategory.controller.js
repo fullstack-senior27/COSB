@@ -26,7 +26,19 @@ const listBlogCategories = catchAsync(async (req, res) => {
   })
 })
 
+const updateBlogCategory = catchAsync(async (req, res) => {
+  const blogCategory = await blogCategoryService.updateBlogCategory(req.params.category_id, req.body);
+  return new ApiSuccess(res, httpStatus.OK, "Blog Category updated successfully", blogCategory);
+})
+
+const deleteBlogCategory = catchAsync(async (req, res) => {
+  const blogCategory = await blogCategoryService.deleteBlogCategory(req.params.category_id);
+  return new ApiSuccess(res, httpStatus.NO_CONTENT, 'Blog category deleted successfully')
+})
+
 module.exports = {
   createBlogCategory,
-  listBlogCategories
+  listBlogCategories,
+  updateBlogCategory,
+  deleteBlogCategory
 };

@@ -1,22 +1,30 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const { serviceController } = require('../../controllers');
+const { serviceController, serviceTypeController, serviceCategoryController } = require('../../controllers');
 
 // service routes  
 const router = express.Router();
-router
-  .route('/create')
-  .post(auth('manageSalons'), serviceController.createService)
+// router
+//   .route('/create')
+//   .post(auth('beautician', 'manageServices'), serviceController.createService)
 
 router
-  .route('/')
-  .get(auth(), serviceController.getAllServices)
+  .route('/all')
+  .get(serviceController.getAllServices)
 
 router
-  .route('/:service_id')
-  .get(auth(), serviceController.getService)
-  .patch(auth('manageSalons'), serviceController.updateService)
-  .delete(auth('manageSalons'), serviceController.deleteService)
+  .route('/categories/all')
+  .get(serviceCategoryController.getAllCategories)
+
+router
+  .route('/types/all')
+  .get(serviceTypeController.getAllServiceTypes)
+
+// router
+//   .route('/:service_id')
+//   .get(serviceController.getService)
+//   .patch(auth('beautician'), serviceController.updateService)
+//   .delete(auth('beautician'), serviceController.deleteService)
 
 module.exports = router;

@@ -2,9 +2,19 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
-const { roles } = require('../config/roles');
 
-const userSchema = mongoose.Schema(
+const noteSchema = mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: String,
+    required: true
+  }
+})
+
+const beauticianSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -47,18 +57,82 @@ const userSchema = mongoose.Schema(
     },
     role: {
       type: String,
-      default: 'user',
+      default: 'beautician',
     },
+    photos: [
+      {
+        type: String,
+        default: null
+      }
+    ],
+    about: {
+      type: String,
+    },
+    website: {
+      type: String
+    },
+    notes: [
+      noteSchema
+    ],
     isEmailVerified: {
       type: Boolean,
       default: false,
     },
+    services: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service'
+      }
+    ],
+    // service_categories: [
+    //   { 
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Service_category'
+    //   }
+    // ],
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review'
+      }
+    ],
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+      }
+    ],
+    availability: [
+      {
+        day: String,
+        isAvailable: {
+          type: Boolean,
+          default: false
+        }
+      }
+    ],
+    clients: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Client'
+      }
+    ],
     appointments: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Appointment'
       }
-    ]
+    ],
+    salon_number: {
+      type: String
+    },
+    business_name: {
+      type: String
+    },
+    address: {
+      type: String,
+      trim: true
+    }
   },
   {
     timestamps: true,
@@ -66,8 +140,8 @@ const userSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-userSchema.plugin(toJSON);
-userSchema.plugin(paginate);
+beauticianSchema.plugin(toJSON);
+beauticianSchema.plugin(paginate);
 
 /**
  * Check if email is taken
@@ -75,12 +149,12 @@ userSchema.plugin(paginate);
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+beauticianSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
   return !!user;
 };
 
-userSchema.statics.isPhoneNoTaken = async function (phone, excludeUserId) {
+beauticianSchema.statics.isPhoneNoTaken = async function (phone, excludeUserId) {
   const user = await this.findOne({ phone, _id: { $ne: excludeUserId } });
   return !!user;
 };
@@ -90,12 +164,12 @@ userSchema.statics.isPhoneNoTaken = async function (phone, excludeUserId) {
  * @param {string} password
  * @returns {Promise<boolean>}
  */
-userSchema.methods.isPasswordMatch = async function (password) {
+beauticianSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
   return bcrypt.compare(password, user.password);
 };
 
-userSchema.pre('save', async function (next) {
+beauticianSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8);
@@ -103,9 +177,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-/**
- * @typedef User
- */
-const User = mongoose.model('User', userSchema);
+const Beautician = mongoose.model('Beautician', beauticianSchema);
 
-module.exports = User;
+module.exports = Beautician;

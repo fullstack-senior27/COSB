@@ -1,7 +1,8 @@
 const httpStatus = require('http-status');
-const { Blog, BlogCategory, User } = require('../models');
+const { Blog, BlogCategory, User, Beautician, Admin } = require('../models');
 const ApiError = require('../utils/ApiError');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { adminService, blogService } = require('.');
 
 const getBlogs = async () => {
   // options.populate = "user, blog_category";
@@ -13,22 +14,20 @@ const getBlogsByTopic = async (blogCategoryId) => {
   const blogs = await Blog.find({
     blog_category: blogCategoryId
   }).populate('user').populate('blog_category');
-  return blogs;
+  return blogs
 }
 
 const createBlog = async ({ title, description, blogCategoryId }, cur_user) => {
+  console.log(cur_user)
   const blog = await Blog.create({
     title,
     description,
     blog_category: blogCategoryId,
-    user: cur_user._id
+    author: cur_user._id
   })
-  const user = await User.findById(cur_user._id);
-  user.blogs.push(blog._id);
-  await user.save();
-  // console.log(user);
-
-
+  const admin = await Admin.findById(cur_user._id);
+  admin.blogs.push(blog._id);
+  await admin.save();
   return blog;
 }
 
@@ -48,10 +47,17 @@ const updateBlog = async (blog_id, updateBody) => {
 }
 
 const deleteBlog = async (blog_id) => {
-  const deletedBlog = await Blog.findByIdAndDelete(blog_id);
+  const deletedBlog = await getBlogById(blog_id);
   if (!deletedBlog) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Blog does not exist', false);
   }
+  // console.log(deletedBlog)
+  // // const updatedAdmin = await adminService.getAdminById(deletedBlog.author);
+  // const updatedAdmin = await Admin.findByIdAndUpdate(deletedBlog.author, {
+  //   $pull: { blogs: blog_id }
+  // }, { new: true })
+  await deletedBlog.remove();
+  // console.log(updatedAdmin);
   return deletedBlog;
 }
 

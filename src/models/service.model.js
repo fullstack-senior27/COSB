@@ -14,13 +14,17 @@ const serviceSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    salon: {
+    beautician: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Salon'
+      ref: 'Beautician'
     },
     service_category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Service_category'
+    },
+    service_type: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service_type'
     },
     isAvailable: {
       type: Boolean,

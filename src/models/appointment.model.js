@@ -9,8 +9,14 @@ const appointmentSchema = mongoose.Schema({
   },
   salon: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Salon'
+    ref: 'Beautician'
   },
+  services: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Service"
+    }
+  ],
   date: {
     type: Date,
     required: true

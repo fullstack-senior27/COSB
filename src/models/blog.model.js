@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
 const blogSchema = mongoose.Schema({
-  user: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "Beautician"
   },
   title: {
     type: String,

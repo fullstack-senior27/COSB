@@ -7,13 +7,13 @@ const mongoose = require('mongoose');
 const createCategory = async ({ name }) => {
   const existingCategory = await ServiceCategory.findOne({ name })
   if (existingCategory) {
-    throw new ApiError(httpStatus.CONFLICT, 'Category already exists', false);
+    throw new ApiError(httpStatus.CONFLICT, 'Category already exists');
   }
 
   const category = await ServiceCategory.create({
     name,
   })
-  console.log(category)
+
   return category;
 }
 
@@ -40,7 +40,7 @@ const updateCategory = async (category_id, updateBody) => {
   Object.assign(updatedCategory, updateBody);
   console.log(updatedCategory);
   updatedCategory.save()
-  return updatedCategory;
+  return updatedCategory
 }
 
 module.exports = {

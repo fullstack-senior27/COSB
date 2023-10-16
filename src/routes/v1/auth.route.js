@@ -3,17 +3,40 @@ const validate = require('../../middlewares/validate');
 const authValidation = require('../../validations/auth.validation');
 const authController = require('../../controllers/auth.controller');
 const auth = require('../../middlewares/auth');
+const { beauticianController, adminController } = require('../../controllers');
 
 const router = express.Router();
 
-router.post('/register', validate(authValidation.register), authController.register);
-router.post('/login', validate(authValidation.login), authController.login);
-router.post('/logout', validate(authValidation.logout), authController.logout);
-router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
-router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
-router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
-router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
-router.post('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
+// user auth
+
+router.post('/register/user', validate(authValidation.register), authController.register);
+router.post('/login/user', validate(authValidation.login), authController.login);
+router.post('/logout/user', validate(authValidation.logout), authController.logout);
+router.post('/refresh-tokens/user', validate(authValidation.refreshTokens), authController.refreshTokens);
+router.post('/forgot-password/user', validate(authValidation.forgotPassword), authController.forgotPassword);
+router.post('/reset-password/user', validate(authValidation.resetPassword), authController.resetPassword);
+router.post('/send-verification-email/user', auth('user'), authController.sendVerificationEmail);
+router.post('/verify-email/user', validate(authValidation.verifyEmail), authController.verifyEmail);
+
+
+// beautician auth
+router.post('/register/beautician', validate(authValidation.register), beauticianController.register);
+router.post('/login/beautician', validate(authValidation.login), beauticianController.login);
+router.post('/logout/beautician', validate(authValidation.logout), beauticianController.logout);
+router.post('/refresh-tokens/beautician', validate(authValidation.refreshTokens), beauticianController.refreshTokens);
+router.post('/forgot-password/beautician', validate(authValidation.forgotPassword), beauticianController.forgotPassword);
+router.post('/reset-password/beautician', validate(authValidation.resetPassword), beauticianController.resetPassword);
+router.post('/send-verification-email/beautician', auth('beautician'), beauticianController.sendVerificationEmail);
+router.post('/verify-email/beautician', validate(authValidation.verifyEmail), beauticianController.verifyEmail);
+
+// admin auth
+router.post('/register/admin', validate(authValidation.register), adminController.register);
+router.post('/login/admin', validate(authValidation.login), adminController.login);
+router.post('/logout/admin', validate(authValidation.logout), adminController.logout);
+router.post('/refresh-tokens/admin', validate(authValidation.refreshTokens), adminController.refreshTokens);
+router.post('/forgot-password/admin', validate(authValidation.forgotPassword), adminController.forgotPassword);
+router.post('/reset-password/admin', validate(authValidation.resetPassword), adminController.resetPassword);
+
 
 module.exports = router;
 

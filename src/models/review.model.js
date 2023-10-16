@@ -9,7 +9,7 @@ const reviewSchema = mongoose.Schema({
   },
   salon: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Salon'
+    ref: 'Beautician'
   },
   text: {
     type: String,

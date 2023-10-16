@@ -7,9 +7,6 @@ const createBlogCategory = async (name) => {
   const blogCategory = await BlogCategory.create({
     name
   })
-  if (!blogCategory) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Bad request', false);
-  }
   return blogCategory;
 }
 
@@ -18,7 +15,22 @@ const listBlogCategories = async () => {
   return blogCategories;
 }
 
+const updateBlogCategory = async (category_id, updateBody) => {
+  const blogCategory = await BlogCategory.findById(category_id);
+  Object.assign(blogCategory, updateBody);
+  await blogCategory.save()
+  return blogCategory;
+}
+
+const deleteBlogCategory = async (category_id) => {
+  const blogCategory = await BlogCategory.findById(category_id);
+  await blogCategory.remove();
+  return blogCategory;
+}
+
 module.exports = {
   createBlogCategory,
-  listBlogCategories
+  listBlogCategories,
+  updateBlogCategory,
+  deleteBlogCategory
 }

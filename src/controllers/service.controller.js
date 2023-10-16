@@ -7,7 +7,7 @@ const { _service } = require('../services');
 
 const createService = catchAsync(async (req, res) => {
   console.log(req.body)
-  const createdService = await _service.createService(req.body)
+  const createdService = await _service.createService(req.body, req.user)
   return res.status(201).json({
     code: httpStatus.CREATED,
     message: "Service created successfully!",
@@ -62,6 +62,7 @@ const getAllServices = catchAsync(async (req, res) => {
     }
   })
 })
+
 
 const updateService = catchAsync(async (req, res) => {
   const updatedService = await _service.updateService(req.params.service_id, req.body)

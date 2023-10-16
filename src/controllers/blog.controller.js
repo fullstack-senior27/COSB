@@ -7,6 +7,7 @@ const ApiSuccess = require('../utils/ApiSuccess');
 
 
 const createBlog = catchAsync(async (req, res) => {
+  console.log("cur_user: ", req.user);
   const createdBlog = await blogService.createBlog(req.body, req.user)
   return res.status(201).json({
     code: httpStatus.CREATED,
@@ -50,7 +51,7 @@ const getBlogs = catchAsync(async (req, res) => {
     message: 'Blogs fetched successfully',
     isSuccess: true,
     data: {
-      salons: paginatedBlogs,
+      results: paginatedBlogs,
       totalPages: Math.ceil(blogs.length / limit),
       currentPage: page,
       limit: limit,
