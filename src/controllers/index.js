@@ -7,3 +7,4 @@ module.exports.serviceCategoryController = require('./serviceCategory.controller
 module.exports.beauticianController = require('./beautician.controller');
 module.exports.adminController = require('./admin.controller');
 module.exports.serviceTypeController = require('./serviceType.controller');
+module.exports.appointmentController = require('./appointment.controller');

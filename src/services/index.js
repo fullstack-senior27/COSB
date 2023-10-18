@@ -9,3 +9,4 @@ module.exports.blogService = require('./blog.service');
 module.exports.blogCategoryService = require('./blogCategory.service');
 module.exports.beauticianService = require('./beautician.service');
 module.exports.serviceTypeService = require('./serviceType.service');
+module.exports.appointmentService = require('./appointment.service');

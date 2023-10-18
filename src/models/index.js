@@ -8,3 +8,4 @@ module.exports.ServiceType = require('./serviceType.model');
 module.exports.Review = require('./review.model');
 module.exports.Blog = require('./blog.model');
 module.exports.BlogCategory = require('./blogCategory.model');
+module.exports.Appointment = require('./appointment.model');

@@ -10,12 +10,6 @@ const serviceTypeSchema = mongoose.Schema(
       trim: true,
       unique: true,
     },
-    services: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Service'
-      }
-    ]
   },
   {
     timestamps: true,

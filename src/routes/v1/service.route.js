@@ -5,13 +5,10 @@ const { serviceController, serviceTypeController, serviceCategoryController } = 
 
 // service routes  
 const router = express.Router();
-// router
-//   .route('/create')
-//   .post(auth('beautician', 'manageServices'), serviceController.createService)
 
 router
-  .route('/all')
-  .get(serviceController.getAllServices)
+  .route('/')
+  .get(serviceController.getServicesByBeautician)
 
 router
   .route('/categories/all')

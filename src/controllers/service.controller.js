@@ -3,10 +3,10 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { _service } = require('../services');
+const ApiSuccess = require('../utils/ApiSuccess');
 
 
 const createService = catchAsync(async (req, res) => {
-  console.log(req.body)
   const createdService = await _service.createService(req.body, req.user)
   return res.status(201).json({
     code: httpStatus.CREATED,
@@ -78,7 +78,7 @@ const updateService = catchAsync(async (req, res) => {
 })
 
 const deleteService = catchAsync(async (req, res) => {
-  const deletedService = await _service.deleteService(req.params.service_id)
+  const deletedService = await _service.deleteService(req.params.service_id, req.user)
   if (!deletedService) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Service not found', false)
   }
@@ -90,11 +90,16 @@ const deleteService = catchAsync(async (req, res) => {
   })
 })
 
+const getServicesByBeautician = catchAsync(async (req, res) => {
+  const services = await _service.getServicesByBeauticianId(req.body.beauticianId);
+  return new ApiSuccess(res, httpStatus.OK, "Services fetched successfully", services);
+})
 
 module.exports = {
   createService,
   getService,
   getAllServices,
   updateService,
-  deleteService
+  deleteService,
+  getServicesByBeautician
 };

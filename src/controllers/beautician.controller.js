@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { beauticianService, authService, tokenService } = require('../services');
+const { beauticianService, authService, tokenService, _service } = require('../services');
 const ApiSuccess = require('../utils/ApiSuccess');
 const { ResponseMessage } = require('../utils/comman');
 
@@ -63,7 +63,7 @@ const getProfile = catchAsync(async (req, res) => {
 
 const updateBeautician = catchAsync(async (req, res) => {
   const user = await beauticianService.updateBeauticianById(req.user._id, req.body);
-  return new ApiSuccess(res, 201, "User updated successfully", user);
+  return new ApiSuccess(res, httpStatus.OK, "User updated successfully", user);
 });
 
 const deleteBeautician = catchAsync(async (req, res) => {
@@ -99,6 +99,8 @@ const getBeauticians = catchAsync(async (req, res) => {
   })
 })
 
+
+
 module.exports = {
   register,
   login,
@@ -111,5 +113,5 @@ module.exports = {
   sendVerificationEmail,
   verifyEmail,
   deleteBeautician,
-  getBeauticians
+  getBeauticians,
 };

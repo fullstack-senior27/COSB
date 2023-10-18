@@ -7,7 +7,11 @@ const router = express.Router();
 
 router
   .route('/profile')
-  .get(auth('beautician'), beauticianController.getProfile)
+  .get(auth('beautician', 'manageBeauticianProfile'), beauticianController.getProfile)
+
+router
+  .route('/edit')
+  .patch(auth('beautician', 'manageBeauticianProfile'), beauticianController.updateBeautician)
 
 router
   .route('/')

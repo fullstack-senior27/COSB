@@ -43,7 +43,7 @@ const deleteServiceType = async (serviceTypeId) => {
 }
 
 const getAllServiceTypes = async () => {
-  const types = await ServiceType.find().populate('services');
+  const types = await ServiceType.find();
   return types;
 }
 

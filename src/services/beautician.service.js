@@ -48,15 +48,14 @@ const deleteBeauticianById = async (beauticianId) => {
   return beautician;
 };
 
+
 const getAllBeauticians = async () => {
-  const beauticians = await Beautician.find().populate('services').populate({
-    path: 'services',
-    populate: 'service_category'
-  });
+  const beauticians = await Beautician.find();
   return beauticians;
 }
 
 const filterBeauticians = async (search, location, date, price_range, service_type) => {
+  console.log(search);
   const matchConditions = [
     {
       $or: [
@@ -69,9 +68,32 @@ const filterBeauticians = async (search, location, date, price_range, service_ty
       ]
     },
     {
-      address: { $regex: `${location}`, $options: 'i' }
+      'address': { $regex: `${location}`, $options: 'i' }
     }
   ]
+
+  if (date) {
+    const startDate = new Date(date);
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999)
+    matchConditions.push(
+      {
+        $and: [
+          {
+            "availability": {
+              $elemMatch: {
+                "date": {
+                  $gte: startDate,
+                  $lte: endDate
+                }
+              }
+            }
+          },
+          { "availability.isAvailable": { $eq: true } },
+        ]
+      });
+  }
+
   const aggregationPipeline = [
     {
       $lookup: {
@@ -83,7 +105,7 @@ const filterBeauticians = async (search, location, date, price_range, service_ty
     },
     {
       $match: {
-        $and: matchConditions
+        $or: matchConditions
       }
     }
   ]

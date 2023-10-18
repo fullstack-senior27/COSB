@@ -1,6 +1,15 @@
 const allRoles = {
-  user: ['readBlogs', 'viewServices', 'manageUserProfile'],
-  beautician: ['readBlogs', 'manageServices', 'manageBeauticianProfile'],
+  user: [
+    'readBlogs',
+    'viewServices',
+    'manageUserProfile',
+    'makeAppointments',
+    'manageAppointments',
+    'manageProfile'],
+  beautician: [
+    'readBlogs',
+    'manageServices',
+    'manageBeauticianProfile'],
   admin: ['manageBlogs', 'manageServiceTypes'],
 };
 

@@ -84,12 +84,12 @@ const beauticianSchema = mongoose.Schema(
         ref: 'Service'
       }
     ],
-    // service_categories: [
-    //   { 
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Service_category'
-    //   }
-    // ],
+    service_categories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service_category'
+      }
+    ],
     reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -104,7 +104,10 @@ const beauticianSchema = mongoose.Schema(
     ],
     availability: [
       {
+        date: Date,
         day: String,
+        startTime: String,
+        endTime: String,
         isAvailable: {
           type: Boolean,
           default: false

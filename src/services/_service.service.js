@@ -15,12 +15,9 @@ const createService = async ({ name, price, description, durationInMinutes, cate
     service_type: serviceType,
     beautician: cur_user._id
   })
-
-  const updatedType = await ServiceType.findById(serviceType);
-  updatedType.services.push(service);
-  await updatedType.save();
   const beautician = await Beautician.findById(cur_user._id);
-  beautician.services.push(service._id);
+  console.log("beautician: ", beautician);
+  beautician.services?.push(service._id);
   await beautician.save();
   return service;
 }
@@ -46,9 +43,20 @@ const updateService = async (service_id, updateBody) => {
   return updatedService;
 }
 
-const deleteService = async (service_id) => {
+const deleteService = async (service_id, cur_user) => {
+  const beautician = await Beautician.findById(cur_user._id)
+  beautician.services = beautician.services.filter(s => s._id != service_id);
+  await beautician.save();
   const deletedService = await Service.findByIdAndDelete(service_id)
+  console.log(beautician)
   return deletedService;
+}
+
+const getServicesByBeauticianId = async (beautician_id) => {
+  const services = await Service.find({
+    beautician: beautician_id
+  }).populate('service_category')
+  return services;
 }
 
 module.exports = {
@@ -56,5 +64,6 @@ module.exports = {
   getServiceById,
   getAllServices,
   updateService,
-  deleteService
+  deleteService,
+  getServicesByBeauticianId
 };

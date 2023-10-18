@@ -7,7 +7,7 @@ const appointmentSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  salon: {
+  beautician: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Beautician'
   },
@@ -20,6 +20,19 @@ const appointmentSchema = mongoose.Schema({
   date: {
     type: Date,
     required: true
+  },
+  amount: {
+    type: Number,
+    required: true
+  },
+  zipcode: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ["confirmed", "cancelled"],
+    default: "confirmed"
   }
 })
 
