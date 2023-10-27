@@ -16,7 +16,7 @@ const createBeautician = async (beauticianBody) => {
 
 
 const getBeauticianById = async (id) => {
-  return Beautician.findById(id);
+  return Beautician.findById(id).populate('services').populate('service_categories').populate('products').populate('reviews');
 };
 
 
@@ -54,8 +54,7 @@ const getAllBeauticians = async () => {
   return beauticians;
 }
 
-const filterBeauticians = async (search, location, date, price_range, service_type) => {
-  console.log(search);
+const filterBeauticians = async (search, location, date, price_range, service_type, sort_price, avgRating) => {
   const matchConditions = [
     {
       $or: [
@@ -70,12 +69,12 @@ const filterBeauticians = async (search, location, date, price_range, service_ty
     {
       'address': { $regex: `${location}`, $options: 'i' }
     }
-  ]
+  ];
 
   if (date) {
     const startDate = new Date(date);
     const endDate = new Date(date);
-    endDate.setHours(23, 59, 59, 999)
+    endDate.setHours(23, 59, 59, 999);
     matchConditions.push(
       {
         $and: [
@@ -104,14 +103,93 @@ const filterBeauticians = async (search, location, date, price_range, service_ty
       }
     },
     {
+      $lookup: {
+        from: 'reviews',
+        localField: 'reviews',
+        foreignField: '_id',
+        as: 'reviews'
+      }
+    },
+    {
+      $addFields: {
+        ratingCount: { $size: '$reviews.rating' }, // Count the total ratings
+        avgRating: {
+          $avg: {
+            $map: {
+              input: '$reviews',
+              as: 'review',
+              in: '$$review.rating',
+            },
+          },
+        },
+      },
+    },
+    {
       $match: {
         $or: matchConditions
       }
+    },
+    // {
+    //   $unwind: "$services"
+    // },
+    // {
+    //   $unwind: '$reviews'
+    // }
+  ];
+
+  const example = await Beautician.aggregate(aggregationPipeline);
+  console.log(example)
+  // Apply additional filters (e.g., price range and rating) to the existing pipeline
+  if (price_range) {
+    const { minPrice, maxPrice } = price_range;
+    aggregationPipeline.push({
+      $match: {
+        "services.price": { $gte: minPrice, $lte: maxPrice }
+      }
+    });
+  }
+
+  if (avgRating) {
+    aggregationPipeline.push({
+      $match: {
+        avgRating: { $eq: avgRating }
+      }
+    });
+  }
+
+  // Apply sorting if needed
+  if (sort_price) {
+    if (sort_price === 'asc') {
+      aggregationPipeline.push({
+        $sort: { "services.price": 1 }
+      });
+    } else {
+      aggregationPipeline.push({
+        $sort: { "services.price": -1 }
+      });
     }
-  ]
-  const beauticians = Beautician.aggregate(aggregationPipeline);
-  return beauticians;
+  }
+
+  const result = await Beautician.aggregate(aggregationPipeline);
+  await Beautician.populate(result, {
+    path: 'services.service_type',
+    model: 'Service_type'
+  })
+  const finalResults = []
+  if (service_type) {
+    for (let res of result) {
+      for (let service of res.services) {
+        if (service.service_type.name.localeCompare(service_type, "en", { sensitivity: "base" }) === 0) {
+          finalResults.push(res);
+        }
+      }
+    }
+    return finalResults;
+  }
+  return result;
 }
+
+
 
 module.exports = {
   createBeautician,

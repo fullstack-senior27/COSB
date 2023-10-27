@@ -104,10 +104,22 @@ const beauticianSchema = mongoose.Schema(
     ],
     availability: [
       {
-        date: Date,
-        day: String,
-        startTime: String,
-        endTime: String,
+        date: {
+          type: Date,
+          default: ""
+        },
+        day: {
+          type: String,
+          default: ""
+        },
+        startTime: {
+          type: String,
+          default: ""
+        },
+        endTime: {
+          type: String,
+          default: ""
+        },
         isAvailable: {
           type: Boolean,
           default: false
@@ -120,12 +132,12 @@ const beauticianSchema = mongoose.Schema(
         ref: 'Client'
       }
     ],
-    appointments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Appointment'
-      }
-    ],
+    // appointments: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Appointment'
+    //   }
+    // ],
     salon_number: {
       type: String
     },

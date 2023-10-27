@@ -53,12 +53,12 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    appointments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Appointment'
-      }
-    ]
+    // appointments: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Appointment'
+    //   }
+    // ]
   },
   {
     timestamps: true,

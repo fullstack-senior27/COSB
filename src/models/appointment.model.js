@@ -21,6 +21,10 @@ const appointmentSchema = mongoose.Schema({
     type: Date,
     required: true
   },
+  startTime: {
+    type: String,
+    required: true
+  },
   amount: {
     type: Number,
     required: true
@@ -33,6 +37,11 @@ const appointmentSchema = mongoose.Schema({
     type: String,
     enum: ["confirmed", "cancelled"],
     default: "confirmed"
+  },
+  paymentStatus: {
+    type: String,
+    enum: ["paid", "pending"],
+    default: "pending"
   }
 })
 

@@ -8,3 +8,5 @@ module.exports.beauticianController = require('./beautician.controller');
 module.exports.adminController = require('./admin.controller');
 module.exports.serviceTypeController = require('./serviceType.controller');
 module.exports.appointmentController = require('./appointment.controller');
+module.exports.availabilityController = require('./availability.controller');
+module.exports.productController = require('./product.controller');

@@ -9,3 +9,4 @@ module.exports.Review = require('./review.model');
 module.exports.Blog = require('./blog.model');
 module.exports.BlogCategory = require('./blogCategory.model');
 module.exports.Appointment = require('./appointment.model');
+module.exports.Product = require('./product.model');

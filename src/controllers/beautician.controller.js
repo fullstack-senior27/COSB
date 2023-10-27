@@ -55,10 +55,11 @@ const verifyEmail = catchAsync(async (req, res) => {
 
 const getProfile = catchAsync(async (req, res) => {
   const beautician = await beauticianService.getBeauticianById(req.user._id);
+  console.log("beautician: ", beautician);
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  return new ApiSuccess(res, httpStatus.OK, "User found successfully");
+  return new ApiSuccess(res, httpStatus.OK, "User found successfully", beautician);
 });
 
 const updateBeautician = catchAsync(async (req, res) => {
@@ -78,8 +79,8 @@ const getBeauticians = catchAsync(async (req, res) => {
   const limit = parseInt(options.limit) || 10;
   const skip = (page - 1) * limit;
   if (req.body.filters) {
-    const { search, location, date, price_range, service_type } = req.body.filters
-    beauticians = await beauticianService.filterBeauticians(search, location, date, price_range, service_type);
+    const { search, location, date, price_range, service_type, sort_price } = req.body.filters
+    beauticians = await beauticianService.filterBeauticians(search, location, date, price_range, service_type, sort_price);
   }
   else {
     beauticians = await beauticianService.getAllBeauticians();

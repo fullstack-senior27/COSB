@@ -7,7 +7,7 @@ const reviewSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  salon: {
+  beautician: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Beautician'
   },

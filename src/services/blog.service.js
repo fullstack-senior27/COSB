@@ -6,7 +6,7 @@ const { adminService, blogService } = require('.');
 
 const getBlogs = async () => {
   // options.populate = "user, blog_category";
-  const blogs = await Blog.find().populate('user').populate('blog_category');
+  const blogs = await Blog.find().populate('user').populate('blog_category').sort({ createdAt: 'desc' });
   return blogs
 }
 

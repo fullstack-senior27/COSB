@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { userService, appointmentService } = require('../services');
+const { userService, appointmentService, reviewService } = require('../services');
 const ApiSuccess = require('../utils/ApiSuccess');
 
 const createUser = catchAsync(async (req, res) => {
@@ -40,25 +40,9 @@ const getProfile = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Profile fetched successfully", user);
 })
 
-const getAppointmentsByUserId = catchAsync(async (req, res) => {
-  const appointments = await appointmentService.getAppointmentsByUserId(req.user._id);
-  const options = pick(req.query, ['limit', 'page'])
-  const page = parseInt(options.page) || 1; // Current page, default to 1 if not provided
-  const limit = parseInt(options.limit) || 10;
-  const skip = (page - 1) * limit;
-  const paginatedAppointments = appointments.slice(skip, skip + limit);
-  return res.status(httpStatus.OK).json({
-    code: httpStatus.OK,
-    message: 'Appointments fetched successfully',
-    isSuccess: true,
-    data: {
-      results: paginatedAppointments,
-      totalPages: Math.ceil(appointments.length / limit),
-      currentPage: page,
-      limit: limit,
-      totalResults: paginatedAppointments.length
-    }
-  })
+const reviewBeautician = catchAsync(async (req, res) => {
+  const beautician = await reviewService.createReview(req.body, req.user._id);
+  return new ApiSuccess(res, httpStatus.OK, "Review added successfully", beautician)
 })
 
 module.exports = {
@@ -68,5 +52,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getProfile,
-  getAppointmentsByUserId
+  reviewBeautician
 };

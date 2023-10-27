@@ -5,11 +5,15 @@ const allRoles = {
     'manageUserProfile',
     'makeAppointments',
     'manageAppointments',
-    'manageProfile'],
+    'manageProfile',
+    'createReviews'
+  ],
   beautician: [
     'readBlogs',
     'manageServices',
-    'manageBeauticianProfile'],
+    'manageBeauticianProfile',
+    'manageAppointments',
+    'manageProducts'],
   admin: ['manageBlogs', 'manageServiceTypes'],
 };
 

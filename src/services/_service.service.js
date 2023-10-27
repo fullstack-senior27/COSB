@@ -18,6 +18,9 @@ const createService = async ({ name, price, description, durationInMinutes, cate
   const beautician = await Beautician.findById(cur_user._id);
   console.log("beautician: ", beautician);
   beautician.services?.push(service._id);
+  if (!beautician.service_categories.includes(category)) {
+    beautician.service_categories.push(category);
+  }
   await beautician.save();
   return service;
 }
