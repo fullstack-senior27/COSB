@@ -36,5 +36,6 @@ const deleteServiceType = catchAsync(async (req, res) => {
 module.exports = {
   createServiceType,
   getAllServiceTypes,
-  updateServiceType
+  updateServiceType,
+  deleteServiceType
 };

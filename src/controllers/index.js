@@ -10,3 +10,5 @@ module.exports.serviceTypeController = require('./serviceType.controller');
 module.exports.appointmentController = require('./appointment.controller');
 module.exports.availabilityController = require('./availability.controller');
 module.exports.productController = require('./product.controller');
+module.exports.clientController = require('./client.controller');
+module.exports.pageController = require('./page.controller');

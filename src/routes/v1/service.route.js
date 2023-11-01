@@ -1,6 +1,7 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
+const { serviceValidation } = require('../../validations')
 const { serviceController, serviceTypeController, serviceCategoryController } = require('../../controllers');
 
 // service routes  
@@ -8,7 +9,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(serviceController.getServicesByBeautician)
+  .get(validate(serviceValidation.getServicesByBeautician), serviceController.getServicesByBeautician)
 
 router
   .route('/categories/all')

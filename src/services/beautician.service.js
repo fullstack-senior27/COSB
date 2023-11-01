@@ -63,7 +63,7 @@ const filterBeauticians = async (search, location, date, price_range, service_ty
         },
         {
           'services.name': { $regex: `${search}`, $options: 'i' }
-        },
+        }
       ]
     },
     {

@@ -6,6 +6,7 @@ const docsRoute = require('./docs.route');
 const serviceRoute = require('./service.route');
 const blogRoute = require('./blog.route');
 const adminRoute = require('./admin.route')
+const pageRoute = require('./page.route')
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -36,6 +37,10 @@ const defaultRoutes = [
     path: '/blogs',
     route: blogRoute
   },
+  {
+    path: '/pages',
+    route: pageRoute
+  }
 ];
 
 const devRoutes = [

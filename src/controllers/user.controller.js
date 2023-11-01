@@ -45,6 +45,12 @@ const reviewBeautician = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Review added successfully", beautician)
 })
 
+const updateReview = catchAsync(async (req, res) => {
+  const review = await reviewService.updateReview(req.body, req.params.reviewId, req.user._id);
+  return new ApiSuccess(res, httpStatus.OK, "Review updated successfully", review);
+})
+
+
 module.exports = {
   createUser,
   getUsers,
@@ -52,5 +58,6 @@ module.exports = {
   updateUser,
   deleteUser,
   getProfile,
-  reviewBeautician
+  reviewBeautician,
+  updateReview
 };

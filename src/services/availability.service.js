@@ -4,17 +4,14 @@ const ApiError = require("../utils/ApiError");
 
 const addAvailableDay = async (updateBody, cur_user) => {
   const { days } = updateBody
+  console.log("cur user", cur_user)
   const beautician = await beauticianService.getBeauticianById(cur_user._id);
+  // console.log(beautician);
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, "Beautician does not exist");
   }
-  if (Array.isArray(days)) {
-    for (let day of days) {
-      beautician.availability.push({
-        day
-      })
-    }
-  }
+  Object.assign(beautician, updateBody);
+
   await beautician.save();
   return beautician;
 }
@@ -25,10 +22,14 @@ const updateDateAndTime = async (updateBody, cur_user) => {
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, "Beautician does not exist");
   }
-  for (let i = 0; i < days.length; i++) {
-    console.log(days[i]);
-    Object.assign(beautician.availability[i], days[i]);
+  for (let a of beautician.availability) {
+    for (let d of days) {
+      if (a.day === d.day) {
+        Object.assign(a, d);
+      }
+    }
   }
+  // Object.assign(beautician.availability, days);
   await beautician.save();
   return beautician;
 }

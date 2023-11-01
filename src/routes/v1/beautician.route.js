@@ -1,7 +1,8 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const { beauticianController, serviceController, serviceCategoryController, availabilityController, appointmentController, productController } = require('../../controllers');
+const { serviceValidation, appointmentValidation, productValidation, clientValidation } = require('../../validations')
+const { beauticianController, serviceController, serviceCategoryController, availabilityController, appointmentController, productController, clientController } = require('../../controllers');
 
 const router = express.Router();
 
@@ -20,36 +21,41 @@ router
 // service routes
 router
   .route('/service/create')
-  .post(auth('beautician', 'manageServices'), serviceController.createService);
+  .post(auth('beautician', 'manageServices'), validate(serviceValidation.createService), serviceController.createService);
 
 router
   .route('/service/:service_id')
-  .patch(auth('beautician', 'manageServices'), serviceController.updateService)
-  .delete(auth('beautician', 'manageServices'), serviceController.deleteService)
+  .patch(auth('beautician', 'manageServices'), validate(serviceValidation.updateService), serviceController.updateService)
+  .delete(auth('beautician', 'manageServices'), validate(serviceValidation.deleteService), serviceController.deleteService)
 
 // service category routes
 router
   .route('/service/category/create')
-  .post(auth('beautician', 'manageServices'), serviceCategoryController.createCategory)
+  .post(auth('beautician', 'manageServices'), validate(serviceValidation.createServiceCategory), serviceCategoryController.createCategory)
 
 router
   .route('/service/category/:category_id')
-  .patch(auth('beautician', 'manageServices'), serviceCategoryController.updateCategory)
-  .delete(auth('beautician', 'manageServices'), serviceCategoryController.deleteCategory)
+  .patch(auth('beautician', 'manageServices'), validate(serviceValidation.updateServiceCategory), serviceCategoryController.updateCategory)
+  .delete(auth('beautician', 'manageServices'), validate(serviceValidation.deleteServiceCategory), serviceCategoryController.deleteCategory)
 
 
 // availability
 router
   .route('/availability/add')
-  .post(auth('beautician', 'manageServices'), availabilityController.addAvailability)
+  .patch(auth('beautician', 'manageServices'), availabilityController.addAvailability)
 router
   .route('/availability/edit')
   .patch(auth('beautician', 'manageServices'), availabilityController.updateDateAndTime)
 
-
+// appointments
 router
   .route('/appointments/create')
-  .post(auth('beautician', 'manageAppointments'), appointmentController.createAppointment)
+  .post(auth('beautician', 'manageAppointments'), validate(appointmentValidation.createAppointment), appointmentController.createAppointment)
+
+router
+  .route('/appointment/:appointmentId')
+  .get(auth('beautician', 'manageAppointments'), validate(appointmentValidation.getAppointmentDetails), appointmentController.getAppointmentDetails)
+  .patch(auth('beautician', 'manageAppointments'), validate(appointmentValidation.updateAppointment), appointmentController.updateAppointment)
 
 router
   .route('/appointments/all')
@@ -58,13 +64,27 @@ router
 
 router
   .route('/products/create')
-  .post(auth('beautician', 'manageProducts'), productController.addProduct)
+  .post(auth('beautician', 'manageProducts'), validate(productValidation.createProduct), productController.addProduct)
 
 router.route('/products').get(productController.getAllProductsByBeautician)
 
 router
   .route('/products/:productId')
-  .patch(auth('beautician', 'manageProducts'), productController.editProduct)
-  .delete(auth('beautician', 'manageProducts'), productController.deleteProduct)
-  .get(productController.getProductDetails)
+  .patch(auth('beautician', 'manageProducts'), validate(productValidation.editProduct), productController.editProduct)
+  .delete(auth('beautician', 'manageProducts'), validate(productValidation.deleteProduct), productController.deleteProduct)
+  .get(validate(productValidation.getProductDetails), productController.getProductDetails)
+
+// reviews
+router
+  .route('/reviews')
+  .get(beauticianController.getAllReviewsByBeauticianId)
+
+// clients
+router
+  .route('/clients')
+  .get(auth('beautician', 'manageClients'), clientController.getAllClientsForBeautician)
+
+router
+  .route('/clients/register')
+  .post(auth('beautician', 'manageClients'), validate(clientValidation.registerNewClient), clientController.registerNewClient)
 module.exports = router;

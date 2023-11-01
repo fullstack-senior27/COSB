@@ -25,20 +25,20 @@ const getBlogs = catchAsync(async (req, res) => {
   if (req.body.blogCategory) {
     blogs = await blogService.getBlogsByTopic(req.body.blogCategory);
 
-    const skip = (page - 1) * limit;
-    const paginatedBlogs = blogs.slice(skip, skip + limit);
-    return res.status(httpStatus.OK).json({
-      code: httpStatus.OK,
-      message: 'Blogs fetched successfully',
-      isSuccess: true,
-      data: {
-        results: paginatedBlogs,
-        totalPages: Math.ceil(blogs.length / limit),
-        currentPage: page,
-        limit: limit,
-        totalResults: paginatedBlogs.length
-      }
-    })
+    // const skip = (page - 1) * limit;
+    // const paginatedBlogs = blogs.slice(skip, skip + limit);
+    // return res.status(httpStatus.OK).json({
+    //   code: httpStatus.OK,
+    //   message: 'Blogs fetched successfully',
+    //   isSuccess: true,
+    //   data: {
+    //     results: paginatedBlogs,
+    //     totalPages: Math.ceil(blogs.length / limit),
+    //     currentPage: page,
+    //     limit: limit,
+    //     totalResults: paginatedBlogs.length
+    //   }
+    // })
   }
   blogs = await blogService.getBlogs();
   if (!blogs) {

@@ -1,10 +1,11 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
+// const userValidation = require('../../validations/user.validation');
 const userController = require('../../controllers/user.controller');
 // const appointmentController = require('../../controllers/appointment.controller');
 const { appointmentController } = require('../../controllers');
+const { appointmentValidation, reviewValidation } = require('../../validations');
 
 const router = express.Router();
 
@@ -30,16 +31,24 @@ router
 
 router
   .route('/appointment/create')
-  .post(auth('user', "makeAppointments"), appointmentController.createAppointment)
+  .post(auth('user', "makeAppointments"), validate(appointmentValidation.createAppointment), appointmentController.createAppointment)
+
+// router
+//   .route('/appointment/update/:appointmentId')
+//   .patch(auth('user', 'manageAppointments'), appointmentController.updateAppointment)
 
 router
-  .route('/appointment/update/:appointmentId')
-  .patch(auth('user', 'manageAppointments'), appointmentController.updateAppointment)
-
+  .route('/appointment/:appointmentId')
+  .get(auth('user', 'manageAppointments'), validate(appointmentValidation.getAppointmentDetails), appointmentController.getAppointmentDetails)
+  .patch(auth('user', 'manageAppointments'), validate(appointmentValidation.updateAppointment), appointmentController.updateAppointment)
 
 router
   .route('/review/create')
-  .post(auth('user', 'createReviews'), userController.reviewBeautician)
+  .post(auth('user', 'createReviews'), validate(reviewValidation.createReview), userController.reviewBeautician)
 
+
+router
+  .route('/review/:reviewId')
+  .patch(auth('user', 'createReviews'), validate(reviewValidation.updateReview), userController.updateReview)
 module.exports = router;
 

@@ -13,8 +13,10 @@ const allRoles = {
     'manageServices',
     'manageBeauticianProfile',
     'manageAppointments',
-    'manageProducts'],
-  admin: ['manageBlogs', 'manageServiceTypes'],
+    'manageProducts',
+    'manageClients'
+  ],
+  admin: ['manageBlogs', 'manageServiceTypes', 'managePages'],
 };
 
 const roles = Object.keys(allRoles);

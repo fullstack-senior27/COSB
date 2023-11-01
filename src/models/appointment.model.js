@@ -43,6 +43,8 @@ const appointmentSchema = mongoose.Schema({
     enum: ["paid", "pending"],
     default: "pending"
   }
+}, {
+  timestamps: true
 })
 
 appointmentSchema.plugin(paginate);

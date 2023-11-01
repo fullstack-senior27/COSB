@@ -13,3 +13,5 @@ module.exports.appointmentService = require('./appointment.service');
 module.exports.availabilityService = require('./availability.service');
 module.exports.reviewService = require('./review.service');
 module.exports.productService = require('./product.service');
+module.exports.clientService = require('./client.service');
+module.exports.pageService = require('./page.service');

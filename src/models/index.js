@@ -10,3 +10,5 @@ module.exports.Blog = require('./blog.model');
 module.exports.BlogCategory = require('./blogCategory.model');
 module.exports.Appointment = require('./appointment.model');
 module.exports.Product = require('./product.model');
+module.exports.Client = require('./client.model');
+module.exports.Page = require('./page.model');

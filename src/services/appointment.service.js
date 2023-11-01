@@ -1,7 +1,8 @@
 const httpStatus = require('http-status');
-const { Appointment } = require('../models');
+const { Appointment, Client } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { getBeauticianById } = require('./beautician.service');
+const clientService = require('./client.service');
 
 
 const createAppointment = async (appointmentBody) => {
@@ -44,9 +45,15 @@ const createAppointment = async (appointmentBody) => {
   });
   if (slotIndex !== -1) {
     existingBeautician.availability[slotIndex].isAvailable = false;
-    const existingClient = existingBeautician.clients.find(u => u === user)
+    const existingClient = await Client.findOne({
+      beautician,
+      user
+    })
+    console.log(existingClient);
+    // const existingClient = existingBeautician.clients.find(u => u === user)
     if (!existingClient) {
-      existingBeautician.clients.push(user)
+      // existingBeautician.clients.push(user)
+      clientService.createClient(beautician, user);
     }
     await existingBeautician.save()
   }
@@ -57,7 +64,7 @@ const createAppointment = async (appointmentBody) => {
 const getAppointmentsByUserId = async (userId) => {
   const appointments = await Appointment.find({
     user: userId
-  }).populate('user').populate('beautician').populate('services');
+  }).sort({ createdAt: 'desc' }).populate('user').populate('beautician').populate('services');
   console.log("appointments: ", appointments)
   return appointments;
 }
@@ -84,19 +91,20 @@ const getAppointmentById = async (appointmentId) => {
 
 // }
 
-const updateAppointment = async (appointmentId, { newDate, services }) => {
+const updateAppointment = async (appointmentId, updateBody) => {
   const appointment = await getAppointmentById(appointmentId);
   // check if the newDate is available
   // if (!appointment) {
   //   throw new ApiError(httpStatus.NOT_FOUND, "Appointment not found")
   // }
-  appointment.date = newDate;
-  if (services) {
-    for
-      (let service of services) {
-      appointment.services.push(service);
-    }
-  }
+  // appointment.date = newDate;
+  // if (services) {
+  //   for(let service of services) {
+  //     appointment.services.push(service);
+  //   }
+  // }
+  Object.assign(appointment, updateBody)
+
   await appointment.save();
   return appointment;
 }
@@ -106,5 +114,6 @@ module.exports = {
   createAppointment,
   getAppointmentsByUserId,
   updateAppointment,
-  getAppointmentsByBeauticianId
+  getAppointmentsByBeauticianId,
+  getAppointmentById
 }
