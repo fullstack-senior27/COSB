@@ -136,14 +136,6 @@ const createCustomer = async ({ email, card }) => {
   return createdCard;
 }
 
-const deleteCard = async (customerId, cardId) => {
-  const deletedCard = await stripe.customers.deleteSource(
-    customerId,
-    cardId
-  )
-  return deletedCard;
-}
-
 const listAllPayments = async (accountId) => {
   let paymentIntents = await stripe.transfers.list({ destination: accountId });
   paymentIntents = paymentIntents.data.map(pi => ({
@@ -218,6 +210,5 @@ module.exports = {
   getBalance,
   listAllBalanceTransactions,
   listAvailableCards,
-  listAllPayouts,
-  deleteCard
+  listAllPayouts
 }
