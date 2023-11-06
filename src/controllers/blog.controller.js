@@ -39,8 +39,9 @@ const getBlogs = catchAsync(async (req, res) => {
     //     totalResults: paginatedBlogs.length
     //   }
     // })
+  } else {
+    blogs = await blogService.getBlogs();
   }
-  blogs = await blogService.getBlogs();
   if (!blogs) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No Blogs found', false)
   }

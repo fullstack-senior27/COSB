@@ -25,9 +25,6 @@ const createBlog = async ({ title, description, blogCategoryId }, cur_user) => {
     blog_category: blogCategoryId,
     author: cur_user._id
   })
-  const admin = await Admin.findById(cur_user._id);
-  admin.blogs.push(blog._id);
-  await admin.save();
   return blog;
 }
 
