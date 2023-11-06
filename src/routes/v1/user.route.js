@@ -53,6 +53,7 @@ router
 
 
 router.route("/card/create").post(auth('user', 'makePayments'), paymentController.createCustomer)
+router.route("/card/delete/:cardId").delete(auth('user', 'makePayments'), paymentController.deleteCard)
 router
   .route('/payment/create')
   .post(auth('user', 'makePayments'), paymentController.processPayment)
