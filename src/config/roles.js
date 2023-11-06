@@ -6,7 +6,8 @@ const allRoles = {
     'makeAppointments',
     'manageAppointments',
     'manageProfile',
-    'createReviews'
+    'createReviews',
+    'makePayments'
   ],
   beautician: [
     'readBlogs',
@@ -14,7 +15,8 @@ const allRoles = {
     'manageBeauticianProfile',
     'manageAppointments',
     'manageProducts',
-    'manageClients'
+    'manageClients',
+    'manageConnectAccount'
   ],
   admin: ['manageBlogs', 'manageServiceTypes', 'managePages'],
 };

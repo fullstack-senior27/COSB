@@ -53,6 +53,10 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    customerId: {
+      type: String,
+      default: ""
+    }
     // appointments: [
     //   {
     //     type: mongoose.Schema.Types.ObjectId,

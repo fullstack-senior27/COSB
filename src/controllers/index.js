@@ -12,3 +12,4 @@ module.exports.availabilityController = require('./availability.controller');
 module.exports.productController = require('./product.controller');
 module.exports.clientController = require('./client.controller');
 module.exports.pageController = require('./page.controller');
+module.exports.paymentController = require('./payment.controller');

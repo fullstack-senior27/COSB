@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const { serviceValidation, appointmentValidation, productValidation, clientValidation } = require('../../validations')
-const { beauticianController, serviceController, serviceCategoryController, availabilityController, appointmentController, productController, clientController } = require('../../controllers');
+const { beauticianController, serviceController, serviceCategoryController, availabilityController, appointmentController, productController, clientController, paymentController } = require('../../controllers');
 
 const router = express.Router();
 
@@ -87,4 +87,27 @@ router
 router
   .route('/clients/register')
   .post(auth('beautician', 'manageClients'), validate(clientValidation.registerNewClient), clientController.registerNewClient)
+
+// router
+//   .route('/clients/update')
+//   .patch(auth('beautician', 'manageClients'), validate(clientValidation.updateClient))
+
+router
+  .route('/seller/create')
+  .get(auth('beautician', 'manageConnectAccount'), paymentController.createSeller)
+
+router
+  .route('/seller/create/success')
+  .get((req, res) => {
+    res.json({
+      message: "Success"
+    })
+  })
+
+router.route('/earnings').get(auth('beautician', 'manageConnectAccount'), paymentController.listAllPayments)
+router.route('/payout').post(auth('beautician', 'manageConnectAccount'), paymentController.createPayout)
+router.route('/balance').get(auth('beautician', 'manageConnectAccount'), paymentController.getBalance)
+router.route('/balanceTransactions').get(auth('beautician', 'manageConnectAccount'), paymentController.listBalanceTransactions)
+router.route('/payouts/list').get(auth('beautician', 'manageConnectAccount'), paymentController.listAllPayouts)
+
 module.exports = router;

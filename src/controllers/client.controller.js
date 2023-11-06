@@ -18,6 +18,10 @@ const registerNewClient = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.CREATED, "Client registered successfully", client)
 })
 
+// const updateClient = catchAsync(async (req, res) => {
+//   const client = await clientService
+// })
+
 module.exports = {
   getAllClientsForBeautician,
   // createClient,

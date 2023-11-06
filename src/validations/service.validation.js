@@ -34,8 +34,8 @@ const createService = {
     price: Joi.number().required(),
     description: Joi.string().required(),
     durationInMinutes: Joi.number().required(),
-    service_category: Joi.required().custom(objectId),
-    service_type: Joi.required().custom(objectId)
+    category: Joi.required().custom(objectId),
+    serviceType: Joi.required().custom(objectId)
   }),
 }
 

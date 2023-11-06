@@ -78,6 +78,11 @@ const beauticianSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    top3Skills: [
+      {
+        type: String
+      }
+    ],
     services: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -147,6 +152,10 @@ const beauticianSchema = mongoose.Schema(
     address: {
       type: String,
       trim: true
+    },
+    accountId: {
+      type: String,
+      default: ""
     }
   },
   {

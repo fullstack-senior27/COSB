@@ -3,13 +3,15 @@ const { Appointment, Client } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { getBeauticianById } = require('./beautician.service');
 const clientService = require('./client.service');
+const { userService } = require('.');
 
 
 const createAppointment = async (appointmentBody) => {
   // check if the dates are available
   const { date, beautician, startTime, user } = appointmentBody
+  const existingUser = await userService.getUserById(user);
   const existingBeautician = await getBeauticianById(beautician);
-
+  appointmentBody.customerId = existingUser.customerId;
   const isBeauticianAvailable = existingBeautician.availability.some(slot => {
     const year = slot.date.getFullYear();
     const month = (slot.date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
