@@ -15,9 +15,9 @@ const router = express.Router();
 //   .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route('/:userId')
+  .route('/profile/update')
   //   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-  .patch(auth('user', 'manageUsers'), validate(userValidation.updateUser), userController.updateUser)
+  .patch(auth('user', 'manageProfile'), userController.updateUser)
 //   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 

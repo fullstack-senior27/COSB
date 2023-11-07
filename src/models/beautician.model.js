@@ -131,18 +131,6 @@ const beauticianSchema = mongoose.Schema(
         }
       }
     ],
-    // clients: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Client'
-    //   }
-    // ],
-    // appointments: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Appointment'
-    //   }
-    // ],
     salon_number: {
       type: String
     },

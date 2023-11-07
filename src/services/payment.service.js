@@ -8,7 +8,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const createSeller = async (email) => {
   const account = await stripe.accounts.create({
-    type: 'standard',
+    type: 'express',
     email: email,
   })
   console.log(account);
@@ -51,12 +51,12 @@ const processPayment = async (appointment) => {
     amount: appointment.amount * 100,
     currency: 'usd',
     customer: appointment.user.customerId,
-    payment_method: cards.data[1].id,
+    payment_method: cards.data[0].id,
     automatic_payment_methods: {
       enabled: true,
       allow_redirects: 'never'
     },
-    // application_fee_amount: 0,
+    application_fee_amount: 123,
     // on_behalf_of: accountId
     transfer_data: {
       // amount: 877,
@@ -170,7 +170,7 @@ const createPayout = async (amount, bankAccountId, accountId) => {
   const payoutObj = await stripe.payouts.create({
     amount,
     currency: 'usd',
-    method: 'standard',
+    method: 'instant',
     destination: bankAccountId
   }, {
     stripeAccount: accountId
@@ -184,12 +184,13 @@ const listAllPayouts = async (accountId) => {
   let payouts = await stripe.payouts.list({
     stripeAccount: accountId
   })
+  // console.log(payouts);
   payouts = payouts.data.map(payout => ({
     ...payout,
     amount: payout.amount / 100,
     // totalPayout: 
   }));
-
+  console.log(payouts)
   return payouts
 }
 
