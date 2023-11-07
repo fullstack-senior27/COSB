@@ -11,11 +11,11 @@ router
   .get(auth('beautician', 'manageBeauticianProfile'), beauticianController.getProfile)
 
 router
-  .route('/edit')
+  .route('/profile/edit')
   .patch(auth('beautician', 'manageBeauticianProfile'), beauticianController.updateBeautician)
 
 router
-  .route('/')
+  .route('/list')
   .get(beauticianController.getBeauticians)
 
 // service routes
@@ -24,9 +24,10 @@ router
   .post(auth('beautician', 'manageServices'), validate(serviceValidation.createService), serviceController.createService);
 
 router
-  .route('/service/:service_id')
+  .route('/service/edit/:service_id')
   .patch(auth('beautician', 'manageServices'), validate(serviceValidation.updateService), serviceController.updateService)
-  .delete(auth('beautician', 'manageServices'), validate(serviceValidation.deleteService), serviceController.deleteService)
+router.route('/service/delete/:service_id')
+  .delete(auth('beautician', 'manageServices'), serviceController.deleteService)
 
 // service category routes
 router
