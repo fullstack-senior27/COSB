@@ -38,9 +38,17 @@ const createPayout = catchAsync(async (req, res) => {
 })
 
 const getBalance = catchAsync(async (req, res) => {
-  const balance = await paymentService.getBalance(req.user.accountId);
-  return new ApiSuccess(res, httpStatus.OK, 'Balance fetched successfully', balance);
+  const totalEarning = await paymentService.getTotalEarning(req.user.accountId);
+  const withdrawBalance = await paymentService.getWithdrawBalance(req.user.accountId)
+  const remainingAmount = Number(totalEarning) - Number(withdrawBalance)
+  const balanceObj = {
+    totalEarning,
+    withdrawBalance,
+    remainingAmount: remainingAmount.toFixed(2)
+  }
+  return new ApiSuccess(res, httpStatus.OK, 'Balance fetched successfully', balanceObj);
 })
+
 
 const listBalanceTransactions = catchAsync(async (req, res) => {
   const balanceTransactions = await paymentService.listAllBalanceTransactions(req.user.accountId);
@@ -54,7 +62,7 @@ const listCardsForUser = catchAsync(async (req, res) => {
 
 const listAllPayouts = catchAsync(async (req, res) => {
   const payouts = await paymentService.listAllPayouts(req.user.accountId);
-  return new ApiSuccess(res, httpStatus.OK, "Payouts", payouts.data);
+  return new ApiSuccess(res, httpStatus.OK, "Payouts", payouts);
 })
 
 

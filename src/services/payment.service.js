@@ -137,7 +137,14 @@ const createCustomer = async ({ email, card }) => {
 }
 
 const listAllPayments = async (accountId) => {
+  const limit = 10;
   let paymentIntents = await stripe.transfers.list({ destination: accountId });
+  console.log(paymentIntents);
+  while (paymentIntents.has_more) {
+    paymentIntents = await stripe.transfers.list({ destination: accountId, limit: limit + 10 })
+  }
+  console.log("*****************")
+  console.log(paymentIntents)
   paymentIntents = paymentIntents.data.map(pi => ({
     ...pi,
     amount: pi.amount / 100
@@ -146,10 +153,17 @@ const listAllPayments = async (accountId) => {
 }
 
 const listAllBalanceTransactions = async (accountId) => {
-  const balanceTransactions = await stripe.balanceTransactions.list({
+  const limit = 10
+  let balanceTransactions = await stripe.balanceTransactions.list({
     stripeAccount: accountId
   })
-
+  while (balanceTransactions.has_more) {
+    balanceTransactions = await stripe.balanceTransactions.list({
+      limit: limit + 10
+    }, {
+      stripeAccount: accountId
+    })
+  }
   let charges = balanceTransactions.data.filter(bt => bt.reporting_category === "charge")
   charges = charges.map(charge => ({
     ...charge,
@@ -181,24 +195,41 @@ const createPayout = async (amount, bankAccountId, accountId) => {
 }
 
 const listAllPayouts = async (accountId) => {
+  const limit = 10
   let payouts = await stripe.payouts.list({
     stripeAccount: accountId
   })
+  while (payouts.has_more) {
+    payouts = await stripe.payouts.list({
+      limit: limit + 10
+    }, {
+      stripeAccount: accountId
+    })
+  }
   // console.log(payouts);
   payouts = payouts.data.map(payout => ({
     ...payout,
     amount: payout.amount / 100,
     // totalPayout: 
   }));
-  console.log(payouts)
   return payouts
 }
 
-const getBalance = async (accountId) => {
+const getTotalEarning = async (accountId) => {
   const balance = await stripe.balance.retrieve({
     stripeAccount: accountId
   })
-  return balance;
+  const totalEarning = ((balance.available[0].amount + balance.pending[0].amount) / 100).toFixed(2)
+  return totalEarning;
+}
+
+const getWithdrawBalance = async (accountId) => {
+  const payouts = await listAllPayouts(accountId)
+  let totalWithDrawBalance = 0;
+  for (let payout of payouts) {
+    totalWithDrawBalance += payout.amount
+  }
+  return totalWithDrawBalance.toFixed(2);
 }
 
 module.exports = {
@@ -208,7 +239,9 @@ module.exports = {
   createCustomer,
   listAllPayments,
   createPayout,
-  getBalance,
+  getTotalEarning,
+  getWithdrawBalance,
+  // getBalance,
   listAllBalanceTransactions,
   listAvailableCards,
   listAllPayouts

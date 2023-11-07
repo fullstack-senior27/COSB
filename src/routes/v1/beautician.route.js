@@ -94,21 +94,29 @@ router
 //   .patch(auth('beautician', 'manageClients'), validate(clientValidation.updateClient))
 
 router
-  .route('/seller/create')
+  .route('/connect_account/create')
   .get(auth('beautician', 'manageConnectAccount'), paymentController.createSeller)
 
 router
-  .route('/seller/create/success')
+  .route('/connect_account/create/success')
   .get((req, res) => {
     res.json({
       message: "Success"
     })
   })
 
-router.route('/earnings').get(auth('beautician', 'manageConnectAccount'), paymentController.listAllPayments)
-router.route('/payout').post(auth('beautician', 'manageConnectAccount'), paymentController.createPayout)
-router.route('/balance').get(auth('beautician', 'manageConnectAccount'), paymentController.getBalance)
-router.route('/balanceTransactions').get(auth('beautician', 'manageConnectAccount'), paymentController.listBalanceTransactions)
-router.route('/payouts/list').get(auth('beautician', 'manageConnectAccount'), paymentController.listAllPayouts)
+router
+  .route('/connect_account/create/failed')
+  .get((req, res) => {
+    res.json({
+      message: "failed"
+    })
+  })
+
+router.route('/connect_account/payments').get(auth('beautician', 'manageConnectAccount'), paymentController.listAllPayments)
+router.route('/connect_account/payout').post(auth('beautician', 'manageConnectAccount'), paymentController.createPayout)
+router.route('/connect_account/balance').get(auth('beautician', 'manageConnectAccount'), paymentController.getBalance)
+router.route('/connect_account/balanceTransactions').get(auth('beautician', 'manageConnectAccount'), paymentController.listBalanceTransactions)
+router.route('/connect_account/payouts/list').get(auth('beautician', 'manageConnectAccount'), paymentController.listAllPayouts)
 
 module.exports = router;
