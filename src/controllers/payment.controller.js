@@ -65,6 +65,10 @@ const listAllPayouts = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Payouts", payouts);
 })
 
+const deleteCard = catchAsync(async (req, res) => {
+  const deleted = await paymentService.deleteCard(req.params.cardId, req.user.customerId);
+  return new ApiSuccess(res, httpStatus.NO_CONTENT, "Card deleted successfully", deleted);
+})
 
 module.exports = {
   createSeller,
@@ -75,5 +79,6 @@ module.exports = {
   getBalance,
   listBalanceTransactions,
   listCardsForUser,
-  listAllPayouts
+  listAllPayouts,
+  deleteCard
 }

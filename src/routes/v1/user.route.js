@@ -62,6 +62,7 @@ router
   .post(auth('user', 'makePayments'), paymentController.processPayment)
 
 router.route('/cards/list').get(auth('user', 'makePayments'), paymentController.listCardsForUser);
+router.route('/card/delete/:cardId').delete(auth('user', 'makePayments'), paymentController.deleteCard)
 
 module.exports = router;
 
