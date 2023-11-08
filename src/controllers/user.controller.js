@@ -50,6 +50,10 @@ const updateReview = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Review updated successfully", review);
 })
 
+const changePassword = catchAsync(async (req, res) => {
+  const updatedUser = await userService.changePassword(req.body.oldPassword, req.body.newPassword, req.user._id);
+  return new ApiSuccess(res, httpStatus.OK, "Password changed successfully", updatedUser);
+})
 
 module.exports = {
   createUser,
@@ -59,5 +63,6 @@ module.exports = {
   deleteUser,
   getProfile,
   reviewBeautician,
-  updateReview
+  updateReview,
+  changePassword
 };

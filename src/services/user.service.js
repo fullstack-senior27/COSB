@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const bcrypt = require('bcryptjs');
+
 
 /**
  * Create a user
@@ -83,6 +85,20 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+
+const changePassword = async (oldPassword, newPassword, userId) => {
+  const user = await getUserById(userId);
+  console.log(user);
+  const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password)
+
+  if (!isOldPasswordValid) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Incorrect Old Password");
+  }
+  user.password = newPassword;
+  await user.save();
+  return user;
+}
+
 module.exports = {
   createUser,
   queryUsers,
@@ -90,4 +106,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  changePassword
 };

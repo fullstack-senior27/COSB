@@ -20,6 +20,9 @@ router
   .patch(auth('user', 'manageProfile'), userController.updateUser)
 //   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router
+  .route('/change_password')
+  .patch(auth('user', 'manageProfile'), validate(userValidation.changePassword), userController.changePassword)
 
 router
   .route('/profile')
