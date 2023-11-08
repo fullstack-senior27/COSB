@@ -26,7 +26,15 @@ if (config.env !== 'test') {
 app.use(helmet());
 
 // parse json request body
-app.use(express.json());
+// app.use(express.json());
+app.use((req, res, next) => {
+  if (req.originalUrl === '/webhook') {
+    next(); // Do nothing with the body because I need it in a raw state.
+  } else {
+    express.json()(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+  }
+});
+
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
@@ -55,20 +63,28 @@ if (config.env === 'production') {
 
 // v1 api routes
 app.use('/v1', routes);
-
-app.post('/webhook', express.raw({
-  type: 'application/json',
-}), (request, response) => {
+// app.use(express.raw({ type: '*/*' }));
+app.post('/webhook', (request, response) => {
+  const payloadString = request;
+  console.log("payload string: ", payloadString)
   console.log("11111111111111111111111111111111111111111");
   let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
   const sig = request.headers['stripe-signature'];
+  console.log(sig);
 
+  // const header = stripe.webhooks.generateTestHeaderString({
+  //   payload: payloadString,
+  //   endpointSecret,
+  // });
+  // const sig = "sk_test_51IcQKWDwwlfx8vZDtKSBliM7hrut2EVKMBrq4L8oV1gfy4PgtTQqrlS7SfNKO6HunhNkW4lXmULh2bEiTUjLXEOQ00Z377rtca"
+  console.log("signature: ", sig)
+  console.log("signature type: ---> ", typeof sig)
   let event;
-  console.log("request body: ", request.rawBody);
+  console.log("request body: ", request.body);
 
   try {
     // event = request.body
-    event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(payloadString?.toString(), sig, endpointSecret);
   } catch (err) {
     console.log("222222222222222222222222222222222222", err);
     response.status(400).send(`Webhook Error: ${err.message}`);
