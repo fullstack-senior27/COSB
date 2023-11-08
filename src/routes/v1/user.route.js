@@ -20,6 +20,9 @@ router
   .patch(auth('user', 'manageProfile'), userController.updateUser)
 //   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router
+  .route('/change_password')
+  .patch(auth('user', 'manageProfile'), validate(userValidation.changePassword), userController.changePassword)
 
 router
   .route('/profile')
@@ -40,6 +43,7 @@ router
 router
   .route('/appointment/:appointmentId')
   .get(auth('user', 'manageAppointments'), validate(appointmentValidation.getAppointmentDetails), appointmentController.getAppointmentDetails)
+router.route('/appointment/update/:appointmentId')
   .patch(auth('user', 'manageAppointments'), validate(appointmentValidation.updateAppointment), appointmentController.updateAppointment)
 
 router
@@ -48,7 +52,7 @@ router
 
 
 router
-  .route('/review/:reviewId')
+  .route('/review/update/:reviewId')
   .patch(auth('user', 'createReviews'), validate(reviewValidation.updateReview), userController.updateReview)
 
 

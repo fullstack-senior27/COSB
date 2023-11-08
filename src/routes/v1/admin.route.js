@@ -10,18 +10,20 @@ router
   .route('/blogs/create')
   .post(auth('admin', 'manageBlogs'), validate(blogValidation.createBlog), blogController.createBlog)
 
-router.route('/blog/:blog_id')
+router.route('/blog/update/:blog_id')
   .patch(auth('admin', 'manageBlogs'), validate(blogValidation.updateBlog), blogController.updateBlog)
-  .delete(auth('admin', 'manageBlogs'), validate(blogValidation.getBlog), blogController.deleteBlog);
+router.route('/blog/delete/:blog_id')
+  .delete(auth('admin', 'manageBlogs'), blogController.deleteBlog);
 
 router
   .route('/blog/category/create')
   .post(auth('admin', 'manageBlogs'), validate(blogCategoryValidation.createBlogCategory), blogCategoryController.createBlogCategory)
 
 router
-  .route('/blog/category/:category_id')
-  .put(auth('admin', 'manageBlogs'), validate(blogCategoryValidation.createBlogCategory), blogCategoryController.updateBlogCategory)
-  .delete(auth('admin', 'manageBlogs'), blogCategoryController.deleteBlogCategory)
+  .route('/blog/category/update/:category_id')
+  .patch(auth('admin', 'manageBlogs'), validate(blogCategoryValidation.createBlogCategory), blogCategoryController.updateBlogCategory)
+
+router.route('/blog/category/delete/:category_id').delete(auth('admin', 'manageBlogs'), blogCategoryController.deleteBlogCategory)
 
 router
   .route('/service/type/create')
