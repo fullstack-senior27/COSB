@@ -65,11 +65,17 @@ const beauticianSchema = mongoose.Schema(
         default: null
       }
     ],
+    profession: {
+      type: String,
+      default: ""
+    },
     about: {
       type: String,
+      default: null
     },
     website: {
-      type: String
+      type: String,
+      default: null
     },
     notes: [
       noteSchema
@@ -78,7 +84,7 @@ const beauticianSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    top3Skills: [
+    speciality: [
       {
         type: String
       }

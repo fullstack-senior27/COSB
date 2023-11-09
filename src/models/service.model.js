@@ -28,7 +28,7 @@ const serviceSchema = mongoose.Schema(
     },
     isAvailable: {
       type: Boolean,
-      default: false
+      default: true
     },
     durationInMinutes: {
       type: Number,
