@@ -122,7 +122,7 @@ const createCustomer = async ({ email, card }) => {
 
   const { number, exp_month, exp_year, cvc } = card;
   const availableCards = await listAvailableCards(user.customerId);
-  for (let c of availableCards.data) {
+  for (let c of availableCards) {
     if (c.last4 === number.slice(-4)) {
       throw new ApiError(httpStatus.CONFLICT, "You have already added this card")
     }
