@@ -14,6 +14,7 @@ const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const { Buffer } = require('node:buffer');
 
 const app = express();
 
@@ -24,6 +25,55 @@ if (config.env !== 'test') {
 
 // set security HTTP headers
 app.use(helmet());
+app.post('/webhook', express.raw({ type: 'application/json' }), (request, response) => {
+  const payloadString = request.body;
+  // const payloadString = request;
+  // const payloadBuffer = Buffer.from(JSON.stringify(payloadString));
+  // const payloadString = request.body;
+  console.log("payload (request): ", payloadString)
+  console.log("11111111111111111111111111111111111111111");
+  let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
+  const sig = request.headers['stripe-signature'];
+  console.log(sig.toString());
+
+  // const header = stripe.webhooks.generateTestHeaderString({
+  //   payload: payloadString,
+  //   endpointSecret,
+  // });
+  // const sig = "sk_test_51IcQKWDwwlfx8vZDtKSBliM7hrut2EVKMBrq4L8oV1gfy4PgtTQqrlS7SfNKO6HunhNkW4lXmULh2bEiTUjLXEOQ00Z377rtca"
+  // console.log("signature: ", sig)
+  // console.log("signature type: ---> ", typeof sig)
+  let event;
+
+  try {
+    // event = request.body
+    event = stripe.webhooks.constructEvent(payloadString, sig, endpointSecret);
+  } catch (err) {
+    console.log("222222222222222222222222222222222222", err);
+    // response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+  console.log("Event Type: ", event.type);
+
+  // Handle the event
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      const paymentIntentSucceeded = event.data.object;
+      // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+      // Then define and call a function to handle the event payment_intent.succeeded
+      console.log("Payment Intent success", paymentIntentSucceeded);
+      // return response.json()
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  // Return a 200 response to acknowledge receipt of the event
+  response.send({
+    message: "Payment Succeeded"
+  });
+});
 
 // parse json request body
 app.use(express.json());
@@ -64,53 +114,7 @@ if (config.env === 'production') {
 // v1 api routes
 app.use('/v1', routes);
 // app.use(express.raw({ type: '*/*' }));
-// app.post('/webhook', (request, response) => {
-//   const payloadString = request;
-//   console.log("payload string: ", payloadString)
-//   console.log("11111111111111111111111111111111111111111");
-//   let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
-//   const sig = request.headers['stripe-signature'];
-//   console.log(sig);
 
-//   // const header = stripe.webhooks.generateTestHeaderString({
-//   //   payload: payloadString,
-//   //   endpointSecret,
-//   // });
-//   // const sig = "sk_test_51IcQKWDwwlfx8vZDtKSBliM7hrut2EVKMBrq4L8oV1gfy4PgtTQqrlS7SfNKO6HunhNkW4lXmULh2bEiTUjLXEOQ00Z377rtca"
-//   console.log("signature: ", sig)
-//   console.log("signature type: ---> ", typeof sig)
-//   let event;
-//   console.log("request body: ", request.body);
-
-//   try {
-//     // event = request.body
-//     event = stripe.webhooks.constructEvent(payloadString?.toString(), sig, endpointSecret);
-//   } catch (err) {
-//     console.log("222222222222222222222222222222222222", err);
-//     response.status(400).send(`Webhook Error: ${err.message}`);
-//     return;
-//   }
-//   console.log("Event Type: ", event.type);
-
-//   // Handle the event
-//   switch (event.type) {
-//     case 'payment_intent.succeeded':
-//       const paymentIntentSucceeded = event.data.object;
-//       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-//       // Then define and call a function to handle the event payment_intent.succeeded
-//       console.log("Payment Intent success", paymentIntentSucceeded);
-//       // return response.json()
-//       break;
-//     // ... handle other event types
-//     default:
-//       console.log(`Unhandled event type ${event.type}`);
-//   }
-
-//   // Return a 200 response to acknowledge receipt of the event
-//   response.send({
-//     message: "Payment Succeeded"
-//   });
-// });
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

@@ -29,8 +29,8 @@ const generateAccountLink = async (beauticianId) => {
   }
   const link = await stripe.accountLinks.create({
     account: accountId,
-    refresh_url: 'http://localhost:3000/v1/payment/failed',
-    return_url: 'http://localhost:3000/v1/beautician/seller/create/success',
+    refresh_url: 'http://localhost:3000/v1/beautician/connect_account/create/failed',
+    return_url: 'http://localhost:3000/v1/beautician/connect_account/create/success',
     type: 'account_onboarding',
   })
   return link
@@ -45,8 +45,6 @@ const processPayment = async (appointment) => {
     appointment.user.customerId,
     { object: 'card' }
   )
-  // console.log(paymentMethod);
-  // console.log(paymentMethods)
   const paymentIntent = await stripe.paymentIntents.create({
     amount: appointment.amount * 100,
     currency: 'usd',
@@ -132,19 +130,19 @@ const createCustomer = async ({ email, card }) => {
   // console.log(number);
   try {
     const cardToken = await stripe.tokens.create({
-    card: {
-      number,
-      exp_month,
-      exp_year,
-      cvc,
-    },
-  })
-  // console.log("card token: ", cardToken);
+      card: {
+        number,
+        exp_month,
+        exp_year,
+        cvc,
+      },
+    })
+    // console.log("card token: ", cardToken);
 
-  const createdCard = await stripe.customers.createSource(user.customerId, { source: cardToken.id })
-  return createdCard;
-  // console.log("created card: ", createdCard)
-  } catch(error) {
+    const createdCard = await stripe.customers.createSource(user.customerId, { source: cardToken.id })
+    return createdCard;
+    // console.log("created card: ", createdCard)
+  } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Your card number is incorrect!")
   }
 
