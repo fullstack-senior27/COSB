@@ -64,10 +64,64 @@ const createAppointment = async (appointmentBody) => {
 };
 
 const getAppointmentsByUserId = async (userId) => {
-  const appointments = await Appointment.find({
-    user: userId
-  }).sort({ createdAt: 'desc' }).populate('user').populate('beautician').populate('services');
-  console.log("appointments: ", appointments)
+  // const appointments = await Appointment.find({
+  //   user: userId
+  // }).sort({ createdAt: 'desc' }).populate('user').populate('beautician').populate('services');
+  // console.log("appointments: ", appointments)
+  // appointments.forEach((appointment) => {
+  //   const reviews = appointment.beautician.reviews;
+  //   console.log(">>>>>>>>>>>>>>>>>>")
+  //   if (reviews.length > 0) {
+  //     const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+  //     appointment.beautician.averageRating = averageRating;
+  //   } else {
+  //     appointment.beautician.averageRating = null;
+  //   }
+  // });
+  // return appointments;
+  const appointments = await Appointment.aggregate([
+    {
+      $match: { user: userId }
+    },
+    {
+      $sort: { createdAt: -1 }
+    },
+    {
+      $lookup: {
+        from: 'beauticians', // Assuming the collection name is 'users' for beauticians
+        localField: 'beautician',
+        foreignField: '_id',
+        as: 'beautician'
+      }
+    },
+    {
+      $unwind: '$beautician'
+    },
+    {
+      $lookup: {
+        from: 'services', // Assuming the collection name is 'services' for services
+        localField: 'services',
+        foreignField: '_id',
+        as: 'services'
+      }
+    },
+    {
+      $lookup: {
+        from: 'reviews', // Assuming the collection name is 'reviews' for reviews
+        localField: 'beautician.reviews',
+        foreignField: '_id',
+        as: 'beautician.reviews'
+      }
+    },
+    {
+      $addFields: {
+        'beautician.averageRating': {
+          $avg: '$beautician.reviews.rating'
+        }
+      }
+    }
+  ]);
+
   return appointments;
 }
 
