@@ -110,7 +110,7 @@ const listAvailableCards = async (customerId) => {
 const createCustomer = async ({ email, card }) => {
   const user = await userService.getUserByEmail(email);
   let customer;
-  if (user && user.customerId) {
+  if (user && user.customerId !== "") {
     customer = await stripe.customers.retrieve(user.customerId);
   } else {
     customer = await stripe.customers.create({
@@ -130,7 +130,8 @@ const createCustomer = async ({ email, card }) => {
 
   // console.log(user)
   // console.log(number);
-  const cardToken = await stripe.tokens.create({
+  try {
+    const cardToken = await stripe.tokens.create({
     card: {
       number,
       exp_month,
@@ -138,12 +139,15 @@ const createCustomer = async ({ email, card }) => {
       cvc,
     },
   })
-
+  // console.log("card token: ", cardToken);
 
   const createdCard = await stripe.customers.createSource(user.customerId, { source: cardToken.id })
-  console.log("created card: ", createdCard)
-
   return createdCard;
+  // console.log("created card: ", createdCard)
+  } catch(error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Your card number is incorrect!")
+  }
+
 }
 
 const listAllPayments = async (accountId) => {

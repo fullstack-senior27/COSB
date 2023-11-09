@@ -21,7 +21,7 @@ const createCustomer = catchAsync(async (req, res) => {
   // const card = await paymentService.createCard(req.body);
   // console.log("card === ", card)
   // return;
-  console.log(req.body);
+  // console.log(req.body);
   // const customer = await paymentService.createCustomer(req.body.type, req.body.email, req.body.card.number, req.body.card.exp_month, req.body.card.exp_year, req.body.card.cvc, req.body.accountId);
   const customer = await paymentService.createCustomer(req.body);
   return new ApiSuccess(res, httpStatus.CREATED, "Customer added successfully", customer)
@@ -67,7 +67,8 @@ const listAllPayouts = catchAsync(async (req, res) => {
 
 const deleteCard = catchAsync(async (req, res) => {
   const deleted = await paymentService.deleteCard(req.params.cardId, req.user.customerId);
-  return new ApiSuccess(res, httpStatus.NO_CONTENT, "Card deleted successfully", deleted);
+  console.log(deleted)
+  return new ApiSuccess(res, httpStatus.OK, "Card deleted successfully", deleted);
 })
 
 module.exports = {
