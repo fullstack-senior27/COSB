@@ -88,11 +88,17 @@ const createBlogCategory = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.CREATED, 'Blog category created successfuly', blog_category);
 })
 
+const getRelatedBlogs = catchAsync(async (req, res) => {
+  const blogs = await blogService.getRelatedBlogs(req.params.blogId);
+  return new ApiSuccess(res, httpStatus.OK, "Related blogs", blogs)
+})
+
 module.exports = {
   createBlog,
   getBlogs,
   getBlog,
   updateBlog,
   deleteBlog,
-  createBlogCategory
+  createBlogCategory,
+  getRelatedBlogs
 };

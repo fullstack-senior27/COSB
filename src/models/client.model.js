@@ -11,6 +11,10 @@ const clientSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Beautician'
   },
+  offlineClient: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'OfflineClient'
+  }
 }, {
   timestamps: true
 })

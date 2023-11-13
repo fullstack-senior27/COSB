@@ -13,7 +13,7 @@ const getBlogs = async () => {
 const getBlogsByTopic = async (blogCategoryId) => {
   const blogs = await Blog.find({
     blog_category: blogCategoryId
-  }).populate('user').populate('blog_category');
+  }).populate('author').populate('blog_category');
   return blogs
 }
 
@@ -48,11 +48,6 @@ const deleteBlog = async (blog_id) => {
   if (!deletedBlog) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Blog does not exist', false);
   }
-  // console.log(deletedBlog)
-  // // const updatedAdmin = await adminService.getAdminById(deletedBlog.author);
-  // const updatedAdmin = await Admin.findByIdAndUpdate(deletedBlog.author, {
-  //   $pull: { blogs: blog_id }
-  // }, { new: true })
   await deletedBlog.remove();
   // console.log(updatedAdmin);
   return deletedBlog;
@@ -65,6 +60,18 @@ const createBlogCategory = async (name) => {
   return blogCategory;
 }
 
+const getRelatedBlogs = async (blogId) => {
+  const blog = await getBlogById(blogId);
+
+  if (blog) {
+    const relatedBlogs = await Blog.find({
+      blog_category: blog.blog_category,
+      _id: { $ne: blogId }
+    }).populate('blog_category').limit(3);
+    return relatedBlogs
+  }
+}
+
 module.exports = {
   getBlogs,
   getBlogsByTopic,
@@ -72,5 +79,6 @@ module.exports = {
   getBlogById,
   updateBlog,
   deleteBlog,
-  createBlogCategory
+  createBlogCategory,
+  getRelatedBlogs
 }

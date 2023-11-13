@@ -6,16 +6,23 @@ const ApiError = require("../utils/ApiError");
 const getClientsByBeauticianId = async (beauticianId) => {
   const clients = await Client.find({
     beautician: beauticianId
-  }).sort({ createdAt: 'desc' }).populate('client');
+  }).sort({ createdAt: 'desc' }).populate('client').populate('offlineClient');
   return clients;
 }
 
 const createClient = async (beautician, user) => {
-  const client = await Client.create({
-    beautician,
-    client: user
-  })
-  console.log(client)
+  let client;
+  if (user.role) {
+    client = await Client.create({
+      beautician,
+      client: user._id
+    })
+  } else {
+    client = await Client.create({
+      beautician,
+      offlineClient: user._id
+    })
+  }
   return client;
 }
 
@@ -31,7 +38,7 @@ const registerClient = async (userBody, beautician) => {
     throw new ApiError(httpStatus.CONFLICT, "Client already exists")
   }
   const user = await OfflineClient.create(userBody);
-  const client = await createClient(beautician, user._id)
+  const client = await createClient(beautician, user)
   return client;
 }
 

@@ -11,6 +11,9 @@ router
 router
   .route("/:blog_id").get(validate(blogValidation.getBlog), blogController.getBlog)
 
+router
+  .route('/related/:blogId').get(blogController.getRelatedBlogs)
+
 
 router
   .route("/categories/all")
