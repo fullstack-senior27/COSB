@@ -14,7 +14,7 @@ const getAllPages = catchAsync(async (req, res) => {
 })
 
 const getPageByKey = catchAsync(async (req, res) => {
-  const page = await pageService.getPageByKey(req.body.key)
+  const page = await pageService.getPageByKey(req.params.key)
   return new ApiSuccess(res, httpStatus.OK, "Feteched page successfully", page)
 })
 

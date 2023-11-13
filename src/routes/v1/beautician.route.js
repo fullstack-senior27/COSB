@@ -78,7 +78,7 @@ router
 // reviews
 router
   .route('/reviews')
-  .get(beauticianController.getAllReviewsByBeauticianId)
+  .post(beauticianController.getAllReviewsByBeauticianId)
 
 // clients
 router
@@ -86,7 +86,7 @@ router
   .get(auth('beautician', 'manageClients'), clientController.getAllClientsForBeautician)
 
 router
-  .route('/clients/register')
+  .route('/clients/new/add')
   .post(auth('beautician', 'manageClients'), validate(clientValidation.registerNewClient), clientController.registerNewClient)
 
 // router

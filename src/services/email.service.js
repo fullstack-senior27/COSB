@@ -45,5 +45,6 @@ If you did not create an account, then ignore this email.`;
 
 module.exports = {
   sendResetPasswordEmail,
-  sendVerificationEmail
+  sendVerificationEmail,
+  sendEmail
 };

@@ -5,8 +5,14 @@ const registerNewClient = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().required(),
-    phone: Joi.string().required(),
-    // role: Joi.string().required().valid('user', 'beautician', 'admin')
+    mobileNumber: Joi.string().required(),
+    homeNumber: Joi.string(),
+    streetAddress: Joi.string(),
+    apt: Joi.number(),
+    city: Joi.string(),
+    state: Joi.string(),
+    zip: Joi.string(),
+    birthday: Joi.string()
   }),
 };
 

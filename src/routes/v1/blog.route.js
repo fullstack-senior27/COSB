@@ -7,7 +7,7 @@ const { blogValidation } = require('../../validations');
 const router = express.Router();
 
 router
-  .route("").get(blogController.getBlogs)
+  .route("").post(blogController.getBlogs)
 router
   .route("/:blog_id").get(validate(blogValidation.getBlog), blogController.getBlog)
 

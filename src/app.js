@@ -15,6 +15,7 @@ const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const { Buffer } = require('node:buffer');
+const { sendEmail } = require('./services/email.service');
 
 const app = express();
 
@@ -25,65 +26,49 @@ if (config.env !== 'test') {
 
 // set security HTTP headers
 app.use(helmet());
-app.post('/webhook', express.raw({ type: 'application/json' }), (request, response) => {
+app.post('/webhook', express.raw({ type: 'application/json' }), async (request, response) => {
   const payloadString = request.body;
-  // const payloadString = request;
-  // const payloadBuffer = Buffer.from(JSON.stringify(payloadString));
-  // const payloadString = request.body;
-  console.log("payload (request): ", payloadString)
-  console.log("11111111111111111111111111111111111111111");
+  // console.log("payload (request): ", payloadString)
   let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
   const sig = request.headers['stripe-signature'];
-  console.log(sig.toString());
+  // console.log(sig.toString());
 
-  // const header = stripe.webhooks.generateTestHeaderString({
-  //   payload: payloadString,
-  //   endpointSecret,
-  // });
-  // const sig = "sk_test_51IcQKWDwwlfx8vZDtKSBliM7hrut2EVKMBrq4L8oV1gfy4PgtTQqrlS7SfNKO6HunhNkW4lXmULh2bEiTUjLXEOQ00Z377rtca"
-  // console.log("signature: ", sig)
-  // console.log("signature type: ---> ", typeof sig)
   let event;
 
   try {
-    // event = request.body
     event = stripe.webhooks.constructEvent(payloadString, sig, endpointSecret);
   } catch (err) {
-    console.log("222222222222222222222222222222222222", err);
-    // response.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
-  console.log("Event Type: ", event.type);
 
+  const paymentIntent = event.data.object;
+  console.log(paymentIntent);
   // Handle the event
   switch (event.type) {
     case 'payment_intent.succeeded':
-      const paymentIntentSucceeded = event.data.object;
-      // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-      // Then define and call a function to handle the event payment_intent.succeeded
-      console.log("Payment Intent success", paymentIntentSucceeded);
-      // return response.json()
+      // console.log(paymentIntent)
+      sendEmail(paymentIntent.receipt_email, "Payment Receipt", "Click on the link to get the receipt", paymentIntent.receipt_url)
       break;
     // ... handle other event types
+    case 'payment_intent.canceled':
+      console.log("Payment Intent cancelled")
+      break;
+
+    case 'payment_intent.requires_action':
+      console.log("Payment Intent requires action")
+      break;
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
 
   // Return a 200 response to acknowledge receipt of the event
   response.send({
-    message: "Payment Succeeded"
+    message: "Email sent"
   });
 });
 
 // parse json request body
 app.use(express.json());
-// app.use((req, res, next) => {
-//   if (req.originalUrl === '/webhook') {
-//     next(); // Do nothing with the body because I need it in a raw state.
-//   } else {
-//     express.json()(req, res, next);  // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
-//   }
-// });
 
 
 // parse urlencoded request body

@@ -9,7 +9,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(validate(serviceValidation.getServicesByBeautician), serviceController.getServicesByBeautician)
+  .post(validate(serviceValidation.getServicesByBeautician), serviceController.getServicesByBeautician)
 
 router
   .route('/categories/all')
