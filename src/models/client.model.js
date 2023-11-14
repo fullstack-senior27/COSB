@@ -10,10 +10,6 @@ const clientSchema = mongoose.Schema({
   beautician: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Beautician'
-  },
-  offlineClient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'OfflineClient'
   }
 }, {
   timestamps: true

@@ -16,7 +16,7 @@ router
 
 router
   .route('/list')
-  .get(beauticianController.getBeauticians)
+  .post(beauticianController.getBeauticians)
 
 // service routes
 router
@@ -89,9 +89,11 @@ router
   .route('/clients/new/add')
   .post(auth('beautician', 'manageClients'), validate(clientValidation.registerNewClient), clientController.registerNewClient)
 
-// router
-//   .route('/clients/update')
-//   .patch(auth('beautician', 'manageClients'), validate(clientValidation.updateClient))
+router
+  .route('/clients/update')
+  .patch(auth('beautician', 'manageClients'), clientController.updateClient)
+
+router.route('/client/block').post(auth('beautician', 'manageClients'), clientController.blockClient)
 
 router
   .route('/connect_account/create')

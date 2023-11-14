@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { appointmentService, _service } = require("../services");
+const { appointmentService, _service, beauticianService } = require("../services");
 const ApiSuccess = require("../utils/ApiSuccess");
 const catchAsync = require("../utils/catchAsync");
 const ApiError = require("../utils/ApiError");
@@ -7,6 +7,10 @@ const pick = require("../utils/pick");
 
 const createAppointment = catchAsync(async (req, res) => {
   const { user, beautician, date, zipcode, services, startTime } = req.body;
+  const existingBeautician = await beauticianService.getBeauticianById(beautician);
+  if (existingBeautician.blockedClients.includes(user)) {
+    throw new ApiError(httpStatus.NOT_ACCEPTABLE, "You have been blocked by this beautician");
+  }
   // const user = req.user._id;
   // if (user.toString() !== req.user._id.toString()) {
   //   throw new ApiError(httpStatus.FORBIDDEN, "You are not allowed");

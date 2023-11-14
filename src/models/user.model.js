@@ -33,6 +33,28 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    homeNumber: {
+      type: String,
+      unique: true
+    },
+    streetAddress: {
+      type: String
+    },
+    apt: {
+      type: Number
+    },
+    city: {
+      type: String
+    },
+    state: {
+      type: String
+    },
+    zip: {
+      type: String
+    },
+    birthday: {
+      type: String
+    },
     password: {
       type: String,
       required: true,
@@ -56,6 +78,10 @@ const userSchema = mongoose.Schema(
     customerId: {
       type: String,
       default: ""
+    },
+    isOffline: {
+      type: Boolean,
+      default: false
     }
     // appointments: [
     //   {

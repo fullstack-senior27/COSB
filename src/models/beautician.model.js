@@ -150,7 +150,13 @@ const beauticianSchema = mongoose.Schema(
     accountId: {
       type: String,
       default: ""
-    }
+    },
+    blockedClients: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      }
+    ],
   },
   {
     timestamps: true,
