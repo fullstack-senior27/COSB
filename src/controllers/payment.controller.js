@@ -13,7 +13,7 @@ const createSeller = catchAsync(async (req, res) => {
 
 const processPayment = catchAsync(async (req, res) => {
   const appointment = await appointmentService.getAppointmentById(req.body.appointmentId);
-  const paymentIntent = await paymentService.processPayment(appointment);
+  const paymentIntent = await paymentService.processPayment(appointment, req.body.cardId);
   return new ApiSuccess(res, httpStatus.CREATED, "Payment successfull", paymentIntent);
 })
 

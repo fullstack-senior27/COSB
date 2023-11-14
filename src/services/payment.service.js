@@ -36,7 +36,7 @@ const generateAccountLink = async (beauticianId) => {
   return link
 }
 
-const processPayment = async (appointment) => {
+const processPayment = async (appointment, cardId) => {
   // console.log("appointment: ", appointment);
   if (appointment.paymentStatus === "paid") {
     throw new ApiError(httpStatus.CONFLICT, "Payment is already done for this appointment")
@@ -49,7 +49,8 @@ const processPayment = async (appointment) => {
     amount: appointment.amount * 100,
     currency: 'usd',
     customer: appointment.user.customerId,
-    payment_method: cards.data[0].id,
+    // payment_method: cards.data[0].id,
+    payment_method: cardId,
     automatic_payment_methods: {
       enabled: true,
       allow_redirects: 'never'
