@@ -40,7 +40,7 @@ const createPayout = catchAsync(async (req, res) => {
 const getBalance = catchAsync(async (req, res) => {
   const totalEarning = await paymentService.getTotalEarning(req.user.accountId);
   const withdrawBalance = await paymentService.getWithdrawBalance(req.user.accountId)
-  const remainingAmount = Number(totalEarning) - Number(withdrawBalance)
+  const remainingAmount = Math.abs(Number(totalEarning) - Number(withdrawBalance))
   const balanceObj = {
     totalEarning,
     withdrawBalance,

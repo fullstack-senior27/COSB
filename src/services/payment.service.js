@@ -150,39 +150,24 @@ const createCustomer = async ({ email, card }) => {
 }
 
 const listAllPayments = async (accountId) => {
-  const limit = 10;
+  // const limit = 10;
   let paymentIntents = await stripe.transfers.list({ destination: accountId });
-  while (paymentIntents.has_more) {
-    paymentIntents = await stripe.transfers.list({ destination: accountId, limit: limit + 10 })
-  }
-  paymentIntents = paymentIntents.data.map(pi => ({
-    ...pi,
-    amount: pi.amount / 100
-  }))
   return paymentIntents;
 }
 
 const listAllBalanceTransactions = async (accountId) => {
-  const limit = 10
   let balanceTransactions = await stripe.balanceTransactions.list({
     stripeAccount: accountId
   })
-  while (balanceTransactions.has_more) {
-    balanceTransactions = await stripe.balanceTransactions.list({
-      limit: limit + 10
-    }, {
-      stripeAccount: accountId
-    })
-  }
   let charges = balanceTransactions.data.filter(bt => bt.reporting_category === "charge")
   charges = charges.map(charge => ({
     ...charge,
-    amount: charge.amount / 100
+    amount: charge.net / 100
   }));
   let payouts = balanceTransactions.data.filter(bt => bt.reporting_category === "payout")
   payouts = payouts.map(payout => ({
     ...payout,
-    amount: payout.amount / 100
+    amount: payout.net / 100
   }));
   return {
     charges,
@@ -209,13 +194,13 @@ const listAllPayouts = async (accountId) => {
   let payouts = await stripe.payouts.list({
     stripeAccount: accountId
   })
-  while (payouts.has_more) {
-    payouts = await stripe.payouts.list({
-      limit: limit + 10
-    }, {
-      stripeAccount: accountId
-    })
-  }
+  // while (payouts.has_more) {
+  //   payouts = await stripe.payouts.list({
+  //     limit: limit + 10
+  //   }, {
+  //     stripeAccount: accountId
+  //   })
+  // }
   // console.log(payouts);
   payouts = payouts.data.map(payout => ({
     ...payout,
@@ -229,7 +214,7 @@ const getTotalEarning = async (accountId) => {
   const balance = await stripe.balance.retrieve({
     stripeAccount: accountId
   })
-  const totalEarning = ((balance.available[0].amount + balance.pending[0].amount) / 100).toFixed(2)
+  const totalEarning = ((balance.available[0].amount + Math.abs(balance.pending[0].amount)) / 100).toFixed(2)
   return totalEarning;
 }
 
