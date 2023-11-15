@@ -90,19 +90,17 @@ const listAvailableCards = async (customerId) => {
   if (customerId === "") {
     return [];
   }
-  const limit = 10;
   let cards = await stripe.customers.listSources(
     customerId,
     { object: 'card' }
   )
 
-  if (cards.has_more) {
-    cards = await stripe.customers.listSources(
-      customerId,
-      limit + 10,
-      { object: 'card' }
-    )
-  }
+  // if (cards.has_more) {
+  //   cards = await stripe.customers.listSources(
+  //     customerId,
+  //     { object: 'card' }
+  //   )
+  // }
   return cards.data
 }
 
@@ -139,12 +137,10 @@ const createCustomer = async ({ email, card }) => {
       },
     })
     // console.log("card token: ", cardToken);
-
     const createdCard = await stripe.customers.createSource(user.customerId, { source: cardToken.id })
     return createdCard;
-    // console.log("created card: ", createdCard)
   } catch (error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Your card number is incorrect!")
+    throw new ApiError(httpStatus.BAD_REQUEST, error.raw.message || "Error while adding your card!")
   }
 
 }
@@ -157,7 +153,8 @@ const listAllPayments = async (accountId) => {
 
 const listAllBalanceTransactions = async (accountId) => {
   let balanceTransactions = await stripe.balanceTransactions.list({
-    stripeAccount: accountId
+    stripeAccount: accountId,
+    limit: 100
   })
   let charges = balanceTransactions.data.filter(bt => bt.reporting_category === "charge")
   charges = charges.map(charge => ({
@@ -192,7 +189,8 @@ const createPayout = async (amount, bankAccountId, accountId) => {
 const listAllPayouts = async (accountId) => {
   const limit = 10
   let payouts = await stripe.payouts.list({
-    stripeAccount: accountId
+    stripeAccount: accountId,
+    limit: 100
   })
   // while (payouts.has_more) {
   //   payouts = await stripe.payouts.list({

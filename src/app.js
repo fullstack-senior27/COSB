@@ -24,46 +24,46 @@ if (config.env !== 'test') {
 
 // set security HTTP headers
 app.use(helmet());
-// app.post('/webhook', express.raw({ type: 'application/json' }), async (request, response) => {
-//   const payloadString = request.body;
-//   // console.log("payload (request): ", payloadString)
-//   let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
-//   const sig = request.headers['stripe-signature'];
-//   // console.log(sig.toString());
+app.post('/webhook', express.raw({ type: 'application/json' }), async (request, response) => {
+  const payloadString = request.body;
+  // console.log("payload (request): ", payloadString)
+  let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
+  const sig = request.headers['stripe-signature'];
+  // console.log(sig.toString());
 
-//   let event;
+  let event;
 
-//   try {
-//     event = stripe.webhooks.constructEvent(payloadString, sig, endpointSecret);
-//   } catch (err) {
-//     return;
-//   }
+  try {
+    event = stripe.webhooks.constructEvent(payloadString, sig, endpointSecret);
+  } catch (err) {
+    return;
+  }
 
-//   const paymentIntent = event.data.object;
-//   console.log(paymentIntent);
-//   // Handle the event
-//   switch (event.type) {
-//     case 'payment_intent.succeeded':
-//       // console.log(paymentIntent)
-//       sendEmail(paymentIntent.receipt_email, "Payment Receipt", "Click on the link to get the receipt", paymentIntent.receipt_url)
-//       break;
-//     // ... handle other event types
-//     case 'payment_intent.canceled':
-//       console.log("Payment Intent cancelled")
-//       break;
+  const paymentIntent = event.data.object;
+  console.log(paymentIntent);
+  // Handle the event
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      // console.log(paymentIntent)
+      sendEmail(paymentIntent.receipt_email, "Payment Receipt", "Click on the link to get the receipt", paymentIntent.receipt_url)
+      break;
+    // ... handle other event types
+    case 'payment_intent.canceled':
+      console.log("Payment Intent cancelled")
+      break;
 
-//     case 'payment_intent.requires_action':
-//       console.log("Payment Intent requires action")
-//       break;
-//     default:
-//       console.log(`Unhandled event type ${event.type}`);
-//   }
+    case 'payment_intent.requires_action':
+      console.log("Payment Intent requires action")
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
 
-//   // Return a 200 response to acknowledge receipt of the event
-//   response.send({
-//     message: "Email sent"
-//   });
-// });
+  // Return a 200 response to acknowledge receipt of the event
+  response.send({
+    message: "Email sent"
+  });
+});
 
 // parse json request body
 app.use(express.json());
