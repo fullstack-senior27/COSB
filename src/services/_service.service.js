@@ -26,12 +26,12 @@ const createService = async ({ name, price, description, durationInMinutes, cate
 }
 
 const getServiceById = async (service_id) => {
-  const service = await Service.findById(service_id).populate('service_category')
+  const service = await Service.findById(service_id).populate('service_category').populate('service_type')
   return service;
 }
 
 const getAllServices = async () => {
-  const allServices = await Service.find().populate('service_category')
+  const allServices = await Service.find().populate('service_category').populate('service_type')
 
   return allServices;
 }
@@ -58,66 +58,61 @@ const deleteService = async (service_id, cur_user) => {
 const getServicesByBeauticianId = async (beautician_id) => {
   const services = await Service.find({
     beautician: beautician_id
-  }).populate('service_category')
+  }).populate('service_category').populate('service_type').sort({ price: 'asc' })
   return services;
 }
 
 const filterServices = async (filters, beauticianId) => {
-  // const matchConditions = [
 
-  // ]
-  // if(filters.tags) {
-  //   matchConditions.push(
-  //     {
-  //       $or: [
-  //         {
-  //           'service_type': { $regex: `${filters.tag}`, $options: 'i' }
-  //         },
-  //         {
-  //           'service_category': { $regex: `${filters.tag}`, $options: 'i' }
-  //         }
-  //       ]
-  //     },
-  //   )
-  // }
-  // const aggregationPipeline = [
-  //   {
-  //     $lookup: {
-  //       from: 'service_types',
-  //       localField: 'service_type',
-  //       foreignField: '_id',
-  //       as: 'service_type'
-  //     }
-  //   },
-  //   {
-  //     $unwind: "$service_type"
-  //   },
-  //   {
-  //     $lookup: {
-  //       from: 'service_categories',
-  //       localField: 'service_category',
-  //       foreignField: '_id',
-  //       as: 'service_category'
-  //     }
-  //   },
-  //   {
-  //     $unwind: "$service_category"
-  //   },
-  //   // {
-  //   //   $sort: {
-  //   //     "price": filters.sort_price === 'desc' ? -1 : 1
-  //   //   }
-  //   // },
-  //   {
-  //     $match: {
-  //       "beautician": beauticianId
-  //     }
-  //   }
-  // ]
-
-  const services = await Service.find({
-    beautician: beauticianId
-  }).sort({ price: filters.sort_price }).populate('service_type').populate('service_category')
+  const aggregationPipeline = [
+    {
+      $lookup: {
+        from: 'service_types',
+        localField: 'service_type',
+        foreignField: '_id',
+        as: 'service_type'
+      }
+    },
+    {
+      $unwind: "$service_type"
+    },
+    {
+      $lookup: {
+        from: 'service_categories',
+        localField: 'service_category',
+        foreignField: '_id',
+        as: 'service_category'
+      }
+    },
+    {
+      $unwind: "$service_category"
+    },
+    {
+      $sort: {
+        "price": filters.sort_price === 'desc' ? -1 : 1
+      }
+    },
+    {
+      $match: {
+        "beautician": mongoose.Types.ObjectId(beauticianId)
+      }
+    }
+  ]
+  if (filters.tags) {
+    aggregationPipeline.push(
+      {
+        $or: [
+          {
+            'service_type': { $regex: `${filters.tag}`, $options: 'i' }
+          },
+          {
+            'service_category': { $regex: `${filters.tag}`, $options: 'i' }
+          }
+        ]
+      },
+    )
+  }
+  const services = await Service.aggregate(aggregationPipeline);
   return services;
 }
 
