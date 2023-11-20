@@ -14,9 +14,12 @@ router
   .route('/profile/edit')
   .patch(auth('beautician', 'manageBeauticianProfile'), beauticianController.updateBeautician)
 
+// public apis
 router
   .route('/list')
   .post(beauticianController.getBeauticians)
+
+// router.route('/pictures').post(beauticianController.getPicturesByBeautician)
 
 // service routes
 router

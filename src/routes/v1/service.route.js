@@ -11,6 +11,8 @@ router
   .route('/')
   .post(validate(serviceValidation.getServicesByBeautician), serviceController.getServicesByBeautician)
 
+router.route('/filter').post(serviceController.filterServices)
+
 router
   .route('/categories/all')
   .get(serviceCategoryController.getAllCategories)

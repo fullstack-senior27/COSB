@@ -50,7 +50,55 @@ const deleteBeauticianById = async (beauticianId) => {
 
 
 const getAllBeauticians = async () => {
-  const beauticians = await Beautician.find();
+  const aggregationPipeline = [
+    {
+      $lookup: {
+        from: 'services',
+        localField: 'services',
+        foreignField: '_id',
+        as: 'services'
+      }
+    },
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'products',
+        foreignField: '_id',
+        as: 'products'
+      }
+    },
+    {
+      $lookup: {
+        from: 'service_categories',
+        localField: 'service_categories',
+        foreignField: '_id',
+        as: 'service_categories'
+      }
+    },
+    {
+      $lookup: {
+        from: 'reviews',
+        localField: 'reviews',
+        foreignField: '_id',
+        as: 'reviews'
+      }
+    },
+    {
+      $addFields: {
+        ratingCount: { $size: '$reviews.rating' }, // Count the total ratings
+        avgRating: {
+          $avg: {
+            $map: {
+              input: '$reviews',
+              as: 'review',
+              in: '$$review.rating',
+            },
+          },
+        },
+      },
+    },
+  ]
+  const beauticians = await Beautician.aggregate(aggregationPipeline);
   return beauticians;
 }
 
@@ -100,6 +148,22 @@ const filterBeauticians = async (search, location, date, price_range, service_ty
         localField: 'services',
         foreignField: '_id',
         as: 'services'
+      }
+    },
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'products',
+        foreignField: '_id',
+        as: 'products'
+      }
+    },
+    {
+      $lookup: {
+        from: 'service_categories',
+        localField: 'service_categories',
+        foreignField: '_id',
+        as: 'service_categories'
       }
     },
     {

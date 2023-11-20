@@ -95,11 +95,17 @@ const getServicesByBeautician = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Services fetched successfully", services);
 })
 
+const filterServices = catchAsync(async (req, res) => {
+  const services = await _service.filterServices(req.body.filters, req.body.beauticianId);
+  return new ApiSuccess(res, httpStatus.OK, "Services fetched successfully", services)
+})
+
 module.exports = {
   createService,
   getService,
   getAllServices,
   updateService,
   deleteService,
-  getServicesByBeautician
+  getServicesByBeautician,
+  filterServices
 };

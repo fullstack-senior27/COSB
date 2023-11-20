@@ -62,11 +62,71 @@ const getServicesByBeauticianId = async (beautician_id) => {
   return services;
 }
 
+const filterServices = async (filters, beauticianId) => {
+  // const matchConditions = [
+
+  // ]
+  // if(filters.tags) {
+  //   matchConditions.push(
+  //     {
+  //       $or: [
+  //         {
+  //           'service_type': { $regex: `${filters.tag}`, $options: 'i' }
+  //         },
+  //         {
+  //           'service_category': { $regex: `${filters.tag}`, $options: 'i' }
+  //         }
+  //       ]
+  //     },
+  //   )
+  // }
+  // const aggregationPipeline = [
+  //   {
+  //     $lookup: {
+  //       from: 'service_types',
+  //       localField: 'service_type',
+  //       foreignField: '_id',
+  //       as: 'service_type'
+  //     }
+  //   },
+  //   {
+  //     $unwind: "$service_type"
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: 'service_categories',
+  //       localField: 'service_category',
+  //       foreignField: '_id',
+  //       as: 'service_category'
+  //     }
+  //   },
+  //   {
+  //     $unwind: "$service_category"
+  //   },
+  //   // {
+  //   //   $sort: {
+  //   //     "price": filters.sort_price === 'desc' ? -1 : 1
+  //   //   }
+  //   // },
+  //   {
+  //     $match: {
+  //       "beautician": beauticianId
+  //     }
+  //   }
+  // ]
+
+  const services = await Service.find({
+    beautician: beauticianId
+  }).sort({ price: filters.sort_price }).populate('service_type').populate('service_category')
+  return services;
+}
+
 module.exports = {
   createService,
   getServiceById,
   getAllServices,
   updateService,
   deleteService,
-  getServicesByBeauticianId
+  getServicesByBeauticianId,
+  filterServices
 };
