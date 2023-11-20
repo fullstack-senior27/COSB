@@ -54,7 +54,7 @@ const verifyEmail = catchAsync(async (req, res) => {
 });
 
 const getProfile = catchAsync(async (req, res) => {
-  const beautician = await beauticianService.getBeauticianById(req.user._id);
+  const beautician = await beauticianService.getBeauticianById(req.body.beauticianId);
   console.log("beautician: ", beautician);
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');

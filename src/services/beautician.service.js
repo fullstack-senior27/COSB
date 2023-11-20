@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { Beautician } = require('../models');
 const ApiError = require('../utils/ApiError');
+const mongoose = require('mongoose');
 
 
 const createBeautician = async (beauticianBody) => {
@@ -16,7 +17,68 @@ const createBeautician = async (beauticianBody) => {
 
 
 const getBeauticianById = async (id) => {
-  return Beautician.findById(id).populate('services').populate('service_categories').populate('products').populate('reviews');
+  const aggregationPipeline = [
+    {
+      $lookup: {
+        from: 'services',
+        localField: 'services',
+        foreignField: '_id',
+        as: 'services'
+      }
+    },
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'products',
+        foreignField: '_id',
+        as: 'products'
+      }
+    },
+    {
+      $lookup: {
+        from: 'service_categories',
+        localField: 'service_categories',
+        foreignField: '_id',
+        as: 'service_categories'
+      }
+    },
+    {
+      $lookup: {
+        from: 'reviews',
+        localField: 'reviews',
+        foreignField: '_id',
+        as: 'reviews'
+      }
+    },
+    {
+      $addFields: {
+        ratingCount: { $size: '$reviews.rating' }, // Count the total ratings
+        avgRating: {
+          $avg: {
+            $map: {
+              input: '$reviews',
+              as: 'review',
+              in: '$$review.rating',
+            },
+          },
+        },
+      },
+    },
+    {
+      $match: {
+        _id: mongoose.Types.ObjectId(id)
+      }
+    },
+    {
+      $project: {
+        password: 0 // Exclude the password field
+      }
+    }
+  ]
+  console.log(id)
+  const beautician = await Beautician.aggregate(aggregationPipeline);
+  return beautician;
+  // return Beautician.findById(id).populate('services').populate('service_categories').populate('products').populate('reviews');
 };
 
 
@@ -97,6 +159,11 @@ const getAllBeauticians = async () => {
         },
       },
     },
+    {
+      $project: {
+        password: 0 // Exclude the password field
+      }
+    }
   ]
   const beauticians = await Beautician.aggregate(aggregationPipeline);
   return beauticians;
@@ -193,6 +260,11 @@ const filterBeauticians = async (search, location, date, price_range, service_ty
         $or: matchConditions
       }
     },
+    {
+      $project: {
+        password: 0 // Exclude the password field
+      }
+    }
     // {
     //   $unwind: "$services"
     // },

@@ -8,7 +8,7 @@ const router = express.Router();
 
 router
   .route('/profile')
-  .get(auth('beautician', 'manageBeauticianProfile'), beauticianController.getProfile)
+  .post(beauticianController.getProfile)
 
 router
   .route('/profile/edit')
