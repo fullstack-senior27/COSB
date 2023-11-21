@@ -283,7 +283,7 @@ const filterBeauticians = async ({ search, location, date, price_range, service_
   let filteredResults;
   if (price_range || service_type || service_category || sort_price || avgRating) {
     // console.log("--------------")
-    console.log(avgRating)
+    // console.log(avgRating)
     let ratingCondition = true;
     let priceCondition = true;
     let categoryCondition = true;
@@ -298,10 +298,12 @@ const filterBeauticians = async ({ search, location, date, price_range, service_
         // console.log(priceCondition)
       }
       if (service_category) {
-        categoryCondition = beautician.services.some(service => service.service_category.name.toLowerCase() === service_category.toLowerCase());
+        categoryCondition = beautician.service_categories.some(service => {
+          return service.name === service_category;
+        });
       }
-      if (service_category) {
-        typeCondition = beautician.service_types.includes(service_type);
+      if (service_type) {
+        typeCondition = beautician.services.some(service => service.service_type.name === service_type);
       }
       // if(sort_price) {
       //   const sortCondition = beautician.services.some()
