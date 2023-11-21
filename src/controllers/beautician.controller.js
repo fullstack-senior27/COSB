@@ -54,8 +54,8 @@ const verifyEmail = catchAsync(async (req, res) => {
 });
 
 const getProfile = catchAsync(async (req, res) => {
-  const beautician = await beauticianService.getBeauticianById(req.body.beauticianId);
-  console.log("beautician: ", beautician);
+  const beautician = await beauticianService.getBeauticianDetails(req.body.beauticianId);
+  // console.log("beautician: ", beautician);
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -79,8 +79,8 @@ const getBeauticians = catchAsync(async (req, res) => {
   const limit = parseInt(options.limit) || 10;
   const skip = (page - 1) * limit;
   if (req.body.filters) {
-    const { search, location, date, price_range, service_type, sort_price } = req.body.filters
-    beauticians = await beauticianService.filterBeauticians(search, location, date, price_range, service_type, sort_price);
+    const { search, location, date, price_range, service_type, sort_price, avgRating } = req.body.filters
+    beauticians = await beauticianService.filterBeauticians(req.body.filters);
   }
   else {
     beauticians = await beauticianService.getAllBeauticians();

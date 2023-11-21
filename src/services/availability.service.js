@@ -5,8 +5,8 @@ const ApiError = require("../utils/ApiError");
 const addAvailableDay = async (updateBody, cur_user) => {
   const { days } = updateBody
   console.log("cur user", cur_user)
-  const beautician = await beauticianService.getBeauticianById(cur_user._id);
-  // console.log(beautician);
+  const beautician = await beauticianService.getBeauticianByEmail(cur_user.email);
+  console.log(beautician);
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, "Beautician does not exist");
   }
@@ -18,7 +18,7 @@ const addAvailableDay = async (updateBody, cur_user) => {
 
 const updateDateAndTime = async (updateBody, cur_user) => {
   const { days } = updateBody;
-  const beautician = await beauticianService.getBeauticianById(cur_user._id)
+  const beautician = await beauticianService.getBeauticianByEmail(cur_user.email)
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, "Beautician does not exist");
   }

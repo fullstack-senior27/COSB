@@ -15,8 +15,11 @@ const createBeautician = async (beauticianBody) => {
   return Beautician.create(beauticianBody);
 };
 
-
 const getBeauticianById = async (id) => {
+  return Beautician.findById(id).populate('services').populate('service_categories').populate('products').populate('reviews');
+}
+
+const getBeauticianDetails = async (id) => {
   const aggregationPipeline = [
     {
       $lookup: {
@@ -77,7 +80,7 @@ const getBeauticianById = async (id) => {
   ]
   console.log(id)
   const beautician = await Beautician.aggregate(aggregationPipeline);
-  return beautician;
+  return beautician[0];
   // return Beautician.findById(id).populate('services').populate('service_categories').populate('products').populate('reviews');
 };
 
@@ -166,10 +169,14 @@ const getAllBeauticians = async () => {
     }
   ]
   const beauticians = await Beautician.aggregate(aggregationPipeline);
+  await Beautician.populate(beauticians, {
+    path: 'services.service_type',
+    model: 'Service_type'
+  })
   return beauticians;
 }
 
-const filterBeauticians = async (search, location, date, price_range, service_type, sort_price, avgRating) => {
+const filterBeauticians = async ({ search, location, date, price_range, service_type, service_category, sort_price, avgRating }) => {
   const matchConditions = [
     {
       $or: [
@@ -265,64 +272,61 @@ const filterBeauticians = async (search, location, date, price_range, service_ty
         password: 0 // Exclude the password field
       }
     }
-    // {
-    //   $unwind: "$services"
-    // },
-    // {
-    //   $unwind: '$reviews'
-    // }
   ];
 
-  const example = await Beautician.aggregate(aggregationPipeline);
-  console.log(example)
-  // Apply additional filters (e.g., price range and rating) to the existing pipeline
-  if (price_range) {
-    const { minPrice, maxPrice } = price_range;
-    aggregationPipeline.push({
-      $match: {
-        "services.price": { $gte: minPrice, $lte: maxPrice }
-      }
-    });
-  }
-
-  if (avgRating) {
-    aggregationPipeline.push({
-      $match: {
-        avgRating: { $eq: avgRating }
-      }
-    });
-  }
-
-  // Apply sorting if needed
-  if (sort_price) {
-    if (sort_price === 'asc') {
-      aggregationPipeline.push({
-        $sort: { "services.price": 1 }
-      });
-    } else {
-      aggregationPipeline.push({
-        $sort: { "services.price": -1 }
-      });
-    }
-  }
 
   const result = await Beautician.aggregate(aggregationPipeline);
   await Beautician.populate(result, {
     path: 'services.service_type',
     model: 'Service_type'
   })
-  const finalResults = []
-  if (service_type) {
-    for (let res of result) {
-      for (let service of res.services) {
-        if (service.service_type.name.localeCompare(service_type, "en", { sensitivity: "base" }) === 0) {
-          finalResults.push(res);
-        }
+  let filteredResults;
+  if (price_range || service_type || service_category || sort_price || avgRating) {
+    // console.log("--------------")
+    console.log(avgRating)
+    let ratingCondition = true;
+    let priceCondition = true;
+    let categoryCondition = true;
+    let typeCondition = true
+    filteredResults = result.filter(beautician => {
+      if (avgRating) {
+        ratingCondition = beautician.avgRating === avgRating;
+        // console.log("rating: ", ratingCondition)
       }
+      if (price_range) {
+        priceCondition = beautician.services.some(service => service.price >= price_range.minPrice && service.price <= price_range.maxPrice)
+        // console.log(priceCondition)
+      }
+      if (service_category) {
+        categoryCondition = beautician.services.some(service => service.service_category.name.toLowerCase() === service_category.toLowerCase());
+      }
+      if (service_category) {
+        typeCondition = beautician.service_types.includes(service_type);
+      }
+      // if(sort_price) {
+      //   const sortCondition = beautician.services.some()
+      // }
+      return ratingCondition && priceCondition && categoryCondition && typeCondition;
+    });
+    // console.log(priceCondition)
+    // console.log(ratingCondition)
+    // console.log(filteredResults);
+    if (sort_price) {
+      filteredResults.sort((a, b) => {
+        // Assuming the price is in the services array, adjust the property accordingly
+        const priceA = a.services[0].price;
+        const priceB = b.services[0].price;
+
+        return sort_price === "asc" ? priceA - priceB : priceB - priceA;// Adjust the sorting logic as needed
+      });
     }
-    return finalResults;
+  } else {
+    filteredResults = result;
   }
-  return result;
+
+
+
+  return filteredResults;
 }
 
 
@@ -335,5 +339,6 @@ module.exports = {
   updateBeauticianById,
   deleteBeauticianById,
   getAllBeauticians,
-  filterBeauticians
+  filterBeauticians,
+  getBeauticianDetails
 };
