@@ -80,6 +80,16 @@ const getBeauticianDetails = async (id) => {
   ]
   console.log(id)
   const beautician = await Beautician.aggregate(aggregationPipeline);
+  await Beautician.populate(beautician, [{
+    path: 'services.service_type',
+    model: 'Service_type'
+  }, {
+    path: 'services.service_category',
+    model: 'Service_category'
+  }, {
+    path: 'reviews.user',
+    model: 'User'
+  }])
   return beautician[0];
   // return Beautician.findById(id).populate('services').populate('service_categories').populate('products').populate('reviews');
 };
