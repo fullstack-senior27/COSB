@@ -2,7 +2,8 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const beauticianService = require('./beautician.service')
-const userService = require('./user.service')
+const userService = require('./user.service');
+const { Appointment } = require('../models');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -208,12 +209,26 @@ const listAllPayouts = async (accountId) => {
   return payouts
 }
 
-const getTotalEarning = async (accountId) => {
-  const balance = await stripe.balance.retrieve({
-    stripeAccount: accountId
-  })
-  const totalEarning = ((balance.available[0].amount + Math.abs(balance.pending[0].amount)) / 100).toFixed(2)
-  return totalEarning;
+const getTotalEarning = async (beauticianId) => {
+  // const balance = await stripe.balance.retrieve({
+  //   stripeAccount: accountId
+  // })
+  // const totalEarning = ((balance.available[0].amount + Math.abs(balance.pending[0].amount)) / 100).toFixed(2)
+  const result = await Appointment.aggregate([
+    {
+      $match: {
+        beautician: beauticianId,
+        paymentStatus: 'paid',
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalEarning: { $sum: '$amount' }, // Assuming there is a field named totalAmount in your Appointment schema
+      },
+    },
+  ]);
+  return result;
 }
 
 const getWithdrawBalance = async (accountId) => {

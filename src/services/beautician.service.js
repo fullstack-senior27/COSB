@@ -195,6 +195,9 @@ const filterBeauticians = async ({ search, location, date, price_range, service_
         },
         {
           'services.name': { $regex: `${search}`, $options: 'i' }
+        },
+        {
+          'service_categories.name': { $regex: `${search}`, $options: 'i' }
         }
       ]
     },
@@ -291,8 +294,8 @@ const filterBeauticians = async ({ search, location, date, price_range, service_
     model: 'Service_type'
   })
   let filteredResults;
-  if (price_range || service_type || service_category || sort_price || avgRating) {
-    // console.log("--------------")
+  if (price_range !== null || service_type !== null || service_category !== null || sort_price !== null || avgRating !== null) {
+    // console.log("--------------") 
     // console.log(avgRating)
     let ratingCondition = true;
     let priceCondition = true;

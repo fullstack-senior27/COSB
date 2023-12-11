@@ -8,6 +8,7 @@ const pick = require("../utils/pick");
 const createAppointment = catchAsync(async (req, res) => {
   const { user, beautician, date, zipcode, services, startTime } = req.body;
   const existingBeautician = await beauticianService.getBeauticianById(beautician);
+  console.log(existingBeautician)
   if (existingBeautician.blockedClients.includes(user)) {
     throw new ApiError(httpStatus.NOT_ACCEPTABLE, "You have been blocked by this beautician");
   }
