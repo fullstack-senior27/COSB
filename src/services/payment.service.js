@@ -2,7 +2,9 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const beauticianService = require('./beautician.service')
-const userService = require('./user.service')
+const userService = require('./user.service');
+const { Appointment } = require('../models');
+const mongoose = require('mongoose')
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -50,12 +52,15 @@ const processPayment = async (appointment, cardId) => {
     currency: 'usd',
     customer: appointment.user.customerId,
     // payment_method: cards.data[0].id,
+    metadata: {
+      appointment: appointment.id
+    },
     payment_method: cardId,
     automatic_payment_methods: {
       enabled: true,
       allow_redirects: 'never'
     },
-    application_fee_amount: 123,
+    // application_fee_amount: 123,
     // on_behalf_of: accountId
     transfer_data: {
       // amount: 877,
@@ -68,8 +73,8 @@ const processPayment = async (appointment, cardId) => {
   const confirmedPaymentIntent = await stripe.paymentIntents.confirm(
     paymentIntent.id
   )
-  appointment.paymentStatus = "paid";
-  await appointment.save();
+  // appointment.paymentStatus = "paid";
+  // await appointment.save();
   return confirmedPaymentIntent
 }
 
@@ -208,12 +213,28 @@ const listAllPayouts = async (accountId) => {
   return payouts
 }
 
-const getTotalEarning = async (accountId) => {
-  const balance = await stripe.balance.retrieve({
-    stripeAccount: accountId
-  })
-  const totalEarning = ((balance.available[0].amount + Math.abs(balance.pending[0].amount)) / 100).toFixed(2)
-  return totalEarning;
+const getTotalEarning = async (beauticianId) => {
+  // const balance = await stripe.balance.retrieve({
+  //   stripeAccount: accountId
+  // })
+  // const totalEarning = ((balance.available[0].amount + Math.abs(balance.pending[0].amount)) / 100).toFixed(2)
+  console.log(beauticianId)
+  const result = await Appointment.aggregate([
+    {
+      $match: {
+        beautician: mongoose.Types.ObjectId(beauticianId),
+        paymentStatus: 'paid',
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalEarning: { $sum: '$amount' }, // Assuming there is a field named totalAmount in your Appointment schema
+      },
+    },
+  ]);
+  // console.log(result)
+  return result[0].totalEarning.toString();
 }
 
 const getWithdrawBalance = async (accountId) => {

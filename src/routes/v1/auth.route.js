@@ -20,7 +20,7 @@ router.post('/verify-email/user', validate(authValidation.verifyEmail), authCont
 
 
 // beautician auth
-router.post('/register/beautician', validate(authValidation.register), beauticianController.register);
+router.post('/register/beautician', validate(authValidation.registerBeautician), beauticianController.register);
 router.post('/login/beautician', validate(authValidation.login), beauticianController.login);
 router.post('/logout/beautician', validate(authValidation.logout), beauticianController.logout);
 router.post('/refresh-tokens/beautician', validate(authValidation.refreshTokens), beauticianController.refreshTokens);

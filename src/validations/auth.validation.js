@@ -11,6 +11,15 @@ const register = {
   }),
 };
 
+const registerBeautician = {
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().custom(password),
+    name: Joi.string().required(),
+    role: Joi.string().required().valid('user', 'beautician', 'admin')
+  }),
+}
+
 const login = {
   body: Joi.object().keys({
     email: Joi.string().required(),
@@ -59,4 +68,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  registerBeautician
 };
