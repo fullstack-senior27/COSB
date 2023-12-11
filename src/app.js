@@ -13,6 +13,8 @@ const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
+const { sendEmail } = require('./services/email.service');
+const { Appointment } = require('./models');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 const app = express();
@@ -40,11 +42,25 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
   }
 
   const paymentIntent = event.data.object;
-  console.log(paymentIntent);
+  // console.log(paymentIntent);
   // Handle the event
   switch (event.type) {
     case 'payment_intent.succeeded':
+      console.log('payment intent succeeded*****************')
+      console.log(event.data.object.metdata)
+      break;
+    case 'transfer.created':
+      console.log('transfer created*****************')
+      console.log(event.data.object)
+      break;
+    case 'charge.succeeded':
       // console.log(paymentIntent)
+      console.log("succeeded: ****************************")
+      console.log(event.data.object)
+      const charge = event.data.object;
+      const appointment = await Appointment.findById(charge.metadata.appointment);
+      appointment.paymentStatus = "paid";
+      await appointment.save();
       sendEmail(paymentIntent.receipt_email, "Payment Receipt", "Click on the link to get the receipt", paymentIntent.receipt_url)
       break;
     // ... handle other event types
@@ -53,6 +69,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
       break;
 
     case 'payment_intent.requires_action':
+      console.log(event.type.object)
       console.log("Payment Intent requires action")
       break;
     default:
