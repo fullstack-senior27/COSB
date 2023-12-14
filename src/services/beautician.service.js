@@ -9,9 +9,9 @@ const createBeautician = async (beauticianBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
 
-  if (await Beautician.isPhoneNoTaken(beauticianBody.phone)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Phone Number already taken');
-  }
+  // if (await Beautician.isPhoneNoTaken(beauticianBody.phone)) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Phone Number already taken');
+  // }
   return Beautician.create(beauticianBody);
 };
 

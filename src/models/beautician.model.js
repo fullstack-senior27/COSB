@@ -14,6 +14,35 @@ const noteSchema = mongoose.Schema({
   }
 })
 
+const timeSlotSchema = mongoose.Schema({
+  startTime: {
+    type: String,
+    // required: true,
+  },
+  endTime: {
+    type: String,
+    // required: true,
+  },
+  isBooked: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const daySchema = mongoose.Schema({
+  day: {
+    type: String
+  },
+  date: {
+    type: Date,
+  },
+  isAvailable: {
+    type: Boolean,
+    default: false,
+  },
+  timeSlots: [timeSlotSchema],
+});
+
 const beauticianSchema = mongoose.Schema(
   {
     name: {
@@ -40,8 +69,8 @@ const beauticianSchema = mongoose.Schema(
     },
     phone: {
       type: String,
-      // required: true,
-      unique: true,
+      default: ""
+      // unique: true,
     },
     password: {
       type: String,
@@ -113,29 +142,10 @@ const beauticianSchema = mongoose.Schema(
         ref: 'Product'
       }
     ],
-    availability: [
-      {
-        date: {
-          type: Date,
-          default: ""
-        },
-        day: {
-          type: String,
-          default: ""
-        },
-        startTime: {
-          type: String,
-          default: ""
-        },
-        endTime: {
-          type: String,
-          default: ""
-        },
-        isAvailable: {
-          type: Boolean,
-          default: false
-        }
-      }
+    availableDays: [
+      // {
+      daySchema
+      // }
     ],
     salon_number: {
       type: String
