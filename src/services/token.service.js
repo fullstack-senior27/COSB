@@ -6,6 +6,7 @@ const userService = require('./user.service');
 const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
+const { beauticianService } = require('.');
 
 /**
  * Generate token
@@ -102,6 +103,18 @@ const generateResetPasswordToken = async (email) => {
   return resetPasswordToken;
 };
 
+const generateResetPasswordTokenBeautician = async (email) => {
+  const beautician = await beauticianService.getBeauticianByEmail(email);
+  if (!beautician) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No beautician found with this email")
+  }
+  const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, 'minutes');
+  console.log(typeof expires);
+  const resetPasswordToken = generateToken(beautician.id, expires, tokenTypes.RESET_PASSWORD);
+  await saveToken(resetPasswordToken, beautician.id, expires, tokenTypes.RESET_PASSWORD);
+  return resetPasswordToken;
+}
+
 /**
  * Generate verify email token
  * @param {User} user
@@ -114,6 +127,13 @@ const generateVerifyEmailToken = async (user) => {
   return verifyEmailToken;
 };
 
+const generateVerifyEmailTokenBeautician = async (beautician) => {
+  const expires = moment().add(config.jwt.verifyEmailExpirationMinutes, 'minutes');
+  const verifyEmailToken = generateToken(beautician.id, expires, tokenTypes.VERIFY_EMAIL);
+  await saveToken(verifyEmailToken, beautician.id, expires, tokenTypes.VERIFY_EMAIL);
+  return verifyEmailToken;
+}
+
 module.exports = {
   generateToken,
   saveToken,
@@ -121,4 +141,6 @@ module.exports = {
   generateAuthTokens,
   generateResetPasswordToken,
   generateVerifyEmailToken,
+  generateResetPasswordTokenBeautician,
+  generateVerifyEmailTokenBeautician
 };

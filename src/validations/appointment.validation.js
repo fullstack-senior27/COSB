@@ -8,7 +8,8 @@ const createAppointment = {
     date: Joi.string().required(),
     zipcode: Joi.string().required(),
     services: Joi.array().required(),
-    startTime: Joi.string().required()
+    startTime: Joi.string().required(),
+    endTime: Joi.string().required()
   }),
 };
 

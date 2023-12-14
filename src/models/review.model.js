@@ -19,6 +19,8 @@ const reviewSchema = mongoose.Schema({
     type: Number,
     required: true
   }
+}, {
+  timestamps: true
 })
 
 reviewSchema.plugin(paginate);

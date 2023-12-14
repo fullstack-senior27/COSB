@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { beauticianService, authService, tokenService, _service, reviewService } = require('../services');
+const { beauticianService, authService, tokenService, _service, reviewService, emailService } = require('../services');
 const ApiSuccess = require('../utils/ApiSuccess');
 const { ResponseMessage } = require('../utils/comman');
 
@@ -32,7 +32,7 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   console.log(req.body);
-  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
+  const resetPasswordToken = await tokenService.generateResetPasswordTokenBeautician(req.body.email);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
   return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS, resetPasswordToken)
 });

@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const { serviceValidation, appointmentValidation, productValidation, clientValidation } = require('../../validations')
-const { beauticianController, serviceController, serviceCategoryController, availabilityController, appointmentController, productController, clientController, paymentController } = require('../../controllers');
+const { beauticianController, serviceController, serviceCategoryController, availabilityController, appointmentController, productController, clientController, paymentController, promotionController } = require('../../controllers');
 
 const router = express.Router();
 
@@ -50,6 +50,8 @@ router
 router
   .route('/availability/edit')
   .patch(auth('beautician', 'manageServices'), availabilityController.updateDateAndTime)
+
+router.route('/availability/list').get(availabilityController.getAvailabilityForBeautician)
 
 // appointments
 router
@@ -124,4 +126,7 @@ router.route('/connect_account/balance').get(auth('beautician', 'manageConnectAc
 router.route('/connect_account/balanceTransactions').get(auth('beautician', 'manageConnectAccount'), paymentController.listBalanceTransactions)
 router.route('/connect_account/payouts/list').get(auth('beautician', 'manageConnectAccount'), paymentController.listAllPayouts)
 
+
+router.route('/promotion/create').post(auth('beautician', 'managePromotions'), promotionController.createPromotion)
+router.route('/promotion/list').get(promotionController.getPromotionsByBeautician)
 module.exports = router;

@@ -27,6 +27,8 @@ const productSchema = mongoose.Schema({
     type: Boolean,
     default: true
   }
+}, {
+  timestamps: true
 })
 
 productSchema.plugin(paginate);
