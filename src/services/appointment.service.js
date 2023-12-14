@@ -8,7 +8,7 @@ const { userService } = require('.');
 
 const createAppointment = async (appointmentBody) => {
   // check if the dates are available
-  const { date, beautician, startTime, user } = appointmentBody
+  const { date, beautician, startTime, endTime, user } = appointmentBody
   const existingUser = await userService.getUserById(user);
   const existingBeautician = await getBeauticianById(beautician);
   appointmentBody.customerId = existingUser.customerId;
@@ -26,7 +26,13 @@ const createAppointment = async (appointmentBody) => {
     )
   })
 
+  // const existingAppointment = await Appointment.findOne({
+  //   startTime: startTime,
+  //   endTime: endTime
+  // })
+
   if (!isBeauticianAvailable) {
+    // console.log(existingAppointment)
     throw new ApiError(httpStatus.CONFLICT, 'Not available')
   }
 
@@ -47,6 +53,7 @@ const createAppointment = async (appointmentBody) => {
   });
   if (slotIndex !== -1) {
     existingBeautician.availability[slotIndex].isAvailable = false;
+
     const existingClient = await Client.findOne({
       beautician,
       user
@@ -57,7 +64,7 @@ const createAppointment = async (appointmentBody) => {
       // existingBeautician.clients.push(user)
       clientService.createClient(beautician, user);
     }
-    await existingBeautician.save()
+    // await existingBeautician.save()
   }
 
   return appointment;

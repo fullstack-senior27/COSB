@@ -6,7 +6,7 @@ const ApiError = require("../utils/ApiError");
 const pick = require("../utils/pick");
 
 const createAppointment = catchAsync(async (req, res) => {
-  const { user, beautician, date, zipcode, services, startTime } = req.body;
+  const { user, beautician, date, zipcode, services, startTime, endTime } = req.body;
   const existingBeautician = await beauticianService.getBeauticianById(beautician);
   console.log(existingBeautician)
   if (existingBeautician.blockedClients.includes(user)) {
@@ -21,7 +21,7 @@ const createAppointment = catchAsync(async (req, res) => {
     const service = await _service.getServiceById(service_id);
     amount += service.price;
   }
-  const appointment = await appointmentService.createAppointment({ beautician, date, zipcode, user, services, amount, startTime });
+  const appointment = await appointmentService.createAppointment({ beautician, date, zipcode, user, services, amount, startTime, endTime });
 
 
   return new ApiSuccess(res, httpStatus.CREATED, "Appointment created successfully", appointment);

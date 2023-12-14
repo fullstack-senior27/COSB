@@ -15,7 +15,13 @@ const updateDateAndTime = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Availibility updated successfully", beautician);
 })
 
+const getAvailabilityForBeautician = catchAsync(async (req, res) => {
+  const availability = await availabilityService.getAvailabilityForBeautician(req.query.beauticianId);
+  return new ApiSuccess(res, httpStatus.OK, "Availability for beautician", availability);
+})
+
 module.exports = {
   addAvailability,
-  updateDateAndTime
+  updateDateAndTime,
+  getAvailabilityForBeautician
 }

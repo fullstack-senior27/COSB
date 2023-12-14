@@ -16,3 +16,4 @@ module.exports.productService = require('./product.service');
 module.exports.clientService = require('./client.service');
 module.exports.pageService = require('./page.service');
 module.exports.paymentService = require('./payment.service');
+module.exports.promotionService = require('./promotion.service');

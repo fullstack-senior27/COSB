@@ -34,7 +34,13 @@ const updateDateAndTime = async (updateBody, cur_user) => {
   return beautician;
 }
 
+const getAvailabilityForBeautician = async (beauticianId) => {
+  const beautician = await beauticianService.getBeauticianById(beauticianId);
+  return beautician.availability;
+}
+
 module.exports = {
   addAvailableDay,
-  updateDateAndTime
+  updateDateAndTime,
+  getAvailabilityForBeautician
 }
