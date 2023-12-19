@@ -136,12 +136,6 @@ const beauticianSchema = mongoose.Schema(
         ref: 'Review'
       }
     ],
-    products: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
-      }
-    ],
     availableDays: [
       // {
       daySchema

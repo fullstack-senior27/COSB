@@ -46,9 +46,6 @@ const deleteProduct = async (productId, beauticianId) => {
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, "product does not exist")
   }
-  const beautician = await beauticianService.getBeauticianById(beauticianId);
-  await beautician.products.pull({ _id: productId })
-  await beautician.save()
   return await product.remove();
 }
 
