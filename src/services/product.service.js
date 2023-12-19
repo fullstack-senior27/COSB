@@ -3,18 +3,17 @@ const { Product } = require("../models")
 const ApiError = require("../utils/ApiError")
 const { beauticianService } = require(".")
 
-const createProduct = async ({ name, description, price, quantity, isAvailable }, beauticianId) => {
+const createProduct = async ({ title, description, link, isAvailable }, beauticianId) => {
   const newProduct = await Product.create({
-    name,
+    title,
     description,
-    price,
-    quantity,
+    link,
     isAvailable,
-    beautician: beauticianId
+    beautician: beauticianId,
   })
-  const beautician = await beauticianService.getBeauticianById(beauticianId);
-  beautician.products.push(newProduct);
-  await beautician.save();
+  // const beautician = await beauticianService.getBeauticianById(beauticianId);
+  // beautician.products.push(newProduct);
+  // await beautician.save();
   return newProduct
 }
 

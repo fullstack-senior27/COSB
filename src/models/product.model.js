@@ -7,21 +7,17 @@ const productSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Beautician'
   },
-  name: {
+  title: {
     type: String,
     required: true
   },
   description: {
     type: String,
-    required: true
+    default: ""
   },
-  price: {
-    type: Number,
-    required: true
-  },
-  quantity: {
-    type: Number,
-    required: true
+  link: {
+    type: String,
+    default: ""
   },
   isAvailable: {
     type: Boolean,

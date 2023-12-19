@@ -3,11 +3,11 @@ const { password, objectId } = require('./custom.validation');
 
 const createProduct = {
   body: Joi.object().keys({
-    name: Joi.string().required(),
-    description: Joi.string().required(),
-    price: Joi.number().required(),
-    quantity: Joi.number().required(),
+    title: Joi.string().required(),
+    description: Joi.string(),
+    link: Joi.string(),
     isAvailable: Joi.boolean(),
+    beautician: Joi.string().custom(objectId)
   }),
 };
 
@@ -16,10 +16,9 @@ const editProduct = {
     productId: Joi.required().custom(objectId),
   }),
   body: Joi.object().keys({
-    name: Joi.string(),
+    title: Joi.string(),
     description: Joi.string(),
-    price: Joi.number(),
-    quantity: Joi.number(),
+    link: Joi.number(),
     isAvailable: Joi.boolean(),
   }),
 }
