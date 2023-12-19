@@ -20,24 +20,8 @@ const deleteProduct = catchAsync(async (req, res) => {
 })
 
 const getAllProductsByBeautician = catchAsync(async (req, res) => {
-  const products = await productService.getAllProductsByBeautician(req.body.beauticianId);
-  const options = pick(req.query, ['limit', 'page'])
-  const page = parseInt(options.page) || 1; // Current page, default to 1 if not provided
-  const limit = parseInt(options.limit) || 10;
-  const skip = (page - 1) * limit;
-  const paginatedProducts = products.slice(skip, skip + limit);
-  return res.status(httpStatus.OK).json({
-    code: httpStatus.OK,
-    message: 'Products fetched successfully',
-    isSuccess: true,
-    data: {
-      results: paginatedProducts,
-      totalPages: Math.ceil(products.length / limit),
-      currentPage: page,
-      limit: limit,
-      totalResults: paginatedProducts.length
-    }
-  })
+  const products = await productService.getAllProductsByBeautician(req.query.beauticianId);
+  return new ApiSuccess(res, httpStatus.OK, "Products by beautician", products)
 })
 
 const getProductDetails = catchAsync(async (req, res) => {

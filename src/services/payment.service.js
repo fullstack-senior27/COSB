@@ -195,15 +195,15 @@ const listAllPayouts = async (accountId) => {
   const limit = 10
   let payouts = await stripe.payouts.list({
     stripeAccount: accountId,
-    limit: 100
+    // limit: 100
   })
-  // while (payouts.has_more) {
-  //   payouts = await stripe.payouts.list({
-  //     limit: limit + 10
-  //   }, {
-  //     stripeAccount: accountId
-  //   })
-  // }
+  while (payouts.has_more) {
+    payouts = await stripe.payouts.list({
+      starting_after: payouts.data[payouts.data.length - 1].id
+    }, {
+      stripeAccount: accountId
+    })
+  }
   // console.log(payouts);
   payouts = payouts.data.map(payout => ({
     ...payout,
@@ -236,6 +236,8 @@ const getTotalEarning = async (beauticianId) => {
   // console.log(result)
   return result[0].totalEarning.toString();
 }
+
+
 
 const getWithdrawBalance = async (accountId) => {
   const payouts = await listAllPayouts(accountId)

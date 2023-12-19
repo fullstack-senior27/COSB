@@ -1,8 +1,8 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const { serviceValidation, appointmentValidation, productValidation, clientValidation } = require('../../validations')
-const { beauticianController, serviceController, serviceCategoryController, availabilityController, appointmentController, productController, clientController, paymentController, promotionController } = require('../../controllers');
+const { serviceValidation, appointmentValidation, productValidation, clientValidation, noteValidation } = require('../../validations')
+const { beauticianController, serviceController, serviceCategoryController, availabilityController, appointmentController, productController, clientController, paymentController, promotionController, noteController } = require('../../controllers');
 
 const router = express.Router();
 
@@ -43,6 +43,7 @@ router
   .delete(auth('beautician', 'manageServices'), validate(serviceValidation.deleteServiceCategory), serviceCategoryController.deleteCategory)
 
 
+
 // availability
 router
   .route('/availability/add')
@@ -74,10 +75,14 @@ router
 
 router.route('/products').get(productController.getAllProductsByBeautician)
 
+router.route('/notes/create').post(auth('beautician', 'manageNotes'), noteController.createNote)
+router.route('/notes/list').get(auth('beautician', 'manageNotes'), noteController.getNotesByClientId)
+
 router
-  .route('/products/:productId')
+  .route('/products/edit/:productId')
   .patch(auth('beautician', 'manageProducts'), validate(productValidation.editProduct), productController.editProduct)
-  .delete(auth('beautician', 'manageProducts'), validate(productValidation.deleteProduct), productController.deleteProduct)
+
+router.route('/products/delete/:productId').delete(auth('beautician', 'manageProducts'), validate(productValidation.deleteProduct), productController.deleteProduct)
   .get(validate(productValidation.getProductDetails), productController.getProductDetails)
 
 // reviews
@@ -129,4 +134,6 @@ router.route('/connect_account/payouts/list').get(auth('beautician', 'manageConn
 
 router.route('/promotion/create').post(auth('beautician', 'managePromotions'), promotionController.createPromotion)
 router.route('/promotion/list').get(promotionController.getPromotionsByBeautician)
+
+
 module.exports = router;

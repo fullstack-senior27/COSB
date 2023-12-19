@@ -17,7 +17,8 @@ const allRoles = {
     'manageProducts',
     'manageClients',
     'manageConnectAccount',
-    'managePromotions'
+    'managePromotions',
+    'manageNotes'
   ],
   admin: ['manageBlogs', 'manageServiceTypes', 'managePages'],
 };

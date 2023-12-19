@@ -7,3 +7,4 @@ module.exports.appointmentValidation = require('./appointment.validation');
 module.exports.productValidation = require('./product.validation');
 module.exports.reviewValidation = require('./review.validation');
 module.exports.clientValidation = require('./client.validation');
+module.exports.noteValidation = require('./note.validation');
