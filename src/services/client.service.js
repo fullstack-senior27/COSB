@@ -60,14 +60,15 @@ const getClientDetails = async (clientId, beauticianId) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Client does not exist")
   }
   // const user = await User.findById(clientId);
-  const clientNote = await Note.findOne({
+  const clientNote = await Note.find({
     client: clientId,
     beautician: beauticianId
   })
+
   const response = {
     client: client.client,
     photos: client.photos,
-    clientNote
+    clientNote: clientNote
   }
   return response;
 }
