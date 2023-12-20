@@ -75,6 +75,8 @@ router
 
 router.route('/products').get(productController.getAllProductsByBeautician)
 
+// router.route('/products/:productId').delete(auth('beautician', 'manageProducts'), productController.deleteProduct)
+
 router.route('/notes/create').post(auth('beautician', 'manageNotes'), noteController.createNote)
 router.route('/notes/list').get(auth('beautician', 'manageNotes'), noteController.getNotesByClientId)
 
@@ -83,7 +85,6 @@ router
   .patch(auth('beautician', 'manageProducts'), validate(productValidation.editProduct), productController.editProduct)
 
 router.route('/products/delete/:productId').delete(auth('beautician', 'manageProducts'), validate(productValidation.deleteProduct), productController.deleteProduct)
-  .get(validate(productValidation.getProductDetails), productController.getProductDetails)
 
 // reviews
 router
