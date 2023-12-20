@@ -15,8 +15,8 @@ const editProduct = catchAsync(async (req, res) => {
 })
 
 const deleteProduct = catchAsync(async (req, res) => {
-  await productService.deleteProduct(req.params.productId, req.user._id)
-  return new ApiSuccess(res, httpStatus.NO_CONTENT, "Product deleted successfully")
+  await productService.deleteProduct(req.params.productId)
+  return new ApiSuccess(res, httpStatus.OK, "Product deleted successfully", {})
 })
 
 const getAllProductsByBeautician = catchAsync(async (req, res) => {

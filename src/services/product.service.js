@@ -41,7 +41,7 @@ const getProductDetails = async (productId) => {
   return product;
 }
 
-const deleteProduct = async (productId, beauticianId) => {
+const deleteProduct = async (productId) => {
   const product = await Product.findById(productId);
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, "product does not exist")
