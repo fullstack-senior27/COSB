@@ -28,10 +28,16 @@ const blockClient = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Client blocked successfully", blockedClient);
 })
 
+const getClientDetails = catchAsync(async (req, res) => {
+  const clientDetails = await clientService.getClientDetails(req.params.clientId, req.user._id);
+  return new ApiSuccess(res, httpStatus.OK, "Client details", clientDetails);
+})
+
 module.exports = {
   getAllClientsForBeautician,
   // createClient,
   registerNewClient,
   updateClient,
-  blockClient
+  blockClient,
+  getClientDetails
 }

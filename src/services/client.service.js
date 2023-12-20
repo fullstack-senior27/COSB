@@ -1,6 +1,6 @@
 const httpStatus = require("http-status");
 const { userService } = require(".");
-const { Client, User } = require("../models");
+const { Client, User, Note } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 const getClientsByBeauticianId = async (beauticianId) => {
@@ -54,10 +54,29 @@ const blockClient = async (clientId, beautician) => {
   return client;
 }
 
+const getClientDetails = async (clientId, beauticianId) => {
+  const client = await Client.findOne({ client: clientId, beautician: beauticianId }).populate('client');
+  if (!client) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Client does not exist")
+  }
+  // const user = await User.findById(clientId);
+  const clientNote = await Note.findOne({
+    client: clientId,
+    beautician: beauticianId
+  })
+  const response = {
+    client: client.client,
+    photos: client.photos,
+    clientNote
+  }
+  return response;
+}
+
 module.exports = {
   getClientsByBeauticianId,
   createClient,
   registerClient,
   updateClient,
-  blockClient
+  blockClient,
+  getClientDetails
 }
