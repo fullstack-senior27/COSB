@@ -16,7 +16,6 @@ const ApiError = require('./utils/ApiError');
 const { sendEmail } = require('./services/email.service');
 const { Appointment, Beautician } = require('./models');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-const cron = require('node-cron');
 
 const app = express();
 
