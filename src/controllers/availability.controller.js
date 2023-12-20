@@ -9,10 +9,15 @@ const addAvailability = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Availibility added successfully", beautician);
 })
 
-const updateDateAndTime = catchAsync(async (req, res) => {
-  // req.body should be a day string.
-  const beautician = await availabilityService.updateDateAndTime(req.body, req.user);
-  return new ApiSuccess(res, httpStatus.OK, "Availibility updated successfully", beautician);
+// const updateDateAndTime = catchAsync(async (req, res) => {
+//   // req.body should be a day string.
+//   const beautician = await availabilityService.updateDateAndTime(req.body, req.user);
+//   return new ApiSuccess(res, httpStatus.OK, "Availibility updated successfully", beautician);
+// })
+
+const updateSlots = catchAsync(async (req, res) => {
+  const beautician = await availabilityService.updateSlots(req.body, req.user);
+  return new ApiSuccess(res, httpStatus.OK, "Slots added successfully", beautician);
 })
 
 const getAvailabilityForBeautician = catchAsync(async (req, res) => {
@@ -22,6 +27,7 @@ const getAvailabilityForBeautician = catchAsync(async (req, res) => {
 
 module.exports = {
   addAvailability,
-  updateDateAndTime,
-  getAvailabilityForBeautician
+  // updateDateAndTime,
+  getAvailabilityForBeautician,
+  updateSlots
 }

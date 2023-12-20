@@ -3,9 +3,9 @@ const { beauticianService } = require(".");
 const ApiError = require("../utils/ApiError");
 
 const addAvailableDay = async (updateBody, cur_user) => {
-  console.log("cur user", cur_user)
+  // console.log("cur user", cur_user)
   const beautician = await beauticianService.getBeauticianByEmail(cur_user.email);
-  console.log(beautician);
+  // console.log(beautician);
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, "Beautician does not exist");
   }
@@ -15,22 +15,28 @@ const addAvailableDay = async (updateBody, cur_user) => {
   return beautician;
 }
 
-const updateDateAndTime = async (updateBody, cur_user) => {
-  // const { days } = updateBody;
-  const beautician = await beauticianService.getBeauticianByEmail(cur_user.email)
-  if (!beautician) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Beautician does not exist");
-  }
-  // for (let a of beautician.availability) {
-  //   for (let d of days) {
-  //     if (a.day === d.day) {
-  //       Object.assign(a, d);
-  //     }
-  //   }
-  // }
-  Object.assign(beautician, updateBody);
+// const updateDateAndTime = async (updateBody, cur_user) => {
+//   // const { day,  } = updateBody;
+//   const beautician = await beauticianService.getBeauticianByEmail(cur_user.email)
+//   if (!beautician) {
+//     throw new ApiError(httpStatus.NOT_FOUND, "Beautician does not exist");
+//   }
+//   // for (let a of beautician.availability) {
+//   //   for (let d of days) {
+//   //     if (a.day === d.day) {
+//   //       Object.assign(a, d);
+//   //     }
+//   //   }
+//   // }
+//   Object.assign(beautician, updateBody);
+//   await beautician.save();
+//   return beautician;
+// }
+
+const updateSlots = async (slots, cur_user) => {
+  const beautician = await beauticianService.getBeauticianByEmail(cur_user.email);
+  Object.assign(beautician, slots);
   await beautician.save();
-  return beautician;
 }
 
 const getAvailabilityForBeautician = async (beauticianId) => {
@@ -40,6 +46,7 @@ const getAvailabilityForBeautician = async (beauticianId) => {
 
 module.exports = {
   addAvailableDay,
-  updateDateAndTime,
-  getAvailabilityForBeautician
+  // updateDateAndTime,
+  getAvailabilityForBeautician,
+  updateSlots
 }

@@ -5,8 +5,64 @@ const { getBeauticianById } = require('./beautician.service');
 const clientService = require('./client.service');
 const { userService } = require('.');
 
-
 const createAppointment = async (appointmentBody) => {
+  const { date, beautician, timeSlot, user } = appointmentBody
+  const existingUser = await userService.getUserById(user);
+  const existingBeautician = await getBeauticianById(beautician);
+  appointmentBody.customerId = existingUser.customerId;
+  const isDateAvailable = existingBeautician.availableDays.some(d => {
+    const year = d.date.getFullYear();
+    const month = (d.date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
+    const day = d.date.getDate().toString().padStart(2, '0');
+
+    const formattedDateString = `${year}-${month}-${day}`;
+
+    if (formattedDateString === date && d.isAvailable) {
+      return true
+    }
+  })
+  let selectedSlot;
+  const isMorningSlotAvailable = existingBeautician.morning.some(t => {
+    if (t.time === timeSlot) {
+      selectedSlot = "morning";
+      if (!t.isBooked) {
+        return true;
+      }
+    }
+  })
+  const isEveningSlotAvailable = existingBeautician.evening.some(t => {
+    if (t.time === timeSlot) {
+      selectedSlot = "evening"
+      if (!t.isBooked) {
+        return true;
+      }
+    }
+  })
+  const isAfternoonSlotAvailable = existingBeautician.afternoon.some(t => {
+    if (t.time === timeSlot) {
+      selectedSlot = "afternoon"
+      if (!t.isBooked) {
+        return true;
+      }
+    }
+  })
+
+  if (isDateAvailable && (isMorningSlotAvailable || isAfternoonSlotAvailable || isEveningSlotAvailable)) {
+    const appointment = await Appointment.create(appointmentBody)
+    const index = existingBeautician[selectedSlot].findIndex((i) => {
+      return i.time === timeSlot;
+    })
+    if (index !== -1) {
+      existingBeautician[selectedSlot][index].isBooked = true;
+    }
+    await existingBeautician.save();
+
+    return appointment
+  }
+  throw new ApiError(httpStatus.BAD_REQUEST, "Could not create appointment!")
+}
+
+const createAppointments = async (appointmentBody) => {
   // check if the dates are available
   const { date, beautician, startTime, endTime, user } = appointmentBody
   const existingUser = await userService.getUserById(user);
