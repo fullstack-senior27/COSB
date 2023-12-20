@@ -4,8 +4,8 @@ const { password, objectId } = require('./custom.validation');
 const createProduct = {
   body: Joi.object().keys({
     title: Joi.string().required(),
-    description: Joi.string(),
-    link: Joi.string(),
+    description: Joi.string().allow(''),
+    link: Joi.string().allow(''),
     isAvailable: Joi.boolean(),
     beautician: Joi.string().custom(objectId)
   }),
@@ -17,8 +17,8 @@ const editProduct = {
   }),
   body: Joi.object().keys({
     title: Joi.string(),
-    description: Joi.string(),
-    link: Joi.number(),
+    description: Joi.string().allow(''),
+    link: Joi.number().allow(''),
     isAvailable: Joi.boolean(),
   }),
 }

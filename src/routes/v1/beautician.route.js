@@ -105,6 +105,8 @@ router
 
 router.route('/client/block').post(auth('beautician', 'manageClients'), clientController.blockClient)
 
+router.route('/client/:clientId').get(auth('beautician', 'manageClients'), clientController.getClientDetails)
+
 router
   .route('/connect_account/create')
   .get(auth('beautician', 'manageConnectAccount'), paymentController.createSeller)

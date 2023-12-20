@@ -10,7 +10,13 @@ const clientSchema = mongoose.Schema({
   beautician: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Beautician'
-  }
+  },
+  photos: [
+    {
+      type: String,
+      default: ""
+    }
+  ]
 }, {
   timestamps: true
 })
