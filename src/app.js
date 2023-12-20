@@ -106,7 +106,7 @@ passport.use('jwt', jwtStrategy);
 passport.use('beauticianJwt', beauticianJwtStrategy);
 passport.use('adminJwt', adminJwtStrategy);
 
-require('./utils/cronJob').start();
+// require('./utils/cronJob').start();
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
