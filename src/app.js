@@ -16,7 +16,7 @@ const ApiError = require('./utils/ApiError');
 const { sendEmail } = require('./services/email.service');
 const { Appointment, Beautician } = require('./models');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-// const cron = require('node-cron');
+const cron = require('node-cron');
 
 const app = express();
 
@@ -107,49 +107,7 @@ passport.use('jwt', jwtStrategy);
 passport.use('beauticianJwt', beauticianJwtStrategy);
 passport.use('adminJwt', adminJwtStrategy);
 
-// const updateAvailabilityJob = cron.schedule('*/1 * * * *', async () => {
-//   // This job runs every hour (replace '0 * * * *' with your desired cron expression)
-
-//   try {
-//     const currentTime = new Date();
-
-//     // Find appointments where the current time is greater than the end time
-//     // console.log(currentTime.toLocaleTimeString("en-GB"))
-//     // console.log("Current Time:", currentTime.toISOString().substr(11, 8));
-//     console.log(currentTime);
-//     console.log("current time: ", currentTime.getTime());
-//     // const finishedAppointments = await Appointment.find({
-//     //   endTime: { $lte: currentTime.toISOString().substr(11, 8) }
-//     // });
-//     // console.log("Finished Appointment: ", finishedAppointments)
-
-//     // // Update beautician availability for finished appointments
-//     // for (const appointment of finishedAppointments) {
-//     //   const beautician = await Beautician.findOne({
-//     //     'availability.date': appointment.date,
-//     //     'availability.isAvailable': false
-//     //   });
-
-//     //   if (beautician) {
-//     //     const availabilityIndex = beautician.availability.findIndex(
-//     //       slot => slot.date.toString() === appointment.date.toString()
-//     //     );
-
-//     //     if (availabilityIndex !== -1) {
-//     //       beautician.availability[availabilityIndex].isAvailable = true;
-//     //       await beautician.save();
-//     //     }
-//     //   }
-//     // }
-//     console.log('Updated availability for expired appointments.');
-//   } catch (error) {
-//     console.error('Error updating availability:', error);
-//   }
-// }, { timezone: 'IST' }); // Replace 'Your-Timezone' with your desired timezone
-
-// updateAvailabilityJob.start();
-
-
+require('./utils/cronJob').start();
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {

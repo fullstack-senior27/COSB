@@ -3,23 +3,9 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 
-const noteSchema = mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  content: {
-    type: String,
-    required: true
-  }
-})
 
 const timeSlotSchema = mongoose.Schema({
-  startTime: {
-    type: String,
-    // required: true,
-  },
-  endTime: {
+  time: {
     type: String,
     // required: true,
   },
@@ -39,8 +25,7 @@ const daySchema = mongoose.Schema({
   isAvailable: {
     type: Boolean,
     default: false,
-  },
-  timeSlots: [timeSlotSchema],
+  }
 });
 
 const beauticianSchema = mongoose.Schema(
@@ -106,9 +91,9 @@ const beauticianSchema = mongoose.Schema(
       type: String,
       default: null
     },
-    notes: [
-      noteSchema
-    ],
+    // notes: [
+    //   noteSchema
+    // ],
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -137,10 +122,61 @@ const beauticianSchema = mongoose.Schema(
       }
     ],
     availableDays: [
-      // {
-      daySchema
-      // }
+      {
+        isAvailable: {
+          type: Boolean,
+          default: false
+        },
+        day: {
+          type: String,
+          default: ""
+        },
+        date: {
+          type: Date
+        }
+      }
     ],
+    morning: [
+      {
+        isBooked: {
+          type: Boolean,
+          default: false
+        },
+        time: {
+          type: String,
+          default: ""
+        }
+      }
+    ],
+    afternoon: [
+      {
+        isBooked: {
+          type: Boolean,
+          default: false
+        },
+        time: {
+          type: String,
+          default: ""
+        }
+      }
+    ],
+    evening: [
+      {
+        isBooked: {
+          type: Boolean,
+          default: false
+        },
+        time: {
+          type: String,
+          default: ""
+        }
+      }
+    ],
+    // timeSlots: [
+    //   {
+    //     timeSlotSchema
+    //   }
+    // ],
     salon_number: {
       type: String
     },

@@ -49,15 +49,15 @@ router
   .route('/availability/add')
   .patch(auth('beautician', 'manageServices'), availabilityController.addAvailability)
 router
-  .route('/availability/edit')
-  .patch(auth('beautician', 'manageServices'), availabilityController.updateDateAndTime)
+  .route('/availability/slots/add')
+  .patch(auth('beautician', 'manageServices'), availabilityController.updateSlots)
 
 router.route('/availability/list').get(availabilityController.getAvailabilityForBeautician)
 
 // appointments
 router
   .route('/appointments/create')
-  .post(auth('beautician', 'manageAppointments'), validate(appointmentValidation.createAppointment), appointmentController.createAppointment)
+  .post(auth('beautician', 'manageAppointments'), appointmentController.createAppointment)
 
 router
   .route('/appointment/:appointmentId')
