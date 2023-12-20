@@ -62,112 +62,98 @@ const createAppointment = async (appointmentBody) => {
   throw new ApiError(httpStatus.BAD_REQUEST, "Could not create appointment!")
 }
 
-const createAppointments = async (appointmentBody) => {
-  // check if the dates are available
-  const { date, beautician, startTime, endTime, user } = appointmentBody
-  const existingUser = await userService.getUserById(user);
-  const existingBeautician = await getBeauticianById(beautician);
-  appointmentBody.customerId = existingUser.customerId;
-  const isBeauticianAvailable = existingBeautician.availableDays.some(slot => {
-    const year = slot.date.getFullYear();
-    const month = (slot.date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
-    const day = slot.date.getDate().toString().padStart(2, '0');
+// const createAppointments = async (appointmentBody) => {
+//   // check if the dates are available
+//   const { date, beautician, startTime, endTime, user } = appointmentBody
+//   const existingUser = await userService.getUserById(user);
+//   const existingBeautician = await getBeauticianById(beautician);
+//   appointmentBody.customerId = existingUser.customerId;
+//   const isBeauticianAvailable = existingBeautician.availableDays.some(slot => {
+//     const year = slot.date.getFullYear();
+//     const month = (slot.date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
+//     const day = slot.date.getDate().toString().padStart(2, '0');
 
-    // Format it as 'YYYY-MM-DD' string
-    const formattedDateString = `${year}-${month}-${day}`;
-    if (formattedDateString === date && slot.isAvailable) {
-      // Check if any time slot is available and not booked
-      return slot.timeSlots.find((timeSlot) => {
-        // const startTime = '08:00'; // Replace with actual startTime
-        // const endTime = '12:00'; // Replace with actual endTime
-        if (timeSlot.startTime === startTime && timeSlot.endTime === endTime) {
-          if (!timeSlot.isBooked) {
-            return true;
-          }
-        }
-      });
-    }
+//     // Format it as 'YYYY-MM-DD' string
+//     const formattedDateString = `${year}-${month}-${day}`;
+//     if (formattedDateString === date && slot.isAvailable) {
+//       // Check if any time slot is available and not booked
+//       return slot.timeSlots.find((timeSlot) => {
+//         // const startTime = '08:00'; // Replace with actual startTime
+//         // const endTime = '12:00'; // Replace with actual endTime
+//         if (timeSlot.startTime === startTime && timeSlot.endTime === endTime) {
+//           if (!timeSlot.isBooked) {
+//             return true;
+//           }
+//         }
+//       });
+//     }
 
-    return false;
-  })
+//     return false;
+//   })
 
-  // const existingAppointment = await Appointment.findOne({
-  //   startTime: startTime,
-  //   endTime: endTime
-  // })
-  if (!isBeauticianAvailable) {
-    // console.log(existingAppointment)
-    throw new ApiError(httpStatus.CONFLICT, 'Not available')
-  }
+//   // const existingAppointment = await Appointment.findOne({
+//   //   startTime: startTime,
+//   //   endTime: endTime
+//   // })
+//   if (!isBeauticianAvailable) {
+//     // console.log(existingAppointment)
+//     throw new ApiError(httpStatus.CONFLICT, 'Not available')
+//   }
 
 
-  const appointment = await Appointment.create(appointmentBody);
-  const slotIndex = existingBeautician.availableDays.findIndex(slot => {
-    const year = slot.date.getFullYear();
-    const month = (slot.date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
-    const day = slot.date.getDate().toString().padStart(2, '0');
+//   const appointment = await Appointment.create(appointmentBody);
+//   const slotIndex = existingBeautician.availableDays.findIndex(slot => {
+//     const year = slot.date.getFullYear();
+//     const month = (slot.date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
+//     const day = slot.date.getDate().toString().padStart(2, '0');
 
-    // Format it as 'YYYY-MM-DD' string
-    const formattedDateString = `${year}-${month}-${day}`;
-    return (
-      formattedDateString === date &&
-      // slot.startTime <= startTime &&
-      slot.isAvailable
-    );
-  });
-  if (slotIndex !== -1) {
-    // for (let s of existingBeautician.availableDays[slotIndex].timeSlots) {
-    //   if (s.startTime === startTime && s.endTime === endTime) {
-    //     console.log("Here:------------------")
-    //     existingBeautician.availableDays[slotIndex].timeSlots[]
-    //     s.isBooked = true;
-    //     console.log(s);
-    //     break;
-    //   }
-    // }
-    const index = existingBeautician.availableDays[slotIndex].timeSlots.findIndex((timeSlot) => {
-      return (
-        timeSlot.startTime === startTime &&
-        timeSlot.endTime === endTime
-      );
-    });
-    if (index !== -1) {
-      existingBeautician.availableDays[slotIndex].timeSlots[index].isBooked = true;
-      await existingBeautician.save();
-    }
-    // existingBeautician.availableDays[slotIndex].timeSlots[index].isBooked = true;
-    const existingClient = await Client.findOne({
-      beautician,
-      user
-    })
-    console.log(existingClient);
-    // const existingClient = existingBeautician.clients.find(u => u === user)
-    if (!existingClient) {
-      // existingBeautician.clients.push(user)
-      clientService.createClient(beautician, user);
-    }
-    await existingBeautician.save()
-  }
+//     // Format it as 'YYYY-MM-DD' string
+//     const formattedDateString = `${year}-${month}-${day}`;
+//     return (
+//       formattedDateString === date &&
+//       // slot.startTime <= startTime &&
+//       slot.isAvailable
+//     );
+//   });
+//   if (slotIndex !== -1) {
+//     // for (let s of existingBeautician.availableDays[slotIndex].timeSlots) {
+//     //   if (s.startTime === startTime && s.endTime === endTime) {
+//     //     console.log("Here:------------------")
+//     //     existingBeautician.availableDays[slotIndex].timeSlots[]
+//     //     s.isBooked = true;
+//     //     console.log(s);
+//     //     break;
+//     //   }
+//     // }
+//     const index = existingBeautician.availableDays[slotIndex].timeSlots.findIndex((timeSlot) => {
+//       return (
+//         timeSlot.startTime === startTime &&
+//         timeSlot.endTime === endTime
+//       );
+//     });
+//     if (index !== -1) {
+//       existingBeautician.availableDays[slotIndex].timeSlots[index].isBooked = true;
+//       await existingBeautician.save();
+//     }
+//     // existingBeautician.availableDays[slotIndex].timeSlots[index].isBooked = true;
+//     const existingClient = await Client.findOne({
+//       beautician,
+//       user
+//     })
+//     console.log(existingClient);
+//     // const existingClient = existingBeautician.clients.find(u => u === user)
+//     if (!existingClient) {
+//       // existingBeautician.clients.push(user)
+//       clientService.createClient(beautician, user);
+//     }
+//     await existingBeautician.save()
+//   }
 
-  return appointment;
-};
+//   return appointment;
+// };
 
 const getAppointmentsByUserId = async (userId) => {
-  // const appointments = await Appointment.find({
-  //   user: userId
-  // }).sort({ createdAt: 'desc' }).populate('user').populate('beautician').populate('services');
-  // console.log("appointments: ", appointments)
-  // appointments.forEach((appointment) => {
-  //   const reviews = appointment.beautician.reviews;
-  //   console.log(">>>>>>>>>>>>>>>>>>")
-  //   if (reviews.length > 0) {
-  //     const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
-  //     appointment.beautician.averageRating = averageRating;
-  //   } else {
-  //     appointment.beautician.averageRating = null;
-  //   }
-  // });
-  // return appointments;
+
   const appointments = await Appointment.aggregate([
     {
       $match: { user: userId }
