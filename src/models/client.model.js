@@ -16,7 +16,15 @@ const clientSchema = mongoose.Schema({
       type: String,
       default: ""
     }
-  ]
+  ],
+  isBlocked: {
+    type: Boolean,
+    default: false
+  },
+  reasonForBlocking: {
+    type: String,
+    default: ""
+  }
 }, {
   timestamps: true
 })
