@@ -29,7 +29,8 @@ app.use(helmet());
 app.post('/webhook', express.raw({ type: 'application/json' }), async (request, response) => {
   const payloadString = request.body;
   // console.log("payload (request): ", payloadString)
-  let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
+  // let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
+  let endpointSecret = process.env.STRIPE_WEBHOOK_KEY
   const sig = request.headers['stripe-signature'];
   // console.log(sig.toString());
 
