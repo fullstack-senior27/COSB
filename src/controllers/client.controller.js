@@ -33,11 +33,17 @@ const getClientDetails = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, "Client details", clientDetails);
 })
 
+const deleteClient = catchAsync(async (req, res) => {
+  await clientService.deleteClient(req.query.clientId, req.user._id);
+  return new ApiSuccess(res, httpStatus.OK, "Client deleted successfully");
+})
+
 module.exports = {
   getAllClientsForBeautician,
   // createClient,
   registerNewClient,
   updateClient,
   blockClient,
-  getClientDetails
+  getClientDetails,
+  deleteClient
 }
