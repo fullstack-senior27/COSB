@@ -24,7 +24,7 @@ const updateClient = catchAsync(async (req, res) => {
 })
 
 const blockClient = catchAsync(async (req, res) => {
-  const blockedClient = await clientService.blockClient(req.body.clientId, req.user);
+  const blockedClient = await clientService.blockClient(req.body.clientId, req.body.reason, req.user);
   return new ApiSuccess(res, httpStatus.OK, "Client blocked successfully", blockedClient);
 })
 

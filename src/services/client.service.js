@@ -1,12 +1,12 @@
 const httpStatus = require("http-status");
-const { userService } = require(".");
+const { userService, beauticianService } = require(".");
 const { Client, User, Note } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 const getClientsByBeauticianId = async (beauticianId) => {
   const clients = await Client.find({
     beautician: beauticianId
-  }).sort({ createdAt: 'desc' }).populate('client').populate('offlineClient');
+  }).sort({ createdAt: 'desc' }).populate('client');
   return clients;
 }
 
@@ -44,7 +44,7 @@ const updateClient = async (updateBody, clientId) => {
   return client;
 }
 
-const blockClient = async (clientId, beautician) => {
+const blockClient = async (clientId, reason, beautician) => {
   const client = await User.findOne({ _id: clientId });
   const ifClient = await Client.findOne({ client: clientId, beautician: beautician._id })
   if (!ifClient) {
@@ -53,6 +53,9 @@ const blockClient = async (clientId, beautician) => {
   if (!client) {
     throw new ApiError(httpStatus.NOT_FOUND, "Client does not exist");
   }
+  ifClient.isBlocked = true;
+  ifClient.reasonForBlocking = reason;
+  await ifClient.save();
   beautician.blockedClients.push(clientId);
   await beautician.save()
   return client;
