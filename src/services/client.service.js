@@ -46,12 +46,29 @@ const updateClient = async (updateBody, clientId) => {
 
 const blockClient = async (clientId, beautician) => {
   const client = await User.findOne({ _id: clientId });
+  const ifClient = await Client.findOne({ client: clientId, beautician: beautician._id })
+  if (!ifClient) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Not a client");
+  }
   if (!client) {
     throw new ApiError(httpStatus.NOT_FOUND, "Client does not exist");
   }
   beautician.blockedClients.push(clientId);
   await beautician.save()
   return client;
+}
+
+const deleteClient = async (clientId, beauticianId) => {
+  // const user = await userService.getUserById(clientId)
+  const client = await Client.findOne({
+    client: clientId,
+    beautician: beauticianId
+  });
+  if (!client) {
+    throw new ApiError(httpStatus.NOT_FOUND, "client does not exist")
+  }
+  await client.remove();
+  return;
 }
 
 const getClientDetails = async (clientId, beauticianId) => {
@@ -79,5 +96,6 @@ module.exports = {
   registerClient,
   updateClient,
   blockClient,
-  getClientDetails
+  getClientDetails,
+  deleteClient
 }
