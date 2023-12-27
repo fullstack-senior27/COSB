@@ -7,6 +7,7 @@ const serviceRoute = require('./service.route');
 const blogRoute = require('./blog.route');
 const adminRoute = require('./admin.route')
 const pageRoute = require('./page.route')
+const fileUploadRoute = require('./fileUpload.route')
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -40,6 +41,10 @@ const defaultRoutes = [
   {
     path: '/pages',
     route: pageRoute
+  },
+  {
+    path: '/file-upload',
+    route: fileUploadRoute
   }
 ];
 
