@@ -43,9 +43,11 @@ const getAvailabilityForBeautician = async (beauticianId) => {
   const beautician = await beauticianService.getBeauticianById(beauticianId);
   return {
     days: beautician.availableDays,
-    morning: beautician.morning,
-    afternoon: beautician.afternoon,
-    evening: beautician.evening
+    slots: {
+      morning: beautician.morning,
+      afternoon: beautician.afternoon,
+      evening: beautician.evening
+    }
   };
 }
 
