@@ -41,7 +41,12 @@ const updateSlots = async (slots, cur_user) => {
 
 const getAvailabilityForBeautician = async (beauticianId) => {
   const beautician = await beauticianService.getBeauticianById(beauticianId);
-  return beautician.availableDays;
+  return {
+    days: beautician.availableDays,
+    morning: beautician.morning,
+    afternoon: beautician.afternoon,
+    evening: beautician.evening
+  };
 }
 
 module.exports = {
