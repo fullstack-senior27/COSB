@@ -15,3 +15,4 @@ module.exports.pageController = require('./page.controller');
 module.exports.paymentController = require('./payment.controller');
 module.exports.promotionController = require('./promotion.controller');
 module.exports.noteController = require('./note.controller');
+module.exports.fileUploadController = require('./fileUpload.controller');
