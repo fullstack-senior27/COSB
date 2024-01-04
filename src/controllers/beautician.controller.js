@@ -34,7 +34,7 @@ const forgotPassword = catchAsync(async (req, res) => {
   console.log(req.body);
   const resetPasswordToken = await tokenService.generateResetPasswordTokenBeautician(req.body.email);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS, resetPasswordToken)
+  return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS, resetPasswordToken);
 });
 
 const resetPassword = catchAsync(async (req, res) => {
@@ -59,30 +59,29 @@ const getProfile = catchAsync(async (req, res) => {
   if (!beautician) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  return new ApiSuccess(res, httpStatus.OK, "User found successfully", beautician);
+  return new ApiSuccess(res, httpStatus.OK, 'User found successfully', beautician);
 });
 
 const updateBeautician = catchAsync(async (req, res) => {
   const user = await beauticianService.updateBeauticianById(req.user._id, req.body);
-  return new ApiSuccess(res, httpStatus.OK, "User updated successfully", user);
+  return new ApiSuccess(res, httpStatus.OK, 'User updated successfully', user);
 });
 
 const deleteBeautician = catchAsync(async (req, res) => {
   await beauticianService.deleteBeauticianById(req.user._id);
-  return new ApiSuccess(res, httpStatus.NO_CONTENT, "User deleted successfully")
+  return new ApiSuccess(res, httpStatus.NO_CONTENT, 'User deleted successfully');
 });
 
 const getBeauticians = catchAsync(async (req, res) => {
   let beauticians;
-  const options = pick(req.query, ['limit', 'page'])
+  const options = pick(req.query, ['limit', 'page']);
   const page = parseInt(options.page) || 1; // Current page, default to 1 if not provided
   const limit = parseInt(options.limit) || 10;
   const skip = (page - 1) * limit;
   if (req.body.filters) {
-    const { search, location, date, price_range, service_type, sort_price, avgRating } = req.body.filters
+    const { search, location, date, price_range, service_type, sort_price, avgRating } = req.body.filters;
     beauticians = await beauticianService.filterBeauticians(req.body.filters);
-  }
-  else {
+  } else {
     beauticians = await beauticianService.getAllBeauticians();
   }
   const paginatedBeauticians = beauticians.slice(skip, skip + limit);
@@ -95,15 +94,15 @@ const getBeauticians = catchAsync(async (req, res) => {
       totalPages: Math.ceil(beauticians.length / limit),
       currentPage: page,
       limit: limit,
-      totalResults: paginatedBeauticians.length
-    }
-  })
-})
+      totalResults: paginatedBeauticians.length,
+    },
+  });
+});
 
 const getAllReviewsByBeauticianId = catchAsync(async (req, res) => {
   const reviews = await reviewService.getAllReviewsByBeauticianId(req.body.beauticianId);
-  return new ApiSuccess(res, httpStatus.OK, "Successfull", reviews)
-})
+  return new ApiSuccess(res, httpStatus.OK, 'Successfull', reviews);
+});
 
 module.exports = {
   register,
@@ -118,5 +117,5 @@ module.exports = {
   verifyEmail,
   deleteBeautician,
   getBeauticians,
-  getAllReviewsByBeauticianId
+  getAllReviewsByBeauticianId,
 };
