@@ -39,8 +39,7 @@ const deleteClient = catchAsync(async (req, res) => {
 });
 
 const uploadClientPhoto = catchAsync(async (req, res) => {
-  const location = await fileUploadService.uploadFile(req);
-  const updatedClient = await clientService.uploadClientPhoto(req.query.clientId, req.user._id, location);
+  const updatedClient = await clientService.uploadClientPhoto(req.query.clientId, req.user._id, req.body.photoUrls);
   return new ApiSuccess(res, httpStatus.OK, 'Client photo added successfully');
 });
 

@@ -1,7 +1,6 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const multer = require('multer');
 const {
   serviceValidation,
   appointmentValidation,
@@ -23,7 +22,6 @@ const {
 } = require('../../controllers');
 
 const router = express.Router();
-const upload = multer();
 router.route('/profile').post(beauticianController.getProfile);
 
 router.route('/profile/edit').patch(auth('beautician', 'manageBeauticianProfile'), beauticianController.updateBeautician);
@@ -126,9 +124,7 @@ router
 
 router.route('/clients/update').patch(auth('beautician', 'manageClients'), clientController.updateClient);
 
-router
-  .route('/clients/upload-image')
-  .patch(auth('beautician', 'manageClients'), upload.single('file'), clientController.uploadClientPhoto);
+router.route('/clients/upload-image').post(auth('beautician', 'manageClients'), clientController.uploadClientPhoto);
 
 router.route('/client/block').post(auth('beautician', 'manageClients'), clientController.blockClient);
 
