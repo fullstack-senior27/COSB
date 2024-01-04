@@ -94,18 +94,13 @@ const getClientDetails = async (clientId, beauticianId) => {
   return response;
 };
 
-const uploadClientPhoto = async (clientId, beauticianId, photoUrl) => {
-  const updatedClient = await Client.findOneAndUpdate(
-    { client: clientId, beautician: beauticianId, isBlocked: false },
-    {
-      $push: {
-        photos: [photoUrl],
-      },
-    }
-  );
+const uploadClientPhoto = async (clientId, beauticianId, photos) => {
+  const updatedClient = await Client.findOne({ client: clientId, beautician: beauticianId, isBlocked: false });
   if (!updatedClient) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Client does not exist or might be blocked');
   }
+  updatedClient.photos.push(...photos);
+  await updatedClient.save();
   return updatedClient;
 };
 
