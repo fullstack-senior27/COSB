@@ -8,6 +8,15 @@ const { fileUploadController } = require('../../controllers');
 const router = express.Router();
 const upload = multer();
 
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'uploads/');
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + '-' + file.originalname);
+//   }
+// });
+
 // router.post('/', upload.single('file'), async (req, res) => {
 //   // try {
 //   //   if (!req.file) {
@@ -28,6 +37,6 @@ const upload = multer();
 //   // }
 // });
 
-router.post('/', upload.single('file'), fileUploadController.uploadFile)
+router.post('/', upload.array('files', 20), fileUploadController.uploadFile);
 
 module.exports = router;
