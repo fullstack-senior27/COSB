@@ -23,7 +23,9 @@ const uploadFile = async (req) => {
     ACL: 'public-read',
   };
   const uploadData = await s3.upload(params).promise();
-  return uploadData.Location;
+  if (!uploadData.Location.startsWith('https://')) {
+    return `https://${uploadData.Location}`;
+  } else return uploadData.Location;
 };
 
 module.exports = {
