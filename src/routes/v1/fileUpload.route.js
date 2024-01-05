@@ -37,6 +37,6 @@ const upload = multer();
 //   // }
 // });
 
-router.post('/', upload.array('files', 20), fileUploadController.uploadFile);
+router.post('/', upload.single('file'), fileUploadController.uploadFile);
 
 module.exports = router;
