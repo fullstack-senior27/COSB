@@ -10,17 +10,17 @@ const createAppointment = async (appointmentBody) => {
   const existingUser = await userService.getUserById(user);
   const existingBeautician = await getBeauticianById(beautician);
   appointmentBody.customerId = existingUser.customerId;
-  const isDateAvailable = existingBeautician.availableDays.some((d) => {
-    const year = d.date.getFullYear();
-    const month = (d.date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
-    const day = d.date.getDate().toString().padStart(2, '0');
+  // const isDateAvailable = existingBeautician.availableDays.some((d) => {
+  //   const year = d.date.getFullYear();
+  //   const month = (d.date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
+  //   const day = d.date.getDate().toString().padStart(2, '0');
 
-    const formattedDateString = `${year}-${month}-${day}`;
+  //   const formattedDateString = `${year}-${month}-${day}`;
 
-    if (formattedDateString === date && d.isAvailable) {
-      return true;
-    }
-  });
+  //   if (formattedDateString === date && d.isAvailable) {
+  //     return true;
+  //   }
+  // });
   let selectedSlot;
   const isMorningSlotAvailable = existingBeautician.morning.some((t) => {
     if (t.time === timeSlot) {
@@ -55,7 +55,7 @@ const createAppointment = async (appointmentBody) => {
     throw new ApiError(httpStatus.CONFLICT, 'The date is already booked');
   }
 
-  if (isDateAvailable && (isMorningSlotAvailable || isAfternoonSlotAvailable || isEveningSlotAvailable)) {
+  if (!isAppointmentDateAvailable && (isMorningSlotAvailable || isAfternoonSlotAvailable || isEveningSlotAvailable)) {
     const appointment = await Appointment.create(appointmentBody);
     const index = existingBeautician[selectedSlot].findIndex((i) => {
       return i.time === timeSlot;
