@@ -53,17 +53,15 @@ const createAppointment = async (appointmentBody) => {
   });
   if (isAppointmentDateAvailable) {
     throw new ApiError(httpStatus.CONFLICT, 'The date is already booked');
-  }
-
-  if (!isAppointmentDateAvailable && (isMorningSlotAvailable || isAfternoonSlotAvailable || isEveningSlotAvailable)) {
+  } else if (!isAppointmentDateAvailable && (isMorningSlotAvailable || isAfternoonSlotAvailable || isEveningSlotAvailable)) {
     const appointment = await Appointment.create(appointmentBody);
     const index = existingBeautician[selectedSlot].findIndex((i) => {
       return i.time === timeSlot;
     });
-    if (index !== -1) {
-      existingBeautician[selectedSlot][index].isBooked = true;
-    }
-    await existingBeautician.save();
+    // if (index !== -1) {
+    //   existingBeautician[selectedSlot][index].isBooked = true;
+    // }
+    // await existingBeautician.save();
 
     return appointment;
   }
