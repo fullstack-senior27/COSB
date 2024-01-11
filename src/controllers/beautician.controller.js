@@ -2,7 +2,15 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { beauticianService, authService, tokenService, _service, reviewService, emailService } = require('../services');
+const {
+  beauticianService,
+  authService,
+  tokenService,
+  _service,
+  reviewService,
+  emailService,
+  transactionService,
+} = require('../services');
 const ApiSuccess = require('../utils/ApiSuccess');
 const { ResponseMessage } = require('../utils/comman');
 
@@ -104,6 +112,21 @@ const getAllReviewsByBeauticianId = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, 'Successfull', reviews);
 });
 
+const getListOfTransactions = catchAsync(async (req, res) => {
+  const transactions = await transactionService.getListOfTransactions(req.query.beauticianId);
+  return new ApiSuccess(res, httpStatus.OK, 'List of transactions', transactions);
+});
+
+// const getRevenueDetails = catchAsync(async (req, res) => {
+//   const transactions = await transactionService.getListOfTransactions(req.query.beauticianId);
+//   const totalEarning = 0;
+//   transactions.forEach((t) => {
+//     totalEarning += t.totalAmount;
+//   })
+//   const withdrawBalance = 0;
+//   const payouts = await pa
+// })
+
 module.exports = {
   register,
   login,
@@ -118,4 +141,5 @@ module.exports = {
   deleteBeautician,
   getBeauticians,
   getAllReviewsByBeauticianId,
+  getListOfTransactions,
 };
