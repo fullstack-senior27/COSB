@@ -4,11 +4,14 @@ const ApiSuccess = require('../utils/ApiSuccess');
 const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 const pick = require('../utils/pick');
+const mongoose = require('mongoose');
+const { Beautician } = require('../models');
 
 const createAppointment = catchAsync(async (req, res) => {
   const { user, beautician, date, zipcode, services, timeSlot } = req.body;
-  const existingBeautician = await beauticianService.getBeauticianById(beautician);
-  console.log(existingBeautician);
+  console.log(beautician);
+  // const existingBeautician = await Beautician.findById(beautician);
+  const existingBeautician = await beauticianService.getBeauticianById(mongoose.Types.ObjectId(beautician));
   if (existingBeautician.blockedClients.includes(user)) {
     throw new ApiError(httpStatus.NOT_ACCEPTABLE, 'You have been blocked by this beautician');
   }

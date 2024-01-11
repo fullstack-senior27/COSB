@@ -51,6 +51,7 @@ const createAppointment = async (appointmentBody) => {
     date,
     timeSlot,
   });
+  console.log(isAppointmentDateAvailable);
   if (isAppointmentDateAvailable) {
     throw new ApiError(httpStatus.CONFLICT, 'The date is already booked');
   } else if (!isAppointmentDateAvailable && (isMorningSlotAvailable || isAfternoonSlotAvailable || isEveningSlotAvailable)) {
@@ -199,6 +200,21 @@ const getAppointmentsByUserId = async (userId) => {
         },
       },
     },
+    {
+      $project: {
+        timeSlot: 1,
+        date: 1,
+        zipcode: 1,
+        status: 1,
+        paymentStatus: 1,
+        amount: 1,
+        user: 1,
+        services: 1,
+        'beautician.name': 1,
+        'beautician.averageRating': 1,
+        // Add other fields you want to include from beautician
+      },
+    },
   ]);
 
   return appointments;
@@ -210,8 +226,8 @@ const getAppointmentsByBeauticianId = async (beauticianId) => {
     beautician: beauticianId,
   })
     .sort({ createdAt: 'desc' })
-    .populate('user')
-    .populate('beautician')
+    .populate('user', 'name')
+    .populate('beautician', 'name')
     .populate('services');
 
   return appointments;
