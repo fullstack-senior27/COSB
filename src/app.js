@@ -14,8 +14,8 @@ const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 const { sendEmail } = require('./services/email.service');
-const { Appointment, Beautician } = require('./models');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const { Appointment, Beautician, Transaction } = require('./models');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 
@@ -30,7 +30,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
   const payloadString = request.body;
   // console.log("payload (request): ", payloadString)
   // let endpointSecret = "whsec_a74da2b3b263ce7c8f5674096033a0e1876816db54c534dd45ca0c0ed6f5b817"
-  let endpointSecret = process.env.STRIPE_WEBHOOK_KEY
+  let endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
   const sig = request.headers['stripe-signature'];
   // console.log(sig.toString());
 
@@ -47,31 +47,44 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
   // Handle the event
   switch (event.type) {
     case 'payment_intent.succeeded':
-      console.log('payment intent succeeded*****************')
-      console.log(event.data.object.metdata)
+      console.log('payment intent succeeded*****************');
+      console.log(event.data.object.metdata);
       break;
     case 'transfer.created':
-      console.log('transfer created*****************')
-      console.log(event.data.object)
+      console.log('transfer created*****************');
+      console.log(event.data.object);
       break;
     case 'charge.succeeded':
       // console.log(paymentIntent)
-      console.log("succeeded: ****************************")
-      console.log(event.data.object)
+      console.log('succeeded: ****************************');
+      console.log('Charge: ', event.data.object);
       const charge = event.data.object;
       const appointment = await Appointment.findById(charge.metadata.appointment);
-      appointment.paymentStatus = "paid";
+      appointment.paymentStatus = 'paid';
       await appointment.save();
-      sendEmail(paymentIntent.receipt_email, "Payment Receipt", "Click on the link to get the receipt", paymentIntent.receipt_url)
+      await Transaction.create({
+        beautician: appointment.beautician,
+        fee: charge.amount / 100,
+        tip: 0,
+        paymentMethod: charge.payment_method_details.card.funding,
+        bookingDateTime: {
+          timeSlot: appointment.timeSlot,
+          date: appointment.date,
+        },
+        status: 'paid',
+        appointment: appointment._id,
+        totalAmount: charge.amount / 100 + 0,
+      });
+      sendEmail(charge.receipt_email, 'Payment Receipt', 'Click on the link to get the receipt', charge.receipt_url);
       break;
     // ... handle other event types
     case 'payment_intent.canceled':
-      console.log("Payment Intent cancelled")
+      console.log('Payment Intent cancelled');
       break;
 
     case 'payment_intent.requires_action':
-      console.log(event.type.object)
-      console.log("Payment Intent requires action")
+      console.log(event.type.object);
+      console.log('Payment Intent requires action');
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);
@@ -79,13 +92,12 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
 
   // Return a 200 response to acknowledge receipt of the event
   response.send({
-    message: "Email sent"
+    message: 'Email sent',
   });
 });
 
 // parse json request body
 app.use(express.json());
-
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
@@ -117,7 +129,6 @@ if (config.env === 'production') {
 // v1 api routes
 app.use('/v1', routes);
 // app.use(express.raw({ type: '*/*' }));
-
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

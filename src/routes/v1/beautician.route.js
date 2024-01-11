@@ -158,4 +158,10 @@ router
 router.route('/promotion/create').post(auth('beautician', 'managePromotions'), promotionController.createPromotion);
 router.route('/promotion/list').get(promotionController.getPromotionsByBeautician);
 
+router
+  .route('/transactions-list')
+  .get(auth('beautician', 'manageConnectAccount'), beauticianController.getListOfTransactions);
+
+// router.route('/revenue-details').get(auth('beautician', 'manageConnectAccount'), beauticianController.getRevenueDetails);
+
 module.exports = router;

@@ -14,3 +14,4 @@ module.exports.Client = require('./client.model');
 module.exports.Page = require('./page.model');
 module.exports.Promotion = require('./promotion.model');
 module.exports.Note = require('./note.model');
+module.exports.Transaction = require('./transaction.model');
