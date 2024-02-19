@@ -4,6 +4,6 @@ const { pageController } = require('../../controllers');
 const router = express.Router();
 
 router.route('/all').get(pageController.getAllPages);
-router.route('/:key').get(pageController.getPageByKey);
+router.route('').get(pageController.getPageByKey);
 
-module.exports = router
+module.exports = router;

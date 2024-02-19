@@ -7,31 +7,34 @@ const { adminService, blogService } = require('.');
 const getBlogs = async () => {
   // options.populate = "user, blog_category";
   const blogs = await Blog.find().populate('user').populate('blog_category').sort({ createdAt: 'desc' });
-  return blogs
-}
+  return blogs;
+};
 
 const getBlogsByTopic = async (blogCategoryId) => {
   const blogs = await Blog.find({
-    blog_category: blogCategoryId
-  }).populate('author').populate('blog_category');
-  return blogs
-}
+    blog_category: blogCategoryId,
+  })
+    .populate('author')
+    .populate('blog_category');
+  return blogs;
+};
 
-const createBlog = async ({ title, description, blogCategoryId }, cur_user) => {
-  console.log(cur_user)
+const createBlog = async ({ title, description, blogCategoryId, imageUrl }, cur_user) => {
+  console.log(cur_user);
   const blog = await Blog.create({
     title,
     description,
     blog_category: blogCategoryId,
-    author: cur_user._id
-  })
+    author: cur_user._id,
+    imageUrl,
+  });
   return blog;
-}
+};
 
 const getBlogById = async (blog_id) => {
   const blog = await Blog.findById(blog_id).populate('user').populate('blog_category');
   return blog;
-}
+};
 
 const updateBlog = async (blog_id, updateBody) => {
   const updatedBlog = await getBlogById(blog_id);
@@ -39,9 +42,9 @@ const updateBlog = async (blog_id, updateBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Blog does not exist', false);
   }
   Object.assign(updatedBlog, updateBody);
-  await updatedBlog.save()
+  await updatedBlog.save();
   return updatedBlog;
-}
+};
 
 const deleteBlog = async (blog_id) => {
   const deletedBlog = await getBlogById(blog_id);
@@ -51,14 +54,14 @@ const deleteBlog = async (blog_id) => {
   await deletedBlog.remove();
   // console.log(updatedAdmin);
   return deletedBlog;
-}
+};
 
 const createBlogCategory = async (name) => {
   const blogCategory = await BlogCategory.create({
-    name
-  })
+    name,
+  });
   return blogCategory;
-}
+};
 
 const getRelatedBlogs = async (blogId) => {
   const blog = await getBlogById(blogId);
@@ -66,11 +69,13 @@ const getRelatedBlogs = async (blogId) => {
   if (blog) {
     const relatedBlogs = await Blog.find({
       blog_category: blog.blog_category,
-      _id: { $ne: blogId }
-    }).populate('blog_category').limit(3);
-    return relatedBlogs
+      _id: { $ne: blogId },
+    })
+      .populate('blog_category')
+      .limit(3);
+    return relatedBlogs;
   }
-}
+};
 
 module.exports = {
   getBlogs,
@@ -80,5 +85,5 @@ module.exports = {
   updateBlog,
   deleteBlog,
   createBlogCategory,
-  getRelatedBlogs
-}
+  getRelatedBlogs,
+};

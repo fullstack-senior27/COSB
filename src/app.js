@@ -78,6 +78,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
       sendEmail(charge.receipt_email, 'Payment Receipt', 'Click on the link to get the receipt', charge.receipt_url);
       break;
     // ... handle other event types
+    case 'charge.failed':
+      console.log('Charge failed');
+      console.log(event.type.object);
     case 'payment_intent.canceled':
       console.log('Payment Intent cancelled');
       break;

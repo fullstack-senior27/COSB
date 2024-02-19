@@ -34,7 +34,7 @@ const forgotPassword = catchAsync(async (req, res) => {
   console.log(req.body);
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS, resetPasswordToken)
+  return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS, resetPasswordToken);
 });
 
 const resetPassword = catchAsync(async (req, res) => {
@@ -42,6 +42,25 @@ const resetPassword = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS);
 });
 
+const listUsers = catchAsync(async (req, res) => {
+  const userList = await adminService.getListOfUsers(req.query.page, req.query.limit);
+  return new ApiSuccess(res, httpStatus.OK, 'List of users', userList);
+});
+
+const listBeauticians = catchAsync(async (req, res) => {
+  const beauticianList = await adminService.getListOfBeauticians(req.query.page, req.query.limit);
+  return new ApiSuccess(res, httpStatus.OK, 'List of beauticians', beauticianList);
+});
+
+const getUserDetails = catchAsync(async (req, res) => {
+  const userDetails = await adminService.getUserDetails(req.query.userId);
+  return new ApiSuccess(res, httpStatus.OK, 'User details fetched', userDetails);
+});
+
+const getBeauticianDetails = catchAsync(async (req, res) => {
+  const beauticianDetails = await adminService.getBeauticianDetails(req.query.beauticianId);
+  return new ApiSuccess(res, httpStatus.OK, 'Beautician details fetched', beauticianDetails);
+});
 
 module.exports = {
   register,
@@ -50,4 +69,8 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
+  listUsers,
+  listBeauticians,
+  getUserDetails,
+  getBeauticianDetails,
 };
