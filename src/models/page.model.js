@@ -2,19 +2,22 @@ const mongoose = require('mongoose');
 // const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
 
-const pageSchema = mongoose.Schema({
-  key: {
-    type: String,
-    default: ""
+const pageSchema = mongoose.Schema(
+  {
+    key: {
+      type: String,
+      unique: true,
+    },
+    data: {
+      type: mongoose.Schema.Types.Mixed,
+      // required: false,
+      default: [],
+    },
   },
-  data: {
-    type: mongoose.Schema.Types.Mixed,
-    // required: false,
-    default: []
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true
-})
+);
 
 pageSchema.plugin(paginate);
 

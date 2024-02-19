@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
-
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const timeSlotSchema = mongoose.Schema({
   time: {
@@ -11,13 +11,13 @@ const timeSlotSchema = mongoose.Schema({
   },
   isBooked: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const daySchema = mongoose.Schema({
   day: {
-    type: String
+    type: String,
   },
   date: {
     type: Date,
@@ -25,7 +25,7 @@ const daySchema = mongoose.Schema({
   isAvailable: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 const beauticianSchema = mongoose.Schema(
@@ -38,7 +38,7 @@ const beauticianSchema = mongoose.Schema(
     image: {
       type: String,
       required: false,
-      default: null
+      default: null,
     },
     email: {
       type: String,
@@ -54,7 +54,7 @@ const beauticianSchema = mongoose.Schema(
     },
     phone: {
       type: String,
-      default: ""
+      default: '',
       // unique: true,
     },
     password: {
@@ -76,20 +76,20 @@ const beauticianSchema = mongoose.Schema(
     photos: [
       {
         type: String,
-        default: null
-      }
+        default: null,
+      },
     ],
     profession: {
       type: String,
-      default: ""
+      default: '',
     },
     about: {
       type: String,
-      default: null
+      default: null,
     },
     website: {
       type: String,
-      default: null
+      default: null,
     },
     // notes: [
     //   noteSchema
@@ -100,77 +100,77 @@ const beauticianSchema = mongoose.Schema(
     },
     speciality: [
       {
-        type: String
-      }
+        type: String,
+      },
     ],
     services: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Service'
-      }
+        ref: 'Service',
+      },
     ],
     service_categories: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Service_category'
-      }
+        ref: 'Service_category',
+      },
     ],
     reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Review'
-      }
+        ref: 'Review',
+      },
     ],
     availableDays: [
       {
         isAvailable: {
           type: Boolean,
-          default: false
+          default: false,
         },
         day: {
           type: String,
-          default: ""
+          default: '',
         },
         date: {
-          type: Date
-        }
-      }
+          type: Date,
+        },
+      },
     ],
     morning: [
       {
         isBooked: {
           type: Boolean,
-          default: false
+          default: false,
         },
         time: {
           type: String,
-          default: ""
-        }
-      }
+          default: '',
+        },
+      },
     ],
     afternoon: [
       {
         isBooked: {
           type: Boolean,
-          default: false
+          default: false,
         },
         time: {
           type: String,
-          default: ""
-        }
-      }
+          default: '',
+        },
+      },
     ],
     evening: [
       {
         isBooked: {
           type: Boolean,
-          default: false
+          default: false,
         },
         time: {
           type: String,
-          default: ""
-        }
-      }
+          default: '',
+        },
+      },
     ],
     // timeSlots: [
     //   {
@@ -178,18 +178,18 @@ const beauticianSchema = mongoose.Schema(
     //   }
     // ],
     salon_number: {
-      type: String
+      type: String,
     },
     business_name: {
-      type: String
+      type: String,
     },
     address: {
       type: String,
-      trim: true
+      trim: true,
     },
     accountId: {
       type: String,
-      default: ""
+      default: '',
     },
     blockedClients: [
       {
@@ -205,7 +205,8 @@ const beauticianSchema = mongoose.Schema(
 
 // add plugin that converts mongoose to json
 beauticianSchema.plugin(toJSON);
-beauticianSchema.plugin(paginate);
+// beauticianSchema.plugin(paginate);
+beauticianSchema.plugin(mongoosePaginate);
 
 /**
  * Check if email is taken

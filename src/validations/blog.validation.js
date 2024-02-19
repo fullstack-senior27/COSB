@@ -5,7 +5,8 @@ const createBlog = {
   body: Joi.object().keys({
     title: Joi.string().required(),
     description: Joi.string().required(),
-    blogCategoryId: Joi.string().required().custom(objectId)
+    blogCategoryId: Joi.string().required().custom(objectId),
+    imageUrl: Joi.string(),
   }),
 };
 
@@ -16,18 +17,18 @@ const updateBlog = {
   body: Joi.object().keys({
     title: Joi.string(),
     description: Joi.string(),
-    blogCategoryId: Joi.string().custom(objectId)
+    blogCategoryId: Joi.string().custom(objectId),
   }),
-}
+};
 
 const getBlog = {
   params: Joi.object().keys({
     blog_id: Joi.required().custom(objectId),
-  })
-}
+  }),
+};
 
 module.exports = {
   createBlog,
   updateBlog,
-  getBlog
+  getBlog,
 };

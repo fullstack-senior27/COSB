@@ -12,6 +12,9 @@ const blogSchema = mongoose.Schema({
     trim: true,
     required: true
   },
+  imageUrl: {
+    type: String,
+  },
   description: {
     type: String,
     required: true

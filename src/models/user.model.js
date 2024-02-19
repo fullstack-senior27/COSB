@@ -3,6 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const userSchema = mongoose.Schema(
   {
@@ -14,7 +15,7 @@ const userSchema = mongoose.Schema(
     image: {
       type: String,
       required: false,
-      default: null
+      default: null,
     },
     email: {
       type: String,
@@ -35,25 +36,25 @@ const userSchema = mongoose.Schema(
     },
     homeNumber: {
       type: String,
-      unique: true
+      unique: true,
     },
     streetAddress: {
-      type: String
+      type: String,
     },
     apt: {
-      type: Number
+      type: Number,
     },
     city: {
-      type: String
+      type: String,
     },
     state: {
-      type: String
+      type: String,
     },
     zip: {
-      type: String
+      type: String,
     },
     birthday: {
-      type: String
+      type: String,
     },
     password: {
       type: String,
@@ -77,12 +78,12 @@ const userSchema = mongoose.Schema(
     },
     customerId: {
       type: String,
-      default: ""
+      default: '',
     },
     isOffline: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
     // appointments: [
     //   {
     //     type: mongoose.Schema.Types.ObjectId,
@@ -132,6 +133,8 @@ userSchema.pre('save', async function (next) {
   }
   next();
 });
+
+userSchema.plugin(mongoosePaginate);
 
 /**
  * @typedef User
