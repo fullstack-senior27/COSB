@@ -6,17 +6,13 @@ const { blogValidation } = require('../../validations');
 
 const router = express.Router();
 
-router
-  .route("").post(blogController.getBlogs)
-router
-  .route("/:blog_id").get(validate(blogValidation.getBlog), blogController.getBlog)
+router.route('').post(blogController.getBlogs);
+router.route('/get-blog').get(blogController.getBlog);
 
-router
-  .route('/related/:blogId').get(blogController.getRelatedBlogs)
+router.route('/related/:blogId').get(blogController.getRelatedBlogs);
 
+router.route('/categories/all').get(blogCategoryController.listBlogCategories);
 
-router
-  .route("/categories/all")
-  .get(blogCategoryController.listBlogCategories)
+router.route('/categories/get-category').get(blogCategoryController.getBlogCategoryById);
 
 module.exports = router;

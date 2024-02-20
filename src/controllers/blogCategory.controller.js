@@ -35,9 +35,15 @@ const deleteBlogCategory = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, 'Blog category deleted successfully');
 });
 
+const getBlogCategoryById = catchAsync(async (req, res) => {
+  const blogCategory = await blogCategoryService.getBlogCategoryById(req.query.category_id);
+  return new ApiSuccess(res, httpStatus.OK, 'Blog category fetched successfully', blogCategory);
+});
+
 module.exports = {
   createBlogCategory,
   listBlogCategories,
   updateBlogCategory,
   deleteBlogCategory,
+  getBlogCategoryById,
 };

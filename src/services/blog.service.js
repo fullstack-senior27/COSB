@@ -32,7 +32,7 @@ const createBlog = async ({ title, description, blogCategoryId, imageUrl }, cur_
 };
 
 const getBlogById = async (blog_id) => {
-  const blog = await Blog.findById(blog_id).populate('user').populate('blog_category');
+  const blog = await Blog.findById(mongoose.Types.ObjectId(blog_id)).populate('user').populate('blog_category');
   return blog;
 };
 
