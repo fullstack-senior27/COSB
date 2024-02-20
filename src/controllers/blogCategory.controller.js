@@ -5,40 +5,39 @@ const catchAsync = require('../utils/catchAsync');
 const { blogCategoryService } = require('../services');
 const ApiSuccess = require('../utils/ApiSuccess');
 
-
 const createBlogCategory = catchAsync(async (req, res) => {
-  const createdBlogCategory = await blogCategoryService.createBlogCategory(req.body.name)
+  const createdBlogCategory = await blogCategoryService.createBlogCategory(req.body.name);
   return res.status(201).json({
     code: httpStatus.CREATED,
-    message: "Blog Category created successfully!",
+    message: 'Blog Category created successfully!',
     isSuccess: true,
-    data: createdBlogCategory
-  })
-})
+    data: createdBlogCategory,
+  });
+});
 
 const listBlogCategories = catchAsync(async (req, res) => {
   const blogCategories = await blogCategoryService.listBlogCategories();
   return res.status(200).json({
     code: httpStatus.OK,
-    message: "Blogs fetched successfully",
+    message: 'Blogs fetched successfully',
     isSuccess: true,
-    data: blogCategories
-  })
-})
+    data: blogCategories,
+  });
+});
 
 const updateBlogCategory = catchAsync(async (req, res) => {
   const blogCategory = await blogCategoryService.updateBlogCategory(req.params.category_id, req.body);
-  return new ApiSuccess(res, httpStatus.OK, "Blog Category updated successfully", blogCategory);
-})
+  return new ApiSuccess(res, httpStatus.OK, 'Blog Category updated successfully', blogCategory);
+});
 
 const deleteBlogCategory = catchAsync(async (req, res) => {
   const blogCategory = await blogCategoryService.deleteBlogCategory(req.params.category_id);
-  return new ApiSuccess(res, httpStatus.NO_CONTENT, 'Blog category deleted successfully')
-})
+  return new ApiSuccess(res, httpStatus.OK, 'Blog category deleted successfully');
+});
 
 module.exports = {
   createBlogCategory,
   listBlogCategories,
   updateBlogCategory,
-  deleteBlogCategory
+  deleteBlogCategory,
 };
