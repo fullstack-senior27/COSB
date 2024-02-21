@@ -5,7 +5,7 @@ const createBlog = {
   body: Joi.object().keys({
     title: Joi.string().required(),
     description: Joi.string().required(),
-    blogCategoryId: Joi.string().required().custom(objectId),
+    blog_category: Joi.string().required().custom(objectId),
     imageUrl: Joi.string(),
   }),
 };
@@ -17,8 +17,8 @@ const updateBlog = {
   body: Joi.object().keys({
     title: Joi.string(),
     description: Joi.string(),
-    blogCategoryId: Joi.string().custom(objectId),
-    imageUrl: Joi.string()
+    blog_category: Joi.string().custom(objectId),
+    imageUrl: Joi.string(),
   }),
 };
 

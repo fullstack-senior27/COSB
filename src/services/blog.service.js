@@ -19,12 +19,12 @@ const getBlogsByTopic = async (blogCategoryId) => {
   return blogs;
 };
 
-const createBlog = async ({ title, description, blogCategoryId, imageUrl }, cur_user) => {
+const createBlog = async ({ title, description, blog_category, imageUrl }, cur_user) => {
   console.log(cur_user);
   const blog = await Blog.create({
     title,
     description,
-    blog_category: blogCategoryId,
+    blog_category,
     author: cur_user._id,
     imageUrl,
   });
@@ -37,7 +37,7 @@ const getBlogById = async (blog_id) => {
 };
 
 const updateBlog = async (blog_id, updateBody) => {
-  const updatedBlog = await getBlogById(blog_id);
+  const updatedBlog = await Blog.findById(blog_id);
   if (!updateBlog) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Blog does not exist', false);
   }
