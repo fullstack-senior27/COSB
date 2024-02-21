@@ -62,6 +62,24 @@ const getBeauticianDetails = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, 'Beautician details fetched', beauticianDetails);
 });
 
+const getAppointmentListForBeautician = catchAsync(async (req, res) => {
+  const appointmentList = await adminService.getAppointmentListForBeautician(
+    req.query.beauticianId,
+    req.query.page,
+    req.query.limit
+  );
+  return new ApiSuccess(res, httpStatus.OK, 'Appointments list by beautician', appointmentList);
+});
+
+const getAppointmentListForUser = catchAsync(async (req, res) => {
+  const appointmentList = await adminService.getAppointmentListForUser;
+});
+
+const getTransactionList = catchAsync(async (req, res) => {
+  const transactionList = await adminService.getTransactionList(req.query.beauticianId, req.query.page, req.query.limit);
+  return new ApiSuccess(res, httpStatus.OK, 'Transaction list by beautician', transactionList);
+});
+
 module.exports = {
   register,
   login,
@@ -73,4 +91,7 @@ module.exports = {
   listBeauticians,
   getUserDetails,
   getBeauticianDetails,
+  getAppointmentListForBeautician,
+  getAppointmentListForUser,
+  getTransactionList,
 };

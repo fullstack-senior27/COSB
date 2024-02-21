@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const appointmentSchema = mongoose.Schema(
   {
@@ -51,6 +52,7 @@ const appointmentSchema = mongoose.Schema(
 );
 
 appointmentSchema.plugin(paginate);
+appointmentSchema.plugin(mongoosePaginate);
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 // const validator = require('validator');
 // const { toJSON, paginate } = require('./plugins');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const transactionSchema = mongoose.Schema(
   {
@@ -37,6 +38,8 @@ const transactionSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+transactionSchema.plugin(mongoosePaginate);
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
 

@@ -18,6 +18,7 @@ const updateBlog = {
     title: Joi.string(),
     description: Joi.string(),
     blogCategoryId: Joi.string().custom(objectId),
+    imageUrl: Joi.string()
   }),
 };
 
