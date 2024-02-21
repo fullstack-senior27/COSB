@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
-const { User, userService } = require('../user');
 const ApiError = require('../utils/ApiError');
+const { Admin } = require('../models');
+const { adminService } = require('.');
 
 function generateOTP() {
   const otp = Math.floor(1000 + Math.random() * 9000);
@@ -11,7 +12,7 @@ const generateResetPasswordOtp = async (email) => {
   const otp = generateOTP();
   const otpGenerationTime = new Date();
   // add this otp to user model
-  const user = await User.findOne({ email });
+  const user = await Admin.findOne({ email });
   user.otp = otp;
   user.otpGeneratedAt = otpGenerationTime;
   await user.save();
@@ -29,11 +30,11 @@ function isOtpValidTime(user) {
 }
 
 const verifyOtpandResetPassword = async (enteredOtp, email, newPassword) => {
-  const user = await User.findOne({ email });
+  const user = await Admin.findOne({ email });
   if (!user.otp || user.otp !== enteredOtp || !isOtpValidTime(user)) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'OTP is invalid');
   }
-  await userService.updateUserById(user.id, { password: newPassword });
+  await adminService.updateAdminById(user.id, { password: newPassword });
   user.otp = '';
   //   user.otpGeneratedAt = undefined;
   await user.save();
