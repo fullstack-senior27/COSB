@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
-const { Admin, User, Beautician } = require('../models');
+const { Admin, User, Beautician, Appointment, Transaction } = require('../models');
 const ApiError = require('../utils/ApiError');
+const mongoose = require('mongoose');
 
 const createAdmin = async (adminBody) => {
   if (await Admin.isEmailTaken(adminBody.email)) {
@@ -83,6 +84,44 @@ const getBeauticianDetails = async (beauticianId) => {
   return beauticianDetails;
 };
 
+const getAppointmentListForBeautician = async (beauticianId, page, limit) => {
+  const appointmentList = await Appointment.paginate(
+    { beautician: mongoose.Types.ObjectId(beauticianId) },
+    {
+      populate: ['services', 'user'],
+      page,
+      limit,
+    }
+  );
+  return appointmentList;
+};
+
+const getAppointmentListForUser = async (userId, page, limit) => {
+  const appointmentList = await Appointment.paginate(
+    {
+      user: mongoose.Types.ObjectId(userId),
+    },
+    {
+      populate: ['service', 'beautician'],
+      page,
+      limit,
+    }
+  );
+  return appointmentList;
+};
+
+const getTransactionList = async (beauticianId, page, limit) => {
+  const appointmentList = await Transaction.paginate(
+    { beautician: mongoose.Types.ObjectId(beauticianId) },
+    {
+      populate: ['appointment', 'beautician'],
+      page,
+      limit,
+    }
+  );
+  return appointmentList;
+};
+
 module.exports = {
   createAdmin,
   updateAdminById,
@@ -94,4 +133,7 @@ module.exports = {
   getListOfBeauticians,
   getUserDetails,
   getBeauticianDetails,
+  getAppointmentListForBeautician,
+  getAppointmentListForUser,
+  getTransactionList,
 };

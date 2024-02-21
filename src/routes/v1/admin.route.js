@@ -7,6 +7,7 @@ const {
   serviceTypeController,
   pageController,
   adminController,
+  appointmentController,
 } = require('../../controllers');
 const { blogValidation, blogCategoryValidation, serviceValidation } = require('../../validations');
 
@@ -73,4 +74,13 @@ router.route('/list/users').get(auth('admin', 'managePages'), adminController.li
 router.route('/list/beauticians').get(auth('admin', 'managePages'), adminController.listBeauticians);
 router.route('/get-user-details').get(auth('admin', 'managePages'), adminController.getUserDetails);
 router.route('/get-beautician-details').get(auth('admin', 'managePages'), adminController.getBeauticianDetails);
+
+router
+  .route('/beautician-appointment-list')
+  .get(auth('admin', 'managePages'), adminController.getAppointmentListForBeautician);
+router.route('/user-appointment-list').get(auth('admin', 'managePages'), adminController.getAppointmentListForUser);
+router.route('/transaction-list').get(auth('admin', 'managePages'), adminController.getTransactionList);
+router
+  .route('/appointment-details/:appointmentId')
+  .get(auth('admin', 'managePages'), appointmentController.getAppointmentDetails);
 module.exports = router;
