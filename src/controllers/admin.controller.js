@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { authService, tokenService, adminService } = require('../services');
+const { authService, tokenService, adminService, otpService, emailService } = require('../services');
 const ApiSuccess = require('../utils/ApiSuccess');
 const { ResponseMessage } = require('../utils/comman');
 
@@ -30,16 +30,26 @@ const refreshTokens = catchAsync(async (req, res) => {
   res.send({ ...tokens });
 });
 
+// const forgotPassword = catchAsync(async (req, res) => {
+//   console.log(req.body);
+//   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
+//   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+//   return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS, resetPasswordToken);
+// });
+
 const forgotPassword = catchAsync(async (req, res) => {
-  console.log(req.body);
-  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS, resetPasswordToken);
+  const otp = await otpService.generateResetPasswordOtp(req.body.email);
+  await emailService.sendResetPasswordEmail(req.body.email, otp);
+  return new ApiSuccess(res, httpStatus.OK, 'OTP has been sent to your email ID');
 });
 
+// const resetPassword = catchAsync(async (req, res) => {
+//   await authService.resetPassword(req.query.token, req.body.password);
+//   return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS);
+// });
 const resetPassword = catchAsync(async (req, res) => {
-  await authService.resetPassword(req.query.token, req.body.password);
-  return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS);
+  const updatedAdmin = await authService.resetPassword(req.body.otp, req.body.email, req.body.password);
+  return new ApiSuccess(res, httpStatus.OK, 'Password has been reset', updatedAdmin);
 });
 
 const listUsers = catchAsync(async (req, res) => {
@@ -72,7 +82,8 @@ const getAppointmentListForBeautician = catchAsync(async (req, res) => {
 });
 
 const getAppointmentListForUser = catchAsync(async (req, res) => {
-  const appointmentList = await adminService.getAppointmentListForUser;
+  const appointmentList = await adminService.getAppointmentListForUser(req.query.userId, req.query.page, req.query.limit);
+  return new ApiSuccess(res, httpStatus.OK, 'Appointments list by user', appointmentList);
 });
 
 const getTransactionList = catchAsync(async (req, res) => {
