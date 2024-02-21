@@ -18,7 +18,6 @@ router.post('/reset-password/user', validate(authValidation.resetPassword), auth
 router.post('/send-verification-email/user', auth('user'), authController.sendVerificationEmail);
 router.post('/verify-email/user', validate(authValidation.verifyEmail), authController.verifyEmail);
 
-
 // beautician auth
 router.post('/register/beautician', validate(authValidation.registerBeautician), beauticianController.register);
 router.post('/login/beautician', validate(authValidation.login), beauticianController.login);
@@ -35,8 +34,7 @@ router.post('/login/admin', validate(authValidation.login), adminController.logi
 router.post('/logout/admin', validate(authValidation.logout), adminController.logout);
 router.post('/refresh-tokens/admin', validate(authValidation.refreshTokens), adminController.refreshTokens);
 router.post('/forgot-password/admin', validate(authValidation.forgotPassword), adminController.forgotPassword);
-router.post('/reset-password/admin', validate(authValidation.resetPassword), adminController.resetPassword);
-
+router.post('/reset-password/admin', adminController.resetPassword);
 
 module.exports = router;
 

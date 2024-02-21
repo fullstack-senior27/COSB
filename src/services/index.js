@@ -20,3 +20,4 @@ module.exports.promotionService = require('./promotion.service');
 module.exports.noteService = require('./note.service');
 module.exports.fileUploadService = require('./fileUpload.service');
 module.exports.transactionService = require('./transaction.service');
+module.exports.otpService = require('./otp.service');

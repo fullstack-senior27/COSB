@@ -43,7 +43,14 @@ const adminSchema = mongoose.Schema(
     role: {
       type: String,
       default: 'admin',
-    }
+    },
+    otp: {
+      type: String,
+      default: '',
+    },
+    otpGeneratedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
