@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
-const ApiError = require('../../utils/ApiError');
 const { User, userService } = require('../user');
+const ApiError = require('../utils/ApiError');
 
 function generateOTP() {
   const otp = Math.floor(1000 + Math.random() * 9000);
