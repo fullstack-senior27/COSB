@@ -48,7 +48,7 @@ const forgotPassword = catchAsync(async (req, res) => {
 //   return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS);
 // });
 const resetPassword = catchAsync(async (req, res) => {
-  const updatedAdmin = await authService.resetPassword(req.body.otp, req.body.email, req.body.password);
+  const updatedAdmin = await otpService.verifyOtpandResetPassword(req.body.otp, req.body.email, req.body.password);
   return new ApiSuccess(res, httpStatus.OK, 'Password has been reset', updatedAdmin);
 });
 
