@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { authService, tokenService, adminService, otpService, emailService } = require('../services');
+const { authService, tokenService, adminService, otpService, emailService, cmsService } = require('../services');
 const ApiSuccess = require('../utils/ApiSuccess');
 const { ResponseMessage } = require('../utils/comman');
 
@@ -91,6 +91,32 @@ const getTransactionList = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, 'Transaction list by beautician', transactionList);
 });
 
+// CMS
+const createHelpContent = catchAsync(async (req, res) => {
+  const help = await cmsService.createHelpContent(req.body);
+  return new ApiSuccess(res, httpStatus.OK, 'Content added successfully', help);
+});
+
+const editHelpContent = catchAsync(async (req, res) => {
+  const help = await cmsService.editHelpContent(req.query.id, req.body);
+  return new ApiSuccess(res, httpStatus.OK, 'Content edited successfully', help);
+});
+
+const deleteHelpContent = catchAsync(async (req, res) => {
+  const help = await cmsService.deleteHelpContent(req.query.id);
+  return new ApiSuccess(res, httpStatus.OK, 'Content deleted successfully', help);
+});
+
+const getHelpContent = catchAsync(async (req, res) => {
+  const help = await cmsService.getAllHelpContent();
+  return new ApiSuccess(res, httpStatus.OK, 'All help content', help);
+});
+
+const getIndividualHelpQuery = catchAsync(async (req, res) => {
+  const help = await cmsService.getHelpContentById(req.params.id);
+  return new ApiSuccess(res, httpStatus.OK, 'Individual help data', help);
+});
+
 module.exports = {
   register,
   login,
@@ -105,4 +131,9 @@ module.exports = {
   getAppointmentListForBeautician,
   getAppointmentListForUser,
   getTransactionList,
+  createHelpContent,
+  editHelpContent,
+  deleteHelpContent,
+  getHelpContent,
+  getIndividualHelpQuery,
 };
