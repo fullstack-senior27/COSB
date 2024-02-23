@@ -83,4 +83,11 @@ router.route('/transaction-list').get(auth('admin', 'managePages'), adminControl
 router
   .route('/appointment-details/:appointmentId')
   .get(auth('admin', 'managePages'), appointmentController.getAppointmentDetails);
+
+// CMS routes
+router.route('/cms/help/create').post(auth('admin', 'managePages'), adminController.createHelpContent);
+router.route('/cms/help/edit').patch(auth('admin', 'managePages'), adminController.editHelpContent);
+router.route('/cms/help/delete').delete(auth('admin', 'managePages'), adminController.deleteHelpContent);
+router.route('/cms/help/view').get(adminController.getHelpContent);
+router.route('/cms/help/view/:id').get(adminController.getIndividualHelpQuery);
 module.exports = router;

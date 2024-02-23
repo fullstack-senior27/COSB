@@ -15,3 +15,5 @@ module.exports.Page = require('./page.model');
 module.exports.Promotion = require('./promotion.model');
 module.exports.Note = require('./note.model');
 module.exports.Transaction = require('./transaction.model');
+module.exports.Help = require('./help.model');
+module.exports.KnowledgeBase = require('./knowledgeBase.model');
