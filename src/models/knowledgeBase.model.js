@@ -5,7 +5,13 @@ const knowledgeBaseSchema = mongoose.Schema(
   {
     key: {
       type: String,
-      enum: ['clients', 'beautician'],
+      enum: ['for-clients', 'for-beautician'],
+      validate: {
+        validator: function (value) {
+          return value === 'for-clients' || value === 'for-beautician';
+        },
+        message: 'Key must be either "for-clients" or "for-beautician"',
+      },
     },
     title: {
       type: String,
