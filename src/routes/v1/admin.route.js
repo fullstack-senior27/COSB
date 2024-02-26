@@ -90,4 +90,10 @@ router.route('/cms/help/edit').patch(auth('admin', 'managePages'), adminControll
 router.route('/cms/help/delete').delete(auth('admin', 'managePages'), adminController.deleteHelpContent);
 router.route('/cms/help/view').get(adminController.getHelpContent);
 router.route('/cms/help/view/:id').get(adminController.getIndividualHelpQuery);
+
+router.route('/cms/knowledgeBase/create').post(auth('admin', 'managePages'), adminController.createKnowledgeBaseContent);
+router.route('/cms/knowledgeBase/edit').patch(auth('admin', 'managePages'), adminController.editKnowledgeBaseContent);
+router.route('/cms/knowledgeBase/delete').delete(auth('admin', 'managePages'), adminController.deleteKnowledgeBaseContent);
+router.route('/cms/knowledgeBase/view-all').get(adminController.getAllKnowledgeBaseContent);
+router.route('/cms/knowledgeBase/get-by-id').get(adminController.getKnowledgeBaseContentById);
 module.exports = router;

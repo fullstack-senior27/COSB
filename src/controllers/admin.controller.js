@@ -117,6 +117,31 @@ const getIndividualHelpQuery = catchAsync(async (req, res) => {
   return new ApiSuccess(res, httpStatus.OK, 'Individual help data', help);
 });
 
+const createKnowledgeBaseContent = catchAsync(async (req, res) => {
+  const knowledgeBase = await cmsService.createKnowledgeBaseContent(req.body);
+  return new ApiSuccess(res, httpStatus.OK, 'Knowledge base created', knowledgeBase);
+});
+
+const editKnowledgeBaseContent = catchAsync(async (req, res) => {
+  const knowledgeBaseContent = await cmsService.editKnowledgeBaseContent(req.query.id, req.body);
+  return new ApiSuccess(res, httpStatus.OK, 'Knowledge base content edited', knowledgeBaseContent);
+});
+
+const deleteKnowledgeBaseContent = catchAsync(async (req, res) => {
+  const deletedKnowledgeBaseContent = await cmsService.deleteKnowledgeBaseContent(req.query.id);
+  return new ApiSuccess(res, httpStatus.OK, 'Knowledge base content deleted successfully', deletedKnowledgeBaseContent);
+});
+
+const getAllKnowledgeBaseContent = catchAsync(async (req, res) => {
+  const list = await cmsService.getAllKnowledgeBaseContent();
+  return new ApiSuccess(res, httpStatus.OK, 'All knowledge base content', list);
+});
+
+const getKnowledgeBaseContentById = catchAsync(async (req, res) => {
+  const knowledgeBaseContent = await cmsService.getKnowledgeBaseContentById(req.query.id);
+  return new ApiSuccess(res, httpStatus.OK, 'Knowledge Base content', knowledgeBaseContent);
+});
+
 module.exports = {
   register,
   login,
@@ -136,4 +161,9 @@ module.exports = {
   deleteHelpContent,
   getHelpContent,
   getIndividualHelpQuery,
+  createKnowledgeBaseContent,
+  editKnowledgeBaseContent,
+  deleteKnowledgeBaseContent,
+  getAllKnowledgeBaseContent,
+  getKnowledgeBaseContentById,
 };
