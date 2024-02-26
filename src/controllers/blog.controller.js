@@ -78,7 +78,7 @@ const updateBlog = catchAsync(async (req, res) => {
 const deleteBlog = catchAsync(async (req, res) => {
   const blog_id = req.params.blog_id;
   const blog = await blogService.deleteBlog(blog_id);
-  return new ApiSuccess(res, httpStatus.NO_CONTENT, 'Blog deleted successfully', blog);
+  return new ApiSuccess(res, httpStatus.OK, 'Blog deleted successfully', blog);
 });
 
 const createBlogCategory = catchAsync(async (req, res) => {
