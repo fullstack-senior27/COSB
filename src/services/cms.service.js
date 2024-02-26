@@ -68,6 +68,14 @@ const getAllKnowledgeBaseContent = async (key) => {
   return data;
 };
 
+const getKnowledgeBaseContentById = async (id) => {
+  const data = await KnowledgeBase.findOne({ _id: id });
+  if (!data) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Content not found');
+  }
+  return data;
+};
+
 module.exports = {
   createHelpContent,
   getHelpContentById,
@@ -78,4 +86,5 @@ module.exports = {
   editKnowledgeBaseContent,
   deleteKnowledgeBaseContent,
   getAllKnowledgeBaseContent,
+  getKnowledgeBaseContentById,
 };
