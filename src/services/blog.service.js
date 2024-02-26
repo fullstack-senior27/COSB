@@ -53,6 +53,7 @@ const deleteBlog = async (blog_id) => {
   }
   await deletedBlog.remove();
   // console.log(updatedAdmin);
+  console.log(deletedBlog);
   return deletedBlog;
 };
 
