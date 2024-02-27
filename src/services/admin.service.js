@@ -122,6 +122,18 @@ const getTransactionList = async (beauticianId, page, limit) => {
   return appointmentList;
 };
 
+const editProfile = async (id, updateBody) => {
+  const admin = await getAdminById(id);
+  Object.assign(admin, updateBody);
+  await admin.save()
+  return admin;
+}
+
+const getProfile = async (id) => {
+  const admin = await getAdminById(id)
+  return admin;
+}
+
 module.exports = {
   createAdmin,
   updateAdminById,
@@ -136,4 +148,6 @@ module.exports = {
   getAppointmentListForBeautician,
   getAppointmentListForUser,
   getTransactionList,
+  editProfile,
+  getProfile
 };

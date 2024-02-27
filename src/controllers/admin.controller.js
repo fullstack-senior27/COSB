@@ -30,12 +30,15 @@ const refreshTokens = catchAsync(async (req, res) => {
   res.send({ ...tokens });
 });
 
-// const forgotPassword = catchAsync(async (req, res) => {
-//   console.log(req.body);
-//   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-//   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-//   return new ApiSuccess(res, httpStatus.OK, ResponseMessage.RESET_SUCCESS, resetPasswordToken);
-// });
+const editProfile = catchAsync(async (req, res) => {
+  const profile = await adminService.editProfile(req.user.id, req.body);
+  return new ApiSuccess(res, httpStatus.OK, 'Profile edited successfully', profile);
+})
+
+const getProfile = catchAsync(async (req, res) => {
+  const profile = await adminService.getProfile(req.user.id)
+  return new ApiSuccess(res, httpStatus.OK, "Admin profile", profile);
+})
 
 const forgotPassword = catchAsync(async (req, res) => {
   const otp = await otpService.generateResetPasswordOtp(req.body.email);
@@ -166,4 +169,6 @@ module.exports = {
   deleteKnowledgeBaseContent,
   getAllKnowledgeBaseContent,
   getKnowledgeBaseContentById,
+  editProfile,
+  getProfile
 };

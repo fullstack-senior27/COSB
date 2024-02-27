@@ -9,7 +9,7 @@ const {
   adminController,
   appointmentController,
 } = require('../../controllers');
-const { blogValidation, blogCategoryValidation, serviceValidation } = require('../../validations');
+const { blogValidation, blogCategoryValidation, serviceValidation, adminValidation } = require('../../validations');
 
 const router = express.Router();
 
@@ -96,4 +96,7 @@ router.route('/cms/knowledgeBase/edit').patch(auth('admin', 'managePages'), admi
 router.route('/cms/knowledgeBase/delete').delete(auth('admin', 'managePages'), adminController.deleteKnowledgeBaseContent);
 router.route('/cms/knowledgeBase/view-all').get(adminController.getAllKnowledgeBaseContent);
 router.route('/cms/knowledgeBase/get-by-id').get(adminController.getKnowledgeBaseContentById);
+
+router.route('/profile/update').patch(auth('admin', 'managePages'), validate(adminValidation.editProfile), adminController.editProfile)
+router.route('/profile/get').get(auth('admin', 'managePages'), adminController.getProfile)
 module.exports = router;
