@@ -11,6 +11,10 @@ const adminSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    imageUrl: {
+      type: String,
+      default: "https://cosmetrospace.sfo3.digitaloceanspaces.com/ninja.jpg"
+    },
     email: {
       type: String,
       required: true,
