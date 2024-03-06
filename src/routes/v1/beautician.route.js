@@ -164,4 +164,7 @@ router
 
 // router.route('/revenue-details').get(auth('beautician', 'manageConnectAccount'), beauticianController.getRevenueDetails);
 
+router.route('/photos/get').get(auth('beautician', 'manageServices'), beauticianController.getPhotosFromGallery);
+router.route('/photos/add').post(auth('beautician', 'manageServices'), beauticianController.addPhotosToGallery);
+router.route('/photos/remove').post(auth('beautician', 'manageServices'), beauticianController.removePhotosByIndex);
 module.exports = router;
