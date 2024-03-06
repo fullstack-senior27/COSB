@@ -10,6 +10,10 @@ const serviceCategorySchema = mongoose.Schema(
       trim: true,
       unique: true,
     },
+    imageUrl: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

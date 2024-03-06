@@ -364,6 +364,33 @@ const filterBeauticians = async ({
   return filteredResults;
 };
 
+const addPhotosToGallery = async (beauticianId, photoUrl) => {
+  const beautician = await Beautician.findOne({ _id: beauticianId });
+  if (!beautician) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Beautician does not exist');
+  }
+  beautician.photos.push(photoUrl);
+  await beautician.save();
+  return beautician.photos;
+};
+
+const getPhotosFromGallery = async (beauticianId) => {
+  const beautician = await Beautician.findOne({ _id: beauticianId });
+  if (!beautician) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Beautician does not exist');
+  }
+  return beautician.photos;
+};
+
+const removePhotosByIndex = async (beauticianId, photoIndex) => {
+  const beautician = await Beautician.findOne({ _id: beauticianId });
+  if (!beautician) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Beautician does not exist');
+  }
+  beautician.photos = beautician.photos.filter((item, index) => photoIndex !== index);
+  await beautician.save();
+};
+
 module.exports = {
   createBeautician,
   updateBeauticianById,
@@ -374,4 +401,7 @@ module.exports = {
   getAllBeauticians,
   filterBeauticians,
   getBeauticianDetails,
+  getPhotosFromGallery,
+  addPhotosToGallery,
+  removePhotosByIndex,
 };

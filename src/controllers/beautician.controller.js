@@ -127,6 +127,21 @@ const getListOfTransactions = catchAsync(async (req, res) => {
 //   const payouts = await pa
 // })
 
+const addPhotosToGallery = catchAsync(async (req, res) => {
+  const photoList = await beauticianService.addPhotosToGallery(req.query.beauticianId, req.body);
+  return new ApiSuccess(res, httpStatus.OK, 'Photos added successfully', photoList);
+});
+
+const getPhotosFromGallery = catchAsync(async (req, res) => {
+  const photoList = await beauticianService.getPhotosFromGallery(req.query.beauticianId);
+  return new ApiSuccess(res, httpStatus.OK, "Photos from beautician's gallery", photoList);
+});
+
+const removePhotosByIndex = catchAsync(async (req, res) => {
+  const newPhotoList = await beauticianService.removePhotosByIndex(req.query.beauticianId, req.body.photoIndex);
+  return new ApiSuccess(res, httpStatus.OK, 'Photo removed successfully', newPhotoList);
+});
+
 module.exports = {
   register,
   login,
@@ -142,4 +157,7 @@ module.exports = {
   getBeauticians,
   getAllReviewsByBeauticianId,
   getListOfTransactions,
+  addPhotosToGallery,
+  getPhotosFromGallery,
+  removePhotosByIndex,
 };

@@ -3,7 +3,7 @@ const { password, objectId } = require('./custom.validation');
 
 const createServiceType = {
   body: Joi.object().keys({
-    name: Joi.string().required()
+    name: Joi.string().required(),
   }),
 };
 
@@ -12,21 +12,21 @@ const updateServiceType = {
     serviceTypeId: Joi.required().custom(objectId),
   }),
   body: Joi.object().keys({
-    name: Joi.string().required()
+    name: Joi.string().required(),
   }),
-}
+};
 
 const deleteServiceType = {
   params: Joi.object().keys({
     serviceTypeId: Joi.required().custom(objectId),
   }),
-}
+};
 
 const getServicesByBeautician = {
   body: Joi.object().keys({
-    beauticianId: Joi.string().required().custom(objectId)
+    beauticianId: Joi.string().required().custom(objectId),
   }),
-}
+};
 
 const createService = {
   body: Joi.object().keys({
@@ -35,9 +35,9 @@ const createService = {
     description: Joi.string().required(),
     durationInMinutes: Joi.number().required(),
     category: Joi.required().custom(objectId),
-    serviceType: Joi.required().custom(objectId)
+    serviceType: Joi.required().custom(objectId),
   }),
-}
+};
 
 const updateService = {
   params: Joi.object().keys({
@@ -49,21 +49,22 @@ const updateService = {
     description: Joi.string(),
     durationInMinutes: Joi.number(),
     service_category: Joi.custom(objectId),
-    service_type: Joi.custom(objectId)
+    service_type: Joi.custom(objectId),
   }),
-}
+};
 
 const deleteService = {
   params: Joi.object().keys({
     service_id: Joi.required().custom(objectId),
   }),
-}
+};
 
 const createServiceCategory = {
   body: Joi.object().keys({
     name: Joi.string().required(),
+    imageUrl: Joi.string(),
   }),
-}
+};
 
 const updateServiceCategory = {
   params: Joi.object().keys({
@@ -71,14 +72,15 @@ const updateServiceCategory = {
   }),
   body: Joi.object().keys({
     name: Joi.string(),
+    imageUrl: Joi.string(),
   }),
-}
+};
 
 const deleteServiceCategory = {
   params: Joi.object().keys({
     category_id: Joi.required().custom(objectId),
   }),
-}
+};
 
 module.exports = {
   createServiceType,
@@ -90,5 +92,5 @@ module.exports = {
   deleteService,
   createServiceCategory,
   updateServiceCategory,
-  deleteServiceCategory
-}
+  deleteServiceCategory,
+};
