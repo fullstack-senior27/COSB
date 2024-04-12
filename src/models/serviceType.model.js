@@ -10,6 +10,10 @@ const serviceTypeSchema = mongoose.Schema(
       trim: true,
       unique: true,
     },
+    image: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

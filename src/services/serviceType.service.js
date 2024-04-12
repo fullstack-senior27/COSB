@@ -12,6 +12,7 @@ const createServiceType = async ({ name }) => {
 
   const type = await ServiceType.create({
     name,
+    image,
   })
 
   console.log(type)

@@ -83,6 +83,10 @@ const beauticianSchema = mongoose.Schema(
       type: String,
       default: '',
     },
+    location: {
+      type: String,
+      default: '',
+    },
     about: {
       type: String,
       default: null,

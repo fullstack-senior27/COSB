@@ -102,6 +102,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
 // parse json request body
 app.use(express.json());
 
+//store image as static file
+app.use(express.static('public'));
+
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
